@@ -32,13 +32,9 @@ namespace NtfsSharp.FileRecords.Attributes.Base
             AttributeHeader attrHeader;
 
             if (header.NonResident)
-            {
                 attrHeader = new NonResident.NonResident(header, bytes, volume);
-            }
             else
-            {
                 attrHeader = new Resident(header, bytes);
-            }
             
             return ReadBody(attrHeader);
         }
