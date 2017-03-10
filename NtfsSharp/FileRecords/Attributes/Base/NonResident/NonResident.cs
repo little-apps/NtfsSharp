@@ -2,6 +2,7 @@
 using NtfsSharp.Helpers;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using NtfsSharp.Data;
 
 namespace NtfsSharp.FileRecords.Attributes.Base.NonResident
 {
@@ -39,6 +40,34 @@ namespace NtfsSharp.FileRecords.Attributes.Base.NonResident
             }
 
             CurrentOffset = currentOffset;
+        }
+
+        public IEnumerable<Cluster> GetDataAsClusters(DataBlock dataBlock)
+        {
+            if (!DataBlocks.Contains(dataBlock))
+                throw new ArgumentOutOfRangeException(nameof(dataBlock), "Data block is not part of this file record");
+
+            for (ulong i = 0; i < dataBlock.RunLength; i++)
+            {
+                yield return _volume.ReadLcn(dataBlock.LcnOffset + i);
+            }
+        }
+
+        public byte[] GetDataAsBytes(DataBlock dataBlock)
+        {
+            if (!DataBlocks.Contains(dataBlock))
+                throw new ArgumentOutOfRangeException(nameof(dataBlock), "Data block is not part of this file record");
+
+            var data = new byte[dataBlock.RunLength * _volume.BytesPerSector * _volume.SectorsPerCluster];
+
+            for (long i = 0, currentLcn = dataBlock.LcnOffset; i < dataBlock.RunLength; i++, currentLcn++)
+            {
+                var cluster = _volume.ReadLcn((ulong)currentLcn);
+
+                Array.Copy(cluster.Data, 0, data, i * _volume.BytesPerSector, cluster.Data.Length);
+            }
+
+            return data;
         }
 
         public struct NonResidentAttribute

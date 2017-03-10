@@ -28,28 +28,6 @@ namespace NtfsSharp.FileRecords.Attributes.Base.NonResident
             LcnOffset = lcnOffset;
         }
 
-        public IEnumerable<Cluster> GetDataAsClusters(Volume vol)
-        {
-            for (ulong i = 0; i < RunLength; i++)
-            {
-                yield return vol.ReadLcn(LcnOffset + i);
-            }
-        }
-
-        public byte[] GetDataAsBytes(Volume vol)
-        {
-            var data = new byte[RunLength * vol.BytesPerSector * vol.SectorsPerCluster];
-            
-            for (long i = 0, currentLcn = LcnOffset; i < RunLength; i++, currentLcn++)
-            {
-                var cluster = vol.ReadLcn((ulong) currentLcn);
-
-                Array.Copy(cluster.Data, 0, data, i * vol.BytesPerSector, cluster.Data.Length);
-            }
-
-            return data;
-        }
-
         public static DataBlock GetDataBlockFromRun(byte[] data, ref uint offset)
         {
             var lengthOffsetFieldSize = new Nibble { Value = data[offset] };
