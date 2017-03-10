@@ -42,6 +42,30 @@ namespace NtfsSharp.FileRecords.Attributes.Base.NonResident
             CurrentOffset = currentOffset;
         }
 
+        public IEnumerable<Cluster> GetAllDataAsClusters()
+        {
+            var clusters = new List<Cluster>();
+
+            foreach (var dataBlock in DataBlocks)
+            {
+                clusters.AddRange(GetDataAsClusters(dataBlock));
+            }
+
+            return clusters;
+        }
+
+        public byte[] GetAllDataAsBytes()
+        {
+            var bytes = new List<byte>();
+
+            foreach (var dataBlock in DataBlocks)
+            {
+                bytes.AddRange(GetDataAsBytes(dataBlock));
+            }
+
+            return bytes.ToArray();
+        }
+
         public IEnumerable<Cluster> GetDataAsClusters(DataBlock dataBlock)
         {
             if (!DataBlocks.Contains(dataBlock))
