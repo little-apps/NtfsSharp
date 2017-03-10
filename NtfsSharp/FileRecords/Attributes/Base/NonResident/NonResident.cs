@@ -7,7 +7,7 @@ namespace NtfsSharp.FileRecords.Attributes.Base.NonResident
 {
     public sealed class NonResident : AttributeHeader
     {
-        public static new uint HeaderSize => (uint)Marshal.SizeOf<NonResidentAttribute>();
+        public new static uint HeaderSize => (uint)Marshal.SizeOf<NonResidentAttribute>();
 
         public NonResidentAttribute SubHeader { get; private set; }
 
