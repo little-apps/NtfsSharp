@@ -42,6 +42,11 @@ namespace NtfsSharp.FileRecords.Attributes.Base.NonResident
             CurrentOffset = currentOffset;
         }
 
+        /// <summary>
+        /// Converts a VCN (Virtual Cluster Number) to LCN (Logical Cluster Number)
+        /// </summary>
+        /// <param name="vcn">Virtual Cluster Number</param>
+        /// <returns>LCN or null if it wasn't found</returns>
         public ulong? VcnToLcn(ulong vcn)
         {
             ulong lcnOffset = 0;
