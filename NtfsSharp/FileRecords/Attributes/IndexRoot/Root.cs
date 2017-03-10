@@ -12,7 +12,7 @@ namespace NtfsSharp.FileRecords.Attributes.IndexRoot
 
         public NTFS_ATTR_INDEX_ROOT Data { get; private set; }
 
-        public readonly List<FileName> FileNameEntries = new List<FileName>();
+        public readonly List<FileNameIndex> FileNameEntries = new List<FileNameIndex>();
 
         public Root(AttributeHeader header) : base(header)
         {
@@ -23,11 +23,11 @@ namespace NtfsSharp.FileRecords.Attributes.IndexRoot
 
             while (shouldContinue)
             {
-                var fileName = new FileName(Bytes, CurrentOffset);
+                var fileName = new FileNameIndex(Bytes, CurrentOffset);
                 FileNameEntries.Add(fileName);
                 CurrentOffset += fileName.Header.IndexEntryLength;
 
-                shouldContinue = !fileName.Header.Flags.HasFlag(FileName.Flags.IsLastEntry) &&
+                shouldContinue = !fileName.Header.Flags.HasFlag(FileNameIndex.Flags.IsLastEntry) &&
                                  fileName.Header.IndexEntryLength > 0 && CurrentOffset < CurrentOffset + Header.Header.Length;
             }
         }

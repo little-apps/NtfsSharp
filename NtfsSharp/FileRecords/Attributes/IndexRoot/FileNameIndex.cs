@@ -1,18 +1,20 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using NtfsSharp.FileRecords.Attributes.Shared;
 using NtfsSharp.Helpers;
 using NtfsSharp.PInvoke;
 
 namespace NtfsSharp.FileRecords.Attributes.IndexRoot
 {
-    public class FileName
+    public class FileNameIndex
     {
-        public new static uint HeaderSize => (uint)Marshal.SizeOf<NTFS_ATTR_INDEX_ENTRY_HEADER>();
+        public static uint HeaderSize => (uint)Marshal.SizeOf<NTFS_ATTR_INDEX_ENTRY_HEADER>();
         public readonly NTFS_ATTR_INDEX_ENTRY_HEADER Header;
         public readonly byte[] Stream;
         public readonly ulong SubNode;
+        public readonly FileName FileName;
         
-        public FileName(byte[] data, uint currentOffset)
+        public FileNameIndex(byte[] data, uint currentOffset)
         {
             Header = data.ToStructure<NTFS_ATTR_INDEX_ENTRY_HEADER>(currentOffset);
 
@@ -20,6 +22,7 @@ namespace NtfsSharp.FileRecords.Attributes.IndexRoot
             {
                 Stream = new byte[Header.StreamLength];
                 Array.Copy(data, currentOffset + HeaderSize, Stream, 0, Stream.Length);
+                FileName = new FileName(Stream);
             }
 
             if (Header.Flags.HasFlag(Flags.HasSubNode))

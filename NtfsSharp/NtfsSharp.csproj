@@ -50,13 +50,14 @@
     <Compile Include="FileRecords\Attributes\Base\AttributeBodyBase.cs" />
     <Compile Include="FileRecords\Attributes\Base\AttributeHeader.cs" />
     <Compile Include="FileRecords\Attributes\Base\NonResident\DataBlock.cs" />
-    <Compile Include="FileRecords\Attributes\FileName.cs" />
+    <Compile Include="FileRecords\Attributes\FileNameAttribute.cs" />
     <Compile Include="FileRecords\Attributes\Base\NonResident\NonResident.cs" />
-    <Compile Include="FileRecords\Attributes\IndexRoot\FileName.cs" />
+    <Compile Include="FileRecords\Attributes\IndexRoot\FileNameIndex.cs" />
     <Compile Include="FileRecords\Attributes\IndexRoot\Root.cs" />
     <Compile Include="FileRecords\Attributes\ObjectId.cs" />
     <Compile Include="FileRecords\Attributes\Base\Resident.cs" />
     <Compile Include="FileRecords\Attributes\SecurityDescriptor.cs" />
+    <Compile Include="FileRecords\Attributes\Shared\FileName.cs" />
     <Compile Include="FileRecords\Attributes\StandardInformation.cs" />
     <Compile Include="FileRecords\Attributes\VolumeInformation.cs" />
     <Compile Include="FileRecords\Attributes\VolumeName.cs" />

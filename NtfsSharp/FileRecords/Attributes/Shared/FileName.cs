@@ -1,32 +1,34 @@
-﻿using NtfsSharp.Helpers;
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
-using FILETIME = System.Runtime.InteropServices.ComTypes.FILETIME;
-using static NtfsSharp.PInvoke.Structs;
 using System.Text;
-using NtfsSharp.FileRecords.Attributes.Base;
+using NtfsSharp.Helpers;
+using NtfsSharp.PInvoke;
+using FILETIME = System.Runtime.InteropServices.ComTypes.FILETIME;
 
-namespace NtfsSharp.FileRecords.Attributes
+namespace NtfsSharp.FileRecords.Attributes.Shared
 {
-    public class FileName : AttributeBodyBase
+    public class FileName
     {
-        public new static uint HeaderSize => (uint)Marshal.SizeOf<NTFS_ATTR_FILE_NAME>();
+        public static uint HeaderSize => (uint)Marshal.SizeOf<NTFS_ATTR_FILE_NAME>();
+
+        public uint CurrentOffset = 0;
 
         public NTFS_ATTR_FILE_NAME Data { get; private set; }
         public string Filename { get; private set; }
 
-        public FileName(AttributeHeader header) : base(header)
+        public FileName(byte[] bytes, uint startOffset = 0)
         {
-            Data = Bytes.ToStructure<NTFS_ATTR_FILE_NAME>(CurrentOffset);
-            CurrentOffset += HeaderSize;
+            CurrentOffset = startOffset;
 
-            if (Data.FileNameLength > 0)
-            {
-                var unicodeLength = Data.FileNameLength * 2;
-                Filename = Encoding.Unicode.GetString(Bytes, (int)CurrentOffset, unicodeLength);
-                CurrentOffset += (uint)unicodeLength;
-            }
-                
+            Data = bytes.ToStructure<NTFS_ATTR_FILE_NAME>(CurrentOffset);
+            CurrentOffset += (uint) Marshal.SizeOf<NTFS_ATTR_FILE_NAME>();
+
+            if (Data.FileNameLength <= 0)
+                return;
+
+            var unicodeLength = Data.FileNameLength * 2;
+            Filename = Encoding.Unicode.GetString(bytes, (int) CurrentOffset, unicodeLength);
+            CurrentOffset += (uint)unicodeLength;
         }
 
         [Flags]
@@ -63,10 +65,10 @@ namespace NtfsSharp.FileRecords.Attributes
         [StructLayout(LayoutKind.Sequential, Pack = 2)]
         public struct NTFS_ATTR_FILE_NAME
         {
-            public readonly FILE_REFERENCE FileReference;
-            public readonly FILETIME CreationTime;
-            public readonly FILETIME ModifiedTime;
-            public readonly FILETIME MFTChangedTime;
+            public readonly Structs.FILE_REFERENCE FileReference;
+            public readonly System.Runtime.InteropServices.ComTypes.FILETIME CreationTime;
+            public readonly System.Runtime.InteropServices.ComTypes.FILETIME ModifiedTime;
+            public readonly System.Runtime.InteropServices.ComTypes.FILETIME MFTChangedTime;
             public readonly FILETIME FileReadTime;
             public readonly ulong AllocateSize;
             public readonly ulong RealSize;

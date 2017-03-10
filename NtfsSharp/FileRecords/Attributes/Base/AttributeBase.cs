@@ -1,4 +1,5 @@
-﻿using NtfsSharp.Helpers;
+﻿using NtfsSharp.FileRecords.Attributes.IndexRoot;
+using NtfsSharp.Helpers;
 using static NtfsSharp.FileRecords.Attributes.Base.AttributeHeader;
 
 namespace NtfsSharp.FileRecords.Attributes.Base
@@ -49,7 +50,7 @@ namespace NtfsSharp.FileRecords.Attributes.Base
                     return new StandardInformation(header);
 
                 case NTFS_ATTR_TYPE.FILE_NAME:
-                    return new FileName(header);
+                    return new FileNameAttribute(header);
 
                 case NTFS_ATTR_TYPE.VOLUME_NAME:
                     return new VolumeName(header);
@@ -58,6 +59,7 @@ namespace NtfsSharp.FileRecords.Attributes.Base
                     return new VolumeInformation(header);
 
                 case NTFS_ATTR_TYPE.INDEX_ROOT:
+                    return new Root(header);
 
                 case NTFS_ATTR_TYPE.DATA:
 
