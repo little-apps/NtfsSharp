@@ -26,7 +26,11 @@ namespace NtfsSharp.FileRecords.Attributes.Base.NonResident
             CurrentOffset += HeaderSize;
 
             ReadName();
+            ReadDataBlocks(data);
+        }
 
+        private void ReadDataBlocks(byte[] data)
+        {
             var currentOffset = CurrentOffset;
 
             while (currentOffset < Header.Length && data[currentOffset] != 0)
