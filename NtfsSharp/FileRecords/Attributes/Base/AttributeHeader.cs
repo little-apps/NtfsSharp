@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NtfsSharp.Helpers;
+using System;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -8,6 +9,18 @@ namespace NtfsSharp.FileRecords.Attributes.Base
     {
         public static uint HeaderSize => (uint)Marshal.SizeOf<NTFS_ATTRIBUTE_HEADER>();
 
+        /// <summary>
+        /// If true, the body data is read when the object is instantiated
+        /// </summary>
+        public abstract bool ReadData { get; }
+
+        public abstract byte[] BodyData { get; }
+
+        /// <summary>
+        /// Bytes (header and body) for attribute
+        /// </summary>
+        public readonly byte[] Bytes;
+
         public NTFS_ATTRIBUTE_HEADER Header { get; private set; }
         public string Name { get; private set; }
 
@@ -15,11 +28,17 @@ namespace NtfsSharp.FileRecords.Attributes.Base
         /// Constructor for AttributeBase
         /// </summary>
         /// <param name="header">Header of attribute</param>
-        /// <param name="data">Bytes of data (including header)</param>
-        protected AttributeHeader(NTFS_ATTRIBUTE_HEADER header, byte[] data) : base(data)
+        /// <param name="data">Bytes of data (including header and body)</param>
+        protected AttributeHeader(NTFS_ATTRIBUTE_HEADER header, byte[] data)
         {
             Header = header;
             CurrentOffset += HeaderSize;
+            Bytes = data;
+        }
+
+        protected byte[] GetBytesFromCurrentOffset(uint length)
+        {
+            return Bytes.GetBytesAtOffset(CurrentOffset, length);
         }
 
         /// <summary>
@@ -33,6 +52,8 @@ namespace NtfsSharp.FileRecords.Attributes.Base
             Name = Encoding.Unicode.GetString(GetBytesFromCurrentOffset(Header.Length * 2));
             CurrentOffset += (uint) Header.NameLength * 2;
         }
+
+        protected abstract byte[] ReadBody();
         
         public enum NTFS_ATTR_TYPE : uint
         {

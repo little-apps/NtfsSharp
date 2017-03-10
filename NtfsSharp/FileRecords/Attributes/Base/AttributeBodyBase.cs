@@ -1,4 +1,5 @@
 ﻿using NtfsSharp.Exceptions;
+using NtfsSharp.Helpers;
 using System;
 
 namespace NtfsSharp.FileRecords.Attributes.Base
@@ -9,10 +10,20 @@ namespace NtfsSharp.FileRecords.Attributes.Base
 
         public readonly AttributeHeader Header;
 
-        protected AttributeBodyBase(AttributeHeader header) : base(header.Bytes)
+        public uint OffsetWithHeader => CurrentOffset + Header.Header.Length;
+
+        /// <summary>
+        /// The body data (in residual or non-residual space)
+        /// </summary>
+        public readonly byte[] Body;
+
+        protected AttributeBodyBase(AttributeHeader header)
         {
             Header = header;
-            CurrentOffset = header.CurrentOffset;
+            CurrentOffset = 0;
+
+            if (header.ReadData)
+                Body = header.BodyData;
 
             if (TypeMustBe.HasFlag(MustBe.Resident) && TypeMustBe.HasFlag(MustBe.NonResident))
                 return;
@@ -21,6 +32,11 @@ namespace NtfsSharp.FileRecords.Attributes.Base
                 throw new InvalidAttributeException("Attribute can only be resident");
             if (TypeMustBe == MustBe.NonResident && !header.Header.NonResident)
                 throw new InvalidAttributeException("Attribute can only be non-resident");
+        }
+
+        protected byte[] GetBytesFromCurrentOffset(uint length)
+        {
+            return Body.GetBytesAtOffset(CurrentOffset, length);
         }
 
         [Flags]

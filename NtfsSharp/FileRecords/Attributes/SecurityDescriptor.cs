@@ -12,7 +12,7 @@ namespace NtfsSharp.FileRecords.Attributes
         
         public SecurityDescriptor(AttributeHeader header) : base(header)
         {
-            SubHeader = Bytes.ToStructure<NTFS_SECURITY_DESCRIPTOR>(CurrentOffset);
+            SubHeader = Body.ToStructure<NTFS_SECURITY_DESCRIPTOR>(CurrentOffset);
             CurrentOffset += SubHeaderSize;
 
             // TODO: Read ACL AND ACE structures
@@ -23,7 +23,7 @@ namespace NtfsSharp.FileRecords.Attributes
 
         private ACL ReadAcl(uint offset)
         {
-            var acl = Bytes.ToStructure<ACL>(CurrentOffset + offset);
+            var acl = Body.ToStructure<ACL>(CurrentOffset + offset);
 
             return acl;
         }

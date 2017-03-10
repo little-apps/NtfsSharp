@@ -1,5 +1,6 @@
 ﻿using NtfsSharp.Helpers;
 using System.Runtime.InteropServices;
+using System;
 
 namespace NtfsSharp.FileRecords.Attributes.Base
 {
@@ -9,6 +10,21 @@ namespace NtfsSharp.FileRecords.Attributes.Base
 
         public ResidentAttribute SubHeader { get; private set; }
 
+        public override bool ReadData => true;
+
+        public override byte[] BodyData
+        {
+            get
+            {
+                var body = new byte[Bytes.Length - CurrentOffset];
+
+                Array.Copy(Bytes, CurrentOffset, body, 0, body.Length);
+
+                return body;
+            }
+        }
+
+
         public Resident(NTFS_ATTRIBUTE_HEADER header, byte[] data) : base(header, data)
         {
             SubHeader = data.ToStructure<ResidentAttribute>(CurrentOffset);
@@ -16,13 +32,18 @@ namespace NtfsSharp.FileRecords.Attributes.Base
 
             ReadName();
         }
-        
+
         public struct ResidentAttribute
         {
             public readonly uint AttributeLength;
             public readonly ushort AttributeOffset;
             public readonly byte IndexedFlag;
             public readonly byte Padding;
+        }
+
+        protected override byte[] ReadBody()
+        {
+            throw new NotImplementedException();
         }
     }
 }

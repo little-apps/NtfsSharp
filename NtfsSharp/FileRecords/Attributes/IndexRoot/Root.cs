@@ -16,14 +16,14 @@ namespace NtfsSharp.FileRecords.Attributes.IndexRoot
 
         public Root(AttributeHeader header) : base(header)
         {
-            Data = Bytes.ToStructure<NTFS_ATTR_INDEX_ROOT>(CurrentOffset);
+            Data = Body.ToStructure<NTFS_ATTR_INDEX_ROOT>(CurrentOffset);
             CurrentOffset += HeaderSize;
 
             var shouldContinue = true;
 
             while (shouldContinue)
             {
-                var fileName = new FileNameIndex(Bytes, CurrentOffset);
+                var fileName = new FileNameIndex(Body, CurrentOffset);
                 FileNameEntries.Add(fileName);
                 CurrentOffset += fileName.Header.IndexEntryLength;
 

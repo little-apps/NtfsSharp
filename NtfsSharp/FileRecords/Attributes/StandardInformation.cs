@@ -14,7 +14,7 @@ namespace NtfsSharp.FileRecords.Attributes
 
         public StandardInformation(AttributeHeader header) : base(header)
         {
-            Data = Bytes.ToStructure<NTFS_ATTR_STANDARD>(CurrentOffset);
+            Data = Body.ToStructure<NTFS_ATTR_STANDARD>(CurrentOffset);
             CurrentOffset += HeaderSize;
         }
 

@@ -6,18 +6,15 @@ namespace NtfsSharp.FileRecords.Attributes.Base
 {
     public abstract class AttributeBase
     {
-        public readonly byte[] Bytes;
+        
         public uint CurrentOffset { get; protected set; }
 
-        protected AttributeBase(byte[] data)
+        protected AttributeBase()
         {
-            Bytes = data;
+
         }
 
-        protected byte[] GetBytesFromCurrentOffset(uint length)
-        {
-            return Bytes.GetBytesAtOffset(CurrentOffset, length);
-        }
+        
 
         /// <summary>
         /// Creates attribute from bytes

@@ -9,7 +9,7 @@ namespace NtfsSharp.FileRecords.Attributes
 
         public FileNameAttribute(AttributeHeader header) : base(header)
         {
-            FileName = new FileName(Bytes, CurrentOffset);
+            FileName = new FileName(Body, CurrentOffset);
             CurrentOffset = FileName.CurrentOffset;
         }
         

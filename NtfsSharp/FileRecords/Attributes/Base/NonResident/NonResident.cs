@@ -16,6 +16,10 @@ namespace NtfsSharp.FileRecords.Attributes.Base.NonResident
 
         private readonly Volume _volume;
 
+        public override bool ReadData => false;
+
+        public override byte[] BodyData => GetAllDataAsBytes();
+
         public NonResident(NTFS_ATTRIBUTE_HEADER header, byte[] data, Volume volume) : base(header, data)
         {
             if (volume == null)
@@ -137,6 +141,11 @@ namespace NtfsSharp.FileRecords.Attributes.Base.NonResident
             }
 
             return data;
+        }
+
+        protected override byte[] ReadBody()
+        {
+            throw new NotImplementedException();
         }
 
         public struct NonResidentAttribute

@@ -14,22 +14,22 @@ namespace NtfsSharp.FileRecords.Attributes
         
         public ObjectId(AttributeHeader header) : base(header)
         {
-            if (CurrentOffset == header.Header.Length)
+            if (OffsetWithHeader == header.Header.Length)
                 return;
 
             UniqueObjectId = ReadNextGuid();
 
-            if (CurrentOffset == header.Header.Length)
+            if (OffsetWithHeader == header.Header.Length)
                 return;
 
             BirthVolumeId = ReadNextGuid();
 
-            if (CurrentOffset == header.Header.Length)
+            if (OffsetWithHeader == header.Header.Length)
                 return;
 
             BirthObjectId = ReadNextGuid();
 
-            if (CurrentOffset == header.Header.Length)
+            if (OffsetWithHeader == header.Header.Length)
                 return;
 
             DomainId = ReadNextGuid();
