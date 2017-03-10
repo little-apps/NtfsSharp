@@ -1,4 +1,5 @@
-﻿using NtfsSharp.Helpers;
+﻿using System;
+using NtfsSharp.Helpers;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
@@ -12,8 +13,15 @@ namespace NtfsSharp.FileRecords.Attributes.Base.NonResident
 
         public List<DataBlock> DataBlocks = new List<DataBlock>();
 
-        public NonResident(NTFS_ATTRIBUTE_HEADER header, byte[] data) : base(header, data)
+        private readonly Volume _volume;
+
+        public NonResident(NTFS_ATTRIBUTE_HEADER header, byte[] data, Volume volume) : base(header, data)
         {
+            if (volume == null)
+                throw new ArgumentNullException(nameof(volume));
+
+            _volume = volume;
+
             SubHeader = data.ToStructure<NonResidentAttribute>(CurrentOffset);
             CurrentOffset += HeaderSize;
 

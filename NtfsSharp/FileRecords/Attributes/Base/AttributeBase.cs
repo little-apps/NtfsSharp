@@ -23,8 +23,9 @@ namespace NtfsSharp.FileRecords.Attributes.Base
         /// Creates attribute from bytes
         /// </summary>
         /// <param name="bytes">Bytes of data</param>
+        /// <param name="volume">Volume holding attribute</param>
         /// <returns>AttributesBase containing resident or non-resident data</returns>
-        public static AttributeBodyBase GetAttribute(byte[] bytes)
+        public static AttributeBodyBase GetAttribute(byte[] bytes, Volume volume)
         {
             var header = bytes.ToStructure<NTFS_ATTRIBUTE_HEADER>();
 
@@ -32,7 +33,7 @@ namespace NtfsSharp.FileRecords.Attributes.Base
 
             if (header.NonResident)
             {
-                attrHeader = new NonResident.NonResident(header, bytes);
+                attrHeader = new NonResident.NonResident(header, bytes, volume);
             }
             else
             {
