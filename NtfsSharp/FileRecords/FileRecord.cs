@@ -45,17 +45,11 @@ namespace NtfsSharp.FileRecords
                 var newData = new byte[_data.Length - _currentOffset];
                 Array.Copy(_data, _currentOffset, newData, 0, newData.Length);
 
-                try
-                {
-                    var attr = AttributeBase.GetAttribute(newData, Volume);
-                    Attributes.Add(attr);
+                var attr = AttributeBase.GetAttribute(newData, Volume);
+                Attributes.Add(attr);
 
-                    _currentOffset += attr.Header.Header.Length;
-                } catch
-                {
-                    break;
-                }
-                
+                _currentOffset += attr.Header.Header.Length;
+
             }
         }
 
