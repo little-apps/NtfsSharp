@@ -20,6 +20,8 @@ namespace NtfsSharp.FileRecords.Attributes.Base.NonResident
         /// </summary>
         public readonly uint LcnOffset;
 
+        public bool LcnOffsetNegative => LcnOffset >> ((OffsetFieldLength - 1) * 8) >= 0x80;
+
         private DataBlock(ushort lengthFieldLength, ushort offsetFieldLength, uint runLength, uint lcnOffset)
         {
             LengthFieldLength = lengthFieldLength;

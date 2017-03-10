@@ -42,6 +42,46 @@ namespace NtfsSharp.FileRecords.Attributes.Base.NonResident
             CurrentOffset = currentOffset;
         }
 
+        public ulong? VcnToLcn(ulong vcn)
+        {
+            ulong lcnOffset = 0;
+
+            var signExtends = new ulong[]
+            {
+                0xffffffffffffff00,
+                0xffffffffffff0000,
+                0xffffffffff000000,
+                0xffffffff00000000,
+                0xffffff0000000000,
+                0xffff000000000000,
+                0xff00000000000000,
+                0x0000000000000000
+            };
+
+            foreach (var dataBlock in DataBlocks)
+            {
+                if (dataBlock.LcnOffsetNegative)
+                {
+                    // Last bit in last byte is 1 (meaning it's negative)
+                    lcnOffset += dataBlock.LcnOffset + signExtends[dataBlock.OffsetFieldLength - 1];
+                }
+                else
+                {
+                    // Offset is positive
+                    lcnOffset += dataBlock.LcnOffset;
+                }
+
+                // Is VCN in this run?
+                if (vcn < dataBlock.RunLength)
+                    return vcn + lcnOffset;
+
+                vcn -= dataBlock.RunLength;
+            }
+
+            // Not found
+            return null;
+        }
+
         public IEnumerable<Cluster> GetAllDataAsClusters()
         {
             var clusters = new List<Cluster>();
