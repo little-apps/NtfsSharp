@@ -47,7 +47,7 @@ namespace NtfsSharp.FileRecords
 
                 try
                 {
-                    var attr = AttributeBase.GetAttribute(newData);
+                    var attr = AttributeBase.GetAttribute(newData, Volume);
                     Attributes.Add(attr);
 
                     _currentOffset += attr.Header.Header.Length;
