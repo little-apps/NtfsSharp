@@ -19,7 +19,7 @@ namespace NtfsSharp.FileRecords.Attributes.Base
 
             if (TypeMustBe == MustBe.Resident && header.Header.NonResident)
                 throw new InvalidAttributeException("Attribute can only be resident");
-            else if (TypeMustBe == MustBe.NonResident && !header.Header.NonResident)
+            if (TypeMustBe == MustBe.NonResident && !header.Header.NonResident)
                 throw new InvalidAttributeException("Attribute can only be non-resident");
         }
 
