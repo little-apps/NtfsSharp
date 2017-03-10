@@ -1,0 +1,91 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<logicalClassDesignerModel xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm4="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm5="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/ModelStore" dslVersion="1.0.0.0" Id="39c31c31-0517-4df7-a81c-4bd651f78d3d" name="NtfsSharp" linkedPackageId="78eb76c2-001d-41e5-a3cf-a3c750819d9a" xmlns="http://schemas.microsoft.com/dsltools/LogicalClassDesigner">
+  <profileInstances>
+    <packageHasProfileInstances Id="7fbcc60e-ca54-4e62-9eee-5d2f2ff7533d">
+      <profileInstance Id="46d01a9a-b627-4954-a917-aa8e6bc9686b" name="StandardProfileL2">
+        <elementDefinition Id="e34d544e-0fea-4ed6-ac5e-1b74119ac791" />
+      </profileInstance>
+      <elementDefinition Id="0caec977-1f8c-4ba3-a7db-8cc9ad9cc73b" />
+    </packageHasProfileInstances>
+    <packageHasProfileInstances Id="23d6676b-8784-4d40-99f0-e4b3882aa5e5">
+      <profileInstance Id="1cdfe835-379f-464d-8146-a0966d787319" name="StandardProfileL3">
+        <elementDefinition Id="532ea607-fb19-44b8-8502-3351b05452be" />
+      </profileInstance>
+      <elementDefinition Id="29349502-908c-4fda-9054-c48619c59ed0" />
+    </packageHasProfileInstances>
+  </profileInstances>
+  <packagedElements>
+    <logicalClassDesignerModelHasTypes>
+      <class Id="c40c7ad3-879d-4bd6-b1b8-4777771edc1d" name="BootSector" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="fe546022-8464-4a8a-b688-27271ed0b532" />
+        <ownedAttributesInternal>
+          <property Id="a0f3e0dd-cc9d-4320-b1fb-317a5cf7d608" name="Attribute1" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+            <elementDefinition Id="89948ccc-8bc9-4412-b7ba-89587e619464" />
+          </property>
+        </ownedAttributesInternal>
+      </class>
+    </logicalClassDesignerModelHasTypes>
+    <logicalClassDesignerModelHasTypes>
+      <class Id="60eeda2b-e08a-4e01-acda-71ff81e9069e" name="FileRecord" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="c128e212-ca4f-4623-a749-b52a79d8f340" />
+      </class>
+    </logicalClassDesignerModelHasTypes>
+    <logicalClassDesignerModelHasTypes>
+      <class Id="06605116-f359-4a49-b392-d26b50e52aa6" name="Volume" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="cc4a31e1-d63a-48ee-85e7-879c4144e4c5" />
+        <targetEnds>
+          <association Id="bd16ddf3-3436-4a16-a031-fa41807f1622" isDerived="false" sourceEndRoleName="Volume" targetEndRoleName="BootSector" isLeaf="false" isAbstract="false">
+            <classMoniker Id="c40c7ad3-879d-4bd6-b1b8-4777771edc1d" LastKnownName="BootSector" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="adf2d062-0352-48f2-af05-35c69b2ef29c" name="Volume" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="b1606e9f-19d8-44f9-949d-c7cbeb00e386" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="dc6c2d7d-50b0-4b2d-97df-44b79cbf0c03" name="BootSector" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="1446e304-69b8-4d74-9a82-149b87b74dc3" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="ffd19747-d483-483a-954e-9335602fbb21" />
+          </association>
+          <association Id="98d7ecef-6e00-4ce0-9a58-dfe71fbf610e" isDerived="false" sourceEndRoleName="Volume" targetEndRoleName="FileRecord" isLeaf="false" isAbstract="false">
+            <classMoniker Id="60eeda2b-e08a-4e01-acda-71ff81e9069e" LastKnownName="FileRecord" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="549b835a-90c9-46ee-aadb-bc2cc30d2a2f" name="Volume" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="09f2f77d-de09-4f71-9f03-34a43dd05437" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="36b97059-7204-4778-b886-01940acf7458" name="FileRecord" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <lowerValueInternal>
+                    <literalString Id="b43c76dc-dffe-496a-80b3-6e7b36aae993" name="Lower" value="2">
+                      <elementDefinition Id="16fd39bd-2e62-42c8-a60d-1c1f62e89758" />
+                    </literalString>
+                  </lowerValueInternal>
+                  <upperValueInternal>
+                    <literalString Id="aa21e1b1-d367-4e3d-85ec-1b3cc2c56dc1" name="Upper" value="2">
+                      <elementDefinition Id="a13cf6e5-3dfc-4066-8f55-2b093bf576fd" />
+                    </literalString>
+                  </upperValueInternal>
+                  <elementDefinition Id="25aac8d7-c9b8-4ec1-8b17-9b30f47f14a7" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="a6a96a97-e8de-4d08-ab41-7e28157661f3" />
+          </association>
+        </targetEnds>
+        <ownedAttributesInternal>
+          <property Id="ee6fbbec-e10f-4973-a245-04e4aceef6bc" name="FileRecords" isLeaf="false" isStatic="false" isReadOnly="false" isUnique="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+            <elementDefinition Id="a1f12e3d-507f-4e6f-93da-6c611bd77050" />
+          </property>
+        </ownedAttributesInternal>
+      </class>
+    </logicalClassDesignerModelHasTypes>
+  </packagedElements>
+  <package Id="78eb76c2-001d-41e5-a3cf-a3c750819d9a" name="Model">
+    <elementDefinition Id="663456e1-3b26-4d66-88c8-9c9d3eedf7d7" />
+  </package>
+</logicalClassDesignerModel>
