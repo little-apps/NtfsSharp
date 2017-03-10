@@ -11,18 +11,29 @@ namespace NtfsSharp.FileRecords
     public class FileRecord
     {
         private uint _currentOffset;
-        private readonly byte[] Data;
-        public readonly FILE_RECORD_HEADER_NTFS Header;
+        private readonly byte[] _data;
+        public readonly Volume Volume;
+
+        public FILE_RECORD_HEADER_NTFS Header { get; private set; }
         public readonly List<AttributeBase> Attributes = new List<AttributeBase>();
 
-        public FileRecord(byte[] bytes)
+        public FileRecord(byte[] data, Volume vol)
         {
-            Data = bytes;
+            if (vol == null)
+                throw new ArgumentNullException(nameof(vol), "Volume cannot be null");
 
-            Header = bytes.ToStructure<FILE_RECORD_HEADER_NTFS>();
+            Volume = vol;
+            _data = data;
+
+            Parse();
+        }
+
+        private void Parse()
+        {
+            Header = _data.ToStructure<FILE_RECORD_HEADER_NTFS>();
             _currentOffset = (uint)Marshal.SizeOf<FILE_RECORD_HEADER_NTFS>();
 
-            if (!Header.Magic.SequenceEqual(new byte[] {0x46, 0x49, 0x4C, 0x45}))
+            if (!Header.Magic.SequenceEqual(new byte[] { 0x46, 0x49, 0x4C, 0x45 }))
                 throw new InvalidFileRecordException(nameof(Header));
 
             ReadAttributes();
@@ -30,10 +41,10 @@ namespace NtfsSharp.FileRecords
 
         private void ReadAttributes()
         {
-            while (_currentOffset < Data.Length && BitConverter.ToUInt32(Data, (int) _currentOffset) != 0xffffffff)
+            while (_currentOffset < _data.Length && BitConverter.ToUInt32(_data, (int) _currentOffset) != 0xffffffff)
             {
-                var newData = new byte[Data.Length - _currentOffset];
-                Array.Copy(Data, _currentOffset, newData, 0, newData.Length);
+                var newData = new byte[_data.Length - _currentOffset];
+                Array.Copy(_data, _currentOffset, newData, 0, newData.Length);
 
                 try
                 {

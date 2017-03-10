@@ -17,9 +17,9 @@ namespace NtfsSharp.FileRecords
 
             SectorsPerMFTRecord = volume.BytesPerFileRecord / volume.BytesPerSector;
 
-            var currentOffset = volume.LcnToOffset(Volume.BootSector.MFTLCN);
-
             var fileRecords = new FileRecord[_recordsToRead];
+
+            var currentOffset = volume.LcnToOffset(Volume.BootSector.MFTLCN);
 
             for (var i = 0; i < _recordsToRead; i++)
             {
@@ -34,7 +34,7 @@ namespace NtfsSharp.FileRecords
                     currentOffset += volume.BytesPerSector;
                 }
 
-                fileRecords[i] = new FileRecord(bytes);
+                fileRecords[i] = new FileRecord(bytes, volume);
             }
             
             Table = new ReadOnlyCollection<FileRecord>(fileRecords);
