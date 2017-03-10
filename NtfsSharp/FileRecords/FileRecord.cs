@@ -25,10 +25,10 @@ namespace NtfsSharp.FileRecords
             Volume = vol;
             _data = data;
 
-            Parse();
+            ParseHeader();
         }
 
-        private void Parse()
+        private void ParseHeader()
         {
             Header = _data.ToStructure<FILE_RECORD_HEADER_NTFS>();
             _currentOffset = (uint)Marshal.SizeOf<FILE_RECORD_HEADER_NTFS>();
