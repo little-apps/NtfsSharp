@@ -69,6 +69,7 @@
     <Compile Include="FileRecords\MasterFileTable.cs" />
     <Compile Include="Helpers\MarshalHelper.cs" />
     <Compile Include="Helpers\ReadableHelper.cs" />
+    <Compile Include="PInvoke\Enums.cs" />
     <Compile Include="PInvoke\Structs.cs" />
     <Compile Include="Volume.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
