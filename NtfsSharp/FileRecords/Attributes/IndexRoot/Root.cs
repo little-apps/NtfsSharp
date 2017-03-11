@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using NtfsSharp.Helpers;
 using NtfsSharp.FileRecords.Attributes.Base;
+using NtfsSharp.PInvoke;
 
 namespace NtfsSharp.FileRecords.Attributes.IndexRoot
 {
@@ -27,7 +28,7 @@ namespace NtfsSharp.FileRecords.Attributes.IndexRoot
                 FileNameEntries.Add(fileName);
                 CurrentOffset += fileName.Header.IndexEntryLength;
 
-                shouldContinue = !fileName.Header.Flags.HasFlag(FileNameIndex.Flags.IsLastEntry) &&
+                shouldContinue = !fileName.Header.Flags.HasFlag(Enums.IndexEntryFlags.IsLastEntry) &&
                                  fileName.Header.IndexEntryLength > 0 && CurrentOffset < CurrentOffset + Header.Header.Length;
             }
         }

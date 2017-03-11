@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿using System;
+using System.Runtime.InteropServices;
 
 namespace NtfsSharp.PInvoke
 {
@@ -12,6 +13,16 @@ namespace NtfsSharp.PInvoke
             
             public ulong FileRecordNumber => Data & 0xFFFFFFFFFFFF;
             public ulong SequenceNumber => Data & 0xFFFF000000000000;
+        }
+
+        public struct NTFS_ATTR_INDEX_ENTRY_HEADER
+        {
+            public readonly Structs.FILE_REFERENCE FileReference;
+            public readonly ushort IndexEntryLength;
+            public readonly ushort StreamLength;
+            public readonly Enums.IndexEntryFlags Flags;
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 3)]
+            public readonly byte[] Padding;
         }
 
         [StructLayout(LayoutKind.Sequential, Size = 1)]
