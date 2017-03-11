@@ -1,5 +1,4 @@
-﻿using System;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 
 namespace NtfsSharp.PInvoke
 {
@@ -17,7 +16,7 @@ namespace NtfsSharp.PInvoke
 
         public struct NTFS_ATTR_INDEX_ENTRY_HEADER
         {
-            public readonly Structs.FILE_REFERENCE FileReference;
+            public readonly FILE_REFERENCE FileReference;
             public readonly ushort IndexEntryLength;
             public readonly ushort StreamLength;
             public readonly Enums.IndexEntryFlags Flags;
