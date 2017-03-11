@@ -50,6 +50,7 @@
     <Compile Include="FileRecords\Attributes\Base\AttributeBodyBase.cs" />
     <Compile Include="FileRecords\Attributes\Base\AttributeHeader.cs" />
     <Compile Include="FileRecords\Attributes\Base\NonResident\DataBlock.cs" />
+    <Compile Include="FileRecords\Attributes\BitmapAttribute.cs" />
     <Compile Include="FileRecords\Attributes\FileNameAttribute.cs" />
     <Compile Include="FileRecords\Attributes\Base\NonResident\NonResident.cs" />
     <Compile Include="FileRecords\Attributes\IndexRoot\FileNameIndex.cs" />
