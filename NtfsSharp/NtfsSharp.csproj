@@ -58,6 +58,7 @@
     <Compile Include="FileRecords\Attributes\IndexAllocation\IndexAllocation.cs" />
     <Compile Include="FileRecords\Attributes\IndexRoot\FileNameIndex.cs" />
     <Compile Include="FileRecords\Attributes\IndexRoot\Root.cs" />
+    <Compile Include="FileRecords\Attributes\LoggedUtilityStream.cs" />
     <Compile Include="FileRecords\Attributes\ObjectId.cs" />
     <Compile Include="FileRecords\Attributes\Base\Resident.cs" />
     <Compile Include="FileRecords\Attributes\SecurityDescriptor.cs" />

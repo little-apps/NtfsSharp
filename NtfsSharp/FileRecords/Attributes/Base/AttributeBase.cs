@@ -55,6 +55,9 @@ namespace NtfsSharp.FileRecords.Attributes.Base
                 case NTFS_ATTR_TYPE.INDEX_ROOT:
                     return new Root(header);
 
+                case NTFS_ATTR_TYPE.LOGGED_UTILITY_STREAM:
+                    return new LoggedUtilityStream(header);
+
                 case NTFS_ATTR_TYPE.DATA:
 
                 case NTFS_ATTR_TYPE.OBJECT_ID:
