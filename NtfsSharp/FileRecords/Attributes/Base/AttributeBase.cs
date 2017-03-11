@@ -63,6 +63,9 @@ namespace NtfsSharp.FileRecords.Attributes.Base
                 case NTFS_ATTR_TYPE.SECURITY_DESCRIPTOR:
                     return new SecurityDescriptor(header);
 
+                case NTFS_ATTR_TYPE.BITMAP:
+                    return new BitmapAttribute(header);
+
                 default:
                     throw new Exceptions.InvalidAttributeException("Attribute type is invalid");
             }
