@@ -1,4 +1,6 @@
-﻿using NtfsSharp.FileRecords.Attributes.IndexRoot;
+﻿using System;
+using System.Collections.Generic;
+using NtfsSharp.FileRecords.Attributes.IndexRoot;
 using NtfsSharp.Helpers;
 using static NtfsSharp.FileRecords.Attributes.Base.AttributeHeader;
 
@@ -9,13 +11,39 @@ namespace NtfsSharp.FileRecords.Attributes.Base
         
         public uint CurrentOffset { get; protected set; }
 
+        private static Dictionary<NTFS_ATTR_TYPE, Type> _attributes = new Dictionary<NTFS_ATTR_TYPE, Type>
+        {
+            {NTFS_ATTR_TYPE.STANDARD_INFORMATION, typeof(StandardInformation)},
+
+            {NTFS_ATTR_TYPE.FILE_NAME, typeof(FileNameAttribute)},
+
+            {NTFS_ATTR_TYPE.VOLUME_NAME, typeof(VolumeName)},
+
+            {NTFS_ATTR_TYPE.VOLUME_INFORMATION, typeof(VolumeInformation)},
+
+            {NTFS_ATTR_TYPE.INDEX_ROOT, typeof(Root)},
+
+            {NTFS_ATTR_TYPE.LOGGED_UTILITY_STREAM, typeof(LoggedUtilityStream)},
+
+            {NTFS_ATTR_TYPE.DATA, null},
+
+            {NTFS_ATTR_TYPE.OBJECT_ID, typeof(ObjectId)},
+
+            {NTFS_ATTR_TYPE.SECURITY_DESCRIPTOR, typeof(SecurityDescriptor)},
+
+            {NTFS_ATTR_TYPE.BITMAP, typeof(BitmapAttribute)},
+
+            {NTFS_ATTR_TYPE.INDEX_ALLOCATION, typeof(IndexAllocation.IndexAllocation)},
+
+            {NTFS_ATTR_TYPE.ATTRIBUTE_LIST, typeof(AttributeList)},
+
+        };
+
         protected AttributeBase()
         {
 
         }
-
-
-
+        
         /// <summary>
         /// Creates attribute from bytes
         /// </summary>
@@ -36,44 +64,19 @@ namespace NtfsSharp.FileRecords.Attributes.Base
             return ReadBody(attrHeader);
         }
 
+        public static Type GetClassTypeFromType(NTFS_ATTR_TYPE type)
+        {
+            if (!_attributes.ContainsKey(type))
+                throw new Exceptions.InvalidAttributeException("Attribute type is invalid");
+
+            return _attributes[type];
+        }
+
         public static AttributeBodyBase ReadBody(AttributeHeader header)
         {
-            switch (header.Header.Type)
-            {
-                case NTFS_ATTR_TYPE.STANDARD_INFORMATION:
-                    return new StandardInformation(header);
+            var type = GetClassTypeFromType(header.Header.Type);
 
-                case NTFS_ATTR_TYPE.FILE_NAME:
-                    return new FileNameAttribute(header);
-
-                case NTFS_ATTR_TYPE.VOLUME_NAME:
-                    return new VolumeName(header);
-
-                case NTFS_ATTR_TYPE.VOLUME_INFORMATION:
-                    return new VolumeInformation(header);
-
-                case NTFS_ATTR_TYPE.INDEX_ROOT:
-                    return new Root(header);
-
-                case NTFS_ATTR_TYPE.LOGGED_UTILITY_STREAM:
-                    return new LoggedUtilityStream(header);
-
-                case NTFS_ATTR_TYPE.DATA:
-
-                case NTFS_ATTR_TYPE.OBJECT_ID:
-                    return new ObjectId(header);
-
-                case NTFS_ATTR_TYPE.SECURITY_DESCRIPTOR:
-                    return new SecurityDescriptor(header);
-
-                case NTFS_ATTR_TYPE.BITMAP:
-                    return new BitmapAttribute(header);
-
-                case NTFS_ATTR_TYPE.INDEX_ALLOCATION:
-                    return new IndexAllocation.IndexAllocation(header);
-
-                default:
-                    throw new Exceptions.InvalidAttributeException("Attribute type is invalid");
+            return (AttributeBodyBase) Activator.CreateInstance(type, header);
             }
         }
     }
