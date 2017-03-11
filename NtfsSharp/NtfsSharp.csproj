@@ -53,6 +53,9 @@
     <Compile Include="FileRecords\Attributes\BitmapAttribute.cs" />
     <Compile Include="FileRecords\Attributes\FileNameAttribute.cs" />
     <Compile Include="FileRecords\Attributes\Base\NonResident\NonResident.cs" />
+    <Compile Include="FileRecords\Attributes\IndexAllocation\FileIndex.cs" />
+    <Compile Include="FileRecords\Attributes\IndexAllocation\FileNameEntry.cs" />
+    <Compile Include="FileRecords\Attributes\IndexAllocation\IndexAllocation.cs" />
     <Compile Include="FileRecords\Attributes\IndexRoot\FileNameIndex.cs" />
     <Compile Include="FileRecords\Attributes\IndexRoot\Root.cs" />
     <Compile Include="FileRecords\Attributes\ObjectId.cs" />

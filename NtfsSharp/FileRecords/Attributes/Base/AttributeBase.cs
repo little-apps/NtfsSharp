@@ -66,6 +66,9 @@ namespace NtfsSharp.FileRecords.Attributes.Base
                 case NTFS_ATTR_TYPE.BITMAP:
                     return new BitmapAttribute(header);
 
+                case NTFS_ATTR_TYPE.INDEX_ALLOCATION:
+                    return new IndexAllocation.IndexAllocation(header);
+
                 default:
                     throw new Exceptions.InvalidAttributeException("Attribute type is invalid");
             }
