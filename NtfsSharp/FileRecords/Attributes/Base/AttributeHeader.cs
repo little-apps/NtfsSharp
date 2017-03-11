@@ -56,7 +56,7 @@ namespace NtfsSharp.FileRecords.Attributes.Base
             if (Header.NameLength <= 0)
                 return;
 
-            Name = Encoding.Unicode.GetString(GetBytesFromCurrentOffset(Header.Length * 2));
+            Name = Encoding.Unicode.GetString(GetBytesFromCurrentOffset((uint) (Header.NameLength * 2)));
             CurrentOffset += (uint) Header.NameLength * 2;
         }
 
