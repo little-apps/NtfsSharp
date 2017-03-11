@@ -14,24 +14,24 @@ namespace NtfsSharp.FileRecords.Attributes.Base
 
         }
 
-        
+
 
         /// <summary>
         /// Creates attribute from bytes
         /// </summary>
         /// <param name="bytes">Bytes of data</param>
-        /// <param name="volume">Volume holding attribute</param>
+        /// <param name="fileRecord">File record holding attribute</param>
         /// <returns>AttributesBase containing resident or non-resident data</returns>
-        public static AttributeBodyBase GetAttribute(byte[] bytes, Volume volume)
+        public static AttributeBodyBase GetAttribute(byte[] bytes, FileRecord fileRecord)
         {
             var header = bytes.ToStructure<NTFS_ATTRIBUTE_HEADER>();
 
             AttributeHeader attrHeader;
 
             if (header.NonResident)
-                attrHeader = new NonResident.NonResident(header, bytes, volume);
+                attrHeader = new NonResident.NonResident(header, bytes, fileRecord);
             else
-                attrHeader = new Resident(header, bytes);
+                attrHeader = new Resident(header, bytes, fileRecord);
             
             return ReadBody(attrHeader);
         }

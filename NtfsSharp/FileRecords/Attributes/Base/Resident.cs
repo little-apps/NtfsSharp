@@ -25,7 +25,7 @@ namespace NtfsSharp.FileRecords.Attributes.Base
         }
 
 
-        public Resident(NTFS_ATTRIBUTE_HEADER header, byte[] data) : base(header, data)
+        public Resident(NTFS_ATTRIBUTE_HEADER header, byte[] data, FileRecord fileRecord) : base(header, data, fileRecord)
         {
             SubHeader = data.ToStructure<ResidentAttribute>(CurrentOffset);
             CurrentOffset += HeaderSize;

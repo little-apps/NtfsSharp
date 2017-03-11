@@ -21,6 +21,8 @@ namespace NtfsSharp.FileRecords.Attributes.Base
         /// </summary>
         public readonly byte[] Bytes;
 
+        public readonly FileRecord FileRecord;
+
         public NTFS_ATTRIBUTE_HEADER Header { get; private set; }
         public string Name { get; private set; }
 
@@ -29,11 +31,16 @@ namespace NtfsSharp.FileRecords.Attributes.Base
         /// </summary>
         /// <param name="header">Header of attribute</param>
         /// <param name="data">Bytes of data (including header and body)</param>
-        protected AttributeHeader(NTFS_ATTRIBUTE_HEADER header, byte[] data)
+        /// <param name="fileRecord">File record containing attribute</param>
+        protected AttributeHeader(NTFS_ATTRIBUTE_HEADER header, byte[] data, FileRecord fileRecord)
         {
+            if (fileRecord == null)
+                throw new ArgumentNullException(nameof(fileRecord));
+
             Header = header;
             CurrentOffset += HeaderSize;
             Bytes = data;
+            FileRecord = fileRecord;
         }
 
         protected byte[] GetBytesFromCurrentOffset(uint length)

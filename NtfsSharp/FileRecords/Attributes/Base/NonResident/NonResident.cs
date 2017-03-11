@@ -14,19 +14,12 @@ namespace NtfsSharp.FileRecords.Attributes.Base.NonResident
 
         public List<DataBlock> DataBlocks = new List<DataBlock>();
 
-        private readonly Volume _volume;
-
         public override bool ReadData => false;
 
         public override byte[] BodyData => GetAllDataAsBytes();
 
-        public NonResident(NTFS_ATTRIBUTE_HEADER header, byte[] data, Volume volume) : base(header, data)
+        public NonResident(NTFS_ATTRIBUTE_HEADER header, byte[] data, FileRecord fileRecord) : base(header, data, fileRecord)
         {
-            if (volume == null)
-                throw new ArgumentNullException(nameof(volume));
-
-            _volume = volume;
-
             SubHeader = data.ToStructure<NonResidentAttribute>(CurrentOffset);
             CurrentOffset += HeaderSize;
 
@@ -122,7 +115,7 @@ namespace NtfsSharp.FileRecords.Attributes.Base.NonResident
 
             for (ulong i = 0; i < dataBlock.RunLength; i++)
             {
-                yield return _volume.ReadLcn(dataBlock.LcnOffset + i);
+                yield return FileRecord.Volume.ReadLcn(dataBlock.LcnOffset + i);
             }
         }
 
@@ -131,13 +124,13 @@ namespace NtfsSharp.FileRecords.Attributes.Base.NonResident
             if (!DataBlocks.Contains(dataBlock))
                 throw new ArgumentOutOfRangeException(nameof(dataBlock), "Data block is not part of this file record");
 
-            var data = new byte[dataBlock.RunLength * _volume.BytesPerSector * _volume.SectorsPerCluster];
+            var data = new byte[dataBlock.RunLength * FileRecord.Volume.BytesPerSector * FileRecord.Volume.SectorsPerCluster];
 
             for (long i = 0, currentLcn = dataBlock.LcnOffset; i < dataBlock.RunLength; i++, currentLcn++)
             {
-                var cluster = _volume.ReadLcn((ulong)currentLcn);
+                var cluster = FileRecord.Volume.ReadLcn((ulong)currentLcn);
 
-                Array.Copy(cluster.Data, 0, data, i * _volume.BytesPerSector, cluster.Data.Length);
+                Array.Copy(cluster.Data, 0, data, i * FileRecord.Volume.BytesPerSector, cluster.Data.Length);
             }
 
             return data;
