@@ -37,8 +37,8 @@ namespace NtfsSharp.FileRecords.Attributes.Base
         [Flags]
         public enum MustBe
         {
-            Resident,
-            NonResident
+            Resident = 1 << 0,
+            NonResident = 1 << 1
         }
     }
 }
