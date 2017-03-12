@@ -35,7 +35,7 @@ namespace NtfsSharp.FileRecords.Attributes.Base
 
             {NTFS_ATTR_TYPE.INDEX_ALLOCATION, typeof(IndexAllocation.IndexAllocation)},
 
-            {NTFS_ATTR_TYPE.ATTRIBUTE_LIST, typeof(AttributeList)},
+            {NTFS_ATTR_TYPE.ATTRIBUTE_LIST, typeof(AttributeList.AttributeList)},
 
         };
 
