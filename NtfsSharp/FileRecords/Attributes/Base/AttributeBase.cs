@@ -77,7 +77,6 @@ namespace NtfsSharp.FileRecords.Attributes.Base
             var type = GetClassTypeFromType(header.Header.Type);
 
             return (AttributeBodyBase) Activator.CreateInstance(type, header);
-            }
         }
     }
 }
