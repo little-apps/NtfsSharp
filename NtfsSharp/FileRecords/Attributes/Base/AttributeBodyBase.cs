@@ -21,17 +21,13 @@ namespace NtfsSharp.FileRecords.Attributes.Base
         {
             Header = header;
             CurrentOffset = 0;
-
-            if (header.ReadData)
-                Body = header.BodyData;
-
-            if (TypeMustBe.HasFlag(MustBe.Resident) && TypeMustBe.HasFlag(MustBe.NonResident))
-                return;
-
+            
             if (TypeMustBe == MustBe.Resident && header.Header.NonResident)
                 throw new InvalidAttributeException("Attribute can only be resident");
             if (TypeMustBe == MustBe.NonResident && !header.Header.NonResident)
                 throw new InvalidAttributeException("Attribute can only be non-resident");
+
+            Body = header.ReadBody();
         }
 
         protected byte[] GetBytesFromCurrentOffset(uint length)

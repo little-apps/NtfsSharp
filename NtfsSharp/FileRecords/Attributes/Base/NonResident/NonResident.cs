@@ -14,10 +14,6 @@ namespace NtfsSharp.FileRecords.Attributes.Base.NonResident
 
         public List<DataBlock> DataBlocks = new List<DataBlock>();
 
-        public override bool ReadData => false;
-
-        public override byte[] BodyData => GetAllDataAsBytes();
-
         public NonResident(NTFS_ATTRIBUTE_HEADER header, byte[] data, FileRecord fileRecord) : base(header, data, fileRecord)
         {
             SubHeader = data.ToStructure<NonResidentAttribute>(CurrentOffset);
@@ -136,9 +132,9 @@ namespace NtfsSharp.FileRecords.Attributes.Base.NonResident
             return data;
         }
 
-        protected override byte[] ReadBody()
+        public override byte[] ReadBody()
         {
-            throw new NotImplementedException();
+            return GetAllDataAsBytes();
         }
 
         public struct NonResidentAttribute

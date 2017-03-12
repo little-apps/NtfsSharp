@@ -10,21 +10,6 @@ namespace NtfsSharp.FileRecords.Attributes.Base
 
         public ResidentAttribute SubHeader { get; private set; }
 
-        public override bool ReadData => true;
-
-        public override byte[] BodyData
-        {
-            get
-            {
-                var body = new byte[Bytes.Length - CurrentOffset];
-
-                Array.Copy(Bytes, CurrentOffset, body, 0, body.Length);
-
-                return body;
-            }
-        }
-
-
         public Resident(NTFS_ATTRIBUTE_HEADER header, byte[] data, FileRecord fileRecord) : base(header, data, fileRecord)
         {
             SubHeader = data.ToStructure<ResidentAttribute>(CurrentOffset);
@@ -41,9 +26,13 @@ namespace NtfsSharp.FileRecords.Attributes.Base
             public readonly byte Padding;
         }
 
-        protected override byte[] ReadBody()
+        public override byte[] ReadBody()
         {
-            throw new NotImplementedException();
+            var body = new byte[Bytes.Length - CurrentOffset];
+
+            Array.Copy(Bytes, CurrentOffset, body, 0, body.Length);
+
+            return body;
         }
     }
 }

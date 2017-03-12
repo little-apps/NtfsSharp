@@ -9,12 +9,7 @@ namespace NtfsSharp.FileRecords.Attributes.Base
     {
         public static uint HeaderSize => (uint)Marshal.SizeOf<NTFS_ATTRIBUTE_HEADER>();
 
-        /// <summary>
-        /// If true, the body data is read when the object is instantiated
-        /// </summary>
-        public abstract bool ReadData { get; }
-
-        public abstract byte[] BodyData { get; }
+        public byte[] BodyData { get; protected set; }
 
         /// <summary>
         /// Bytes (header and body) for attribute
@@ -60,7 +55,7 @@ namespace NtfsSharp.FileRecords.Attributes.Base
             CurrentOffset += (uint) Header.NameLength * 2;
         }
 
-        protected abstract byte[] ReadBody();
+        public abstract byte[] ReadBody();
         
         public enum NTFS_ATTR_TYPE : uint
         {
