@@ -14,29 +14,17 @@ namespace NtfsSharp.FileRecords.Attributes.Base
         private static Dictionary<NTFS_ATTR_TYPE, Type> _attributes = new Dictionary<NTFS_ATTR_TYPE, Type>
         {
             {NTFS_ATTR_TYPE.STANDARD_INFORMATION, typeof(StandardInformation)},
-
             {NTFS_ATTR_TYPE.FILE_NAME, typeof(FileNameAttribute)},
-
             {NTFS_ATTR_TYPE.VOLUME_NAME, typeof(VolumeName)},
-
             {NTFS_ATTR_TYPE.VOLUME_INFORMATION, typeof(VolumeInformation)},
-
             {NTFS_ATTR_TYPE.INDEX_ROOT, typeof(Root)},
-
             {NTFS_ATTR_TYPE.LOGGED_UTILITY_STREAM, typeof(LoggedUtilityStream)},
-
             {NTFS_ATTR_TYPE.DATA, typeof(DataAttribute)},
-
             {NTFS_ATTR_TYPE.OBJECT_ID, typeof(ObjectId)},
-
             {NTFS_ATTR_TYPE.SECURITY_DESCRIPTOR, typeof(SecurityDescriptor)},
-
             {NTFS_ATTR_TYPE.BITMAP, typeof(BitmapAttribute)},
-
             {NTFS_ATTR_TYPE.INDEX_ALLOCATION, typeof(IndexAllocation.IndexAllocation)},
-
             {NTFS_ATTR_TYPE.ATTRIBUTE_LIST, typeof(AttributeList.AttributeList)},
-
         };
 
         protected AttributeBase()
