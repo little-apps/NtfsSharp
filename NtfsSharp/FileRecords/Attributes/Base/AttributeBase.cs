@@ -25,7 +25,7 @@ namespace NtfsSharp.FileRecords.Attributes.Base
 
             {NTFS_ATTR_TYPE.LOGGED_UTILITY_STREAM, typeof(LoggedUtilityStream)},
 
-            {NTFS_ATTR_TYPE.DATA, null},
+            {NTFS_ATTR_TYPE.DATA, typeof(DataAttribute)},
 
             {NTFS_ATTR_TYPE.OBJECT_ID, typeof(ObjectId)},
 
