@@ -46,14 +46,16 @@
     <Compile Include="Exceptions\InvalidAttributeException.cs" />
     <Compile Include="Exceptions\InvalidBootSectorException.cs" />
     <Compile Include="Exceptions\InvalidFileRecordException.cs" />
-    <Compile Include="FileRecords\Attributes\AttributeListItem.cs" />
-    <Compile Include="FileRecords\Attributes\AttributeList.cs" />
+    <Compile Include="FileRecords\Attributes\AttributeList\AttributeListItem.cs" />
+    <Compile Include="FileRecords\Attributes\AttributeList\AttributeList.cs" />
     <Compile Include="FileRecords\Attributes\Base\AttributeBase.cs" />
     <Compile Include="FileRecords\Attributes\Base\AttributeBodyBase.cs" />
     <Compile Include="FileRecords\Attributes\Base\AttributeHeader.cs" />
     <Compile Include="FileRecords\Attributes\Base\NonResident\DataBlock.cs" />
     <Compile Include="FileRecords\Attributes\BitmapAttribute.cs" />
-    <Compile Include="FileRecords\Attributes\Data.cs" />
+    <Compile Include="FileRecords\Attributes\DataAttribute.cs" />
+    <Compile Include="FileRecords\Attributes\ExtendedAttribute.cs" />
+    <Compile Include="FileRecords\Attributes\ExtendedAttributeInformation.cs" />
     <Compile Include="FileRecords\Attributes\FileNameAttribute.cs" />
     <Compile Include="FileRecords\Attributes\Base\NonResident\NonResident.cs" />
     <Compile Include="FileRecords\Attributes\IndexAllocation\FileIndex.cs" />
@@ -64,6 +66,7 @@
     <Compile Include="FileRecords\Attributes\LoggedUtilityStream.cs" />
     <Compile Include="FileRecords\Attributes\ObjectId.cs" />
     <Compile Include="FileRecords\Attributes\Base\Resident.cs" />
+    <Compile Include="FileRecords\Attributes\ReparsePoint.cs" />
     <Compile Include="FileRecords\Attributes\SecurityDescriptor.cs" />
     <Compile Include="FileRecords\Attributes\Shared\FileName.cs" />
     <Compile Include="FileRecords\Attributes\StandardInformation.cs" />
