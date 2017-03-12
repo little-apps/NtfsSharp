@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace NtfsSharp.FileRecords
@@ -9,7 +10,7 @@ namespace NtfsSharp.FileRecords
 
         private readonly uint SectorsPerMFTRecord;
         private readonly Volume Volume;
-        public readonly ReadOnlyCollection<FileRecord> Table;
+        public readonly ReadOnlyDictionary<uint, FileRecord> Table;
 
         public MasterFileTable(Volume volume)
         {
@@ -17,7 +18,7 @@ namespace NtfsSharp.FileRecords
 
             SectorsPerMFTRecord = volume.BytesPerFileRecord / volume.BytesPerSector;
 
-            var fileRecords = new FileRecord[_recordsToRead];
+            var fileRecords = new Dictionary<uint, FileRecord>((int) _recordsToRead);
 
             var currentOffset = volume.LcnToOffset(Volume.BootSector.MFTLCN);
 
@@ -34,10 +35,12 @@ namespace NtfsSharp.FileRecords
                     currentOffset += volume.BytesPerSector;
                 }
 
-                fileRecords[i] = new FileRecord(bytes, volume);
+                var fileRecord = new FileRecord(bytes, volume);
+
+                fileRecords.Add(fileRecord.Header.MFTRecordNumber, fileRecord);
             }
-            
-            Table = new ReadOnlyCollection<FileRecord>(fileRecords);
+
+            Table = new ReadOnlyDictionary<uint, FileRecord>(fileRecords);
         }
     }
 }
