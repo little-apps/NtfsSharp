@@ -6,8 +6,6 @@ namespace NtfsSharp.FileRecords.Attributes.Base
 {
     public abstract class AttributeBodyBase : AttributeBase
     {
-        public MustBe TypeMustBe { get; } = MustBe.Resident | MustBe.NonResident;
-
         public readonly AttributeHeader Header;
 
         public uint OffsetWithHeader => CurrentOffset + Header.Header.Length;
@@ -17,17 +15,18 @@ namespace NtfsSharp.FileRecords.Attributes.Base
         /// </summary>
         public readonly byte[] Body;
 
-        protected AttributeBodyBase(AttributeHeader header)
+        protected AttributeBodyBase(AttributeHeader header, MustBe mustBe = MustBe.Resident | MustBe.NonResident, bool readBody = true)
         {
             Header = header;
             CurrentOffset = 0;
             
-            if (TypeMustBe == MustBe.Resident && header.Header.NonResident)
+            if (mustBe == MustBe.Resident && header.Header.NonResident)
                 throw new InvalidAttributeException("Attribute can only be resident");
-            if (TypeMustBe == MustBe.NonResident && !header.Header.NonResident)
+            if (mustBe == MustBe.NonResident && !header.Header.NonResident)
                 throw new InvalidAttributeException("Attribute can only be non-resident");
 
-            Body = header.ReadBody();
+            if (readBody)
+                Body = header.ReadBody();
         }
 
         protected byte[] GetBytesFromCurrentOffset(uint length)

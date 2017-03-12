@@ -7,11 +7,9 @@ namespace NtfsSharp.FileRecords.Attributes.IndexAllocation
 {
     public class IndexAllocation : AttributeBodyBase
     {
-        public MustBe TypeMustBe { get; } = MustBe.NonResident;
-
         public readonly List<FileIndex> FileIndices = new List<FileIndex>();
 
-        public IndexAllocation(AttributeHeader header) : base(header)
+        public IndexAllocation(AttributeHeader header) : base(header, MustBe.NonResident)
         {
             if (!header.FileRecord.Header.Flags.HasFlag(FileRecord.Flags.IsDirectory))
                 return;

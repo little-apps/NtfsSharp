@@ -5,11 +5,9 @@ namespace NtfsSharp.FileRecords.Attributes
 {
     public class VolumeName : AttributeBodyBase
     {
-        public new MustBe TypeMustBe => MustBe.Resident;
-
         public readonly string Name;
 
-        public VolumeName(AttributeHeader header) : base(header)
+        public VolumeName(AttributeHeader header) : base(header, MustBe.Resident)
         {
             var residentHeader = header as Resident;
 
