@@ -22,6 +22,8 @@ namespace NtfsSharp.FileRecords.Attributes.AttributeList
                         attributeList.Header.BodyData.GetBytesAtOffset(attributeList.CurrentOffset + Header.NameOffset,
                             (uint) (Header.NameLength * 2)));
             }
+
+            // TODO: Parse file record if FileRecordNumber is different than parent
         }
 
         public struct NTFS_ATTRIBUTE_LIST_HEADER
