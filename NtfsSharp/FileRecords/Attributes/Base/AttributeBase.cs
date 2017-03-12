@@ -11,7 +11,7 @@ namespace NtfsSharp.FileRecords.Attributes.Base
         
         public uint CurrentOffset { get; protected set; }
 
-        private static Dictionary<NTFS_ATTR_TYPE, Type> _attributes = new Dictionary<NTFS_ATTR_TYPE, Type>
+        private static readonly Dictionary<NTFS_ATTR_TYPE, Type> Attributes = new Dictionary<NTFS_ATTR_TYPE, Type>
         {
             {NTFS_ATTR_TYPE.STANDARD_INFORMATION, typeof(StandardInformation)},
             {NTFS_ATTR_TYPE.FILE_NAME, typeof(FileNameAttribute)},
@@ -54,10 +54,10 @@ namespace NtfsSharp.FileRecords.Attributes.Base
 
         public static Type GetClassTypeFromType(NTFS_ATTR_TYPE type)
         {
-            if (!_attributes.ContainsKey(type))
+            if (!Attributes.ContainsKey(type))
                 throw new Exceptions.InvalidAttributeException("Attribute type is invalid");
 
-            return _attributes[type];
+            return Attributes[type];
         }
 
         public static AttributeBodyBase ReadBody(AttributeHeader header)
