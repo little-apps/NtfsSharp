@@ -19,6 +19,7 @@ namespace NtfsSharp.FileRecords.Attributes.AttributeList
         public readonly AttributeBase ChildAttribute;
 
         public AttributeListItem(uint currentOffset, AttributeList attributeList)
+        public AttributeListItem(AttributeList attributeList)
         {
             Header = attributeList.Body.ToStructure<NTFS_ATTRIBUTE_LIST_HEADER>(attributeList.CurrentOffset);
 
