@@ -28,6 +28,20 @@ namespace NtfsSharp.FileRecords
             ParseHeader();
         }
 
+        public FileRecord(ulong recordNum, Volume vol)
+        {
+            if (vol == null)
+                throw new ArgumentNullException(nameof(vol), "Volume cannot be null");
+
+            vol.Disk.Move(vol.LcnToOffset(vol.BootSector.MFTLCN) + vol.BytesPerFileRecord * recordNum);
+            var data = vol.Disk.ReadFile(vol.BytesPerFileRecord);
+
+            Volume = vol;
+            _data = data;
+
+            ParseHeader();
+        }
+
         private void ParseHeader()
         {
             Header = _data.ToStructure<FILE_RECORD_HEADER_NTFS>();
