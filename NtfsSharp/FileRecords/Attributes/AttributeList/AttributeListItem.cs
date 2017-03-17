@@ -1,5 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 using System.Text;
+using NtfsSharp.Exceptions;
 using NtfsSharp.FileRecords.Attributes.Base;
 using NtfsSharp.Helpers;
 using NtfsSharp.PInvoke;
@@ -10,6 +11,12 @@ namespace NtfsSharp.FileRecords.Attributes.AttributeList
     {
         public readonly NTFS_ATTRIBUTE_LIST_HEADER Header;
         public readonly string Name;
+
+        /// <summary>
+        /// Attribute located in child file record
+        /// </summary>
+        /// <remarks>Can be null if there is attribute is located in this file record or it wasn't found</remarks>
+        public readonly AttributeBase ChildAttribute;
 
         public AttributeListItem(uint currentOffset, AttributeList attributeList)
         {
@@ -24,6 +31,21 @@ namespace NtfsSharp.FileRecords.Attributes.AttributeList
             }
 
             // TODO: Parse file record if FileRecordNumber is different than parent
+            var parentFileRecord = attributeList.Header.FileRecord;
+
+            if (parentFileRecord.Header.MFTRecordNumber == Header.BaseFileReference.FileRecordNumber)
+                return;
+
+            var fileRecord = new FileRecord(Header.BaseFileReference.FileRecordNumber,
+                attributeList.Header.FileRecord.Volume);
+
+            if (!fileRecord.Header.Flags.HasFlag(FileRecord.Flags.InUse))
+                throw new InvalidFileRecordException(nameof(FileRecord.Flags), "File record is marked as free", fileRecord);
+
+            if (fileRecord.Header.FileReference == 0)
+                throw new InvalidFileRecordException(nameof(fileRecord.Header.FileReference), "Not a child record", fileRecord);
+
+            ChildAttribute = fileRecord.FindAttribute(Header.AttributeId, Header.Type, attributeList.Header.Name);
         }
 
         public struct NTFS_ATTRIBUTE_LIST_HEADER
