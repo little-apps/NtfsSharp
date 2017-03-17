@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using System.Text;
+﻿using System.Collections.Generic;
 using NtfsSharp.FileRecords.Attributes.Base;
-using NtfsSharp.Helpers;
-using NtfsSharp.PInvoke;
 
 namespace NtfsSharp.FileRecords.Attributes.AttributeList
 {
