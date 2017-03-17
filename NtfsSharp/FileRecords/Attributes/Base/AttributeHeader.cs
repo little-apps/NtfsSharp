@@ -9,8 +9,6 @@ namespace NtfsSharp.FileRecords.Attributes.Base
     {
         public static uint HeaderSize => (uint)Marshal.SizeOf<NTFS_ATTRIBUTE_HEADER>();
 
-        public byte[] BodyData { get; protected set; }
-
         /// <summary>
         /// Bytes (header and body) for attribute
         /// </summary>

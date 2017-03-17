@@ -13,7 +13,7 @@ namespace NtfsSharp.FileRecords.Attributes
 
         public BitmapAttribute(AttributeHeader header) : base(header)
         {
-            Bitmap = new BitArray(header.BodyData);
+            Bitmap = new BitArray(Body);
         }
     }
 }

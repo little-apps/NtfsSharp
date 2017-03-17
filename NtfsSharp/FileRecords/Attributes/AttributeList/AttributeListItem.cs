@@ -13,13 +13,13 @@ namespace NtfsSharp.FileRecords.Attributes.AttributeList
 
         public AttributeListItem(uint currentOffset, AttributeList attributeList)
         {
-            Header = attributeList.Header.BodyData.ToStructure<NTFS_ATTRIBUTE_LIST_HEADER>(attributeList.CurrentOffset);
+            Header = attributeList.Body.ToStructure<NTFS_ATTRIBUTE_LIST_HEADER>(attributeList.CurrentOffset);
 
             if (Header.NameLength > 0)
             {
                 Name =
                     Encoding.Unicode.GetString(
-                        attributeList.Header.BodyData.GetBytesAtOffset(attributeList.CurrentOffset + Header.NameOffset,
+                        attributeList.Body.GetBytesAtOffset(attributeList.CurrentOffset + Header.NameOffset,
                             (uint) (Header.NameLength * 2)));
             }
 
