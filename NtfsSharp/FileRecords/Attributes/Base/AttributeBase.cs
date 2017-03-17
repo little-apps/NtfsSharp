@@ -40,7 +40,7 @@ namespace NtfsSharp.FileRecords.Attributes.Base
         /// <param name="bytes">Bytes of data</param>
         /// <param name="fileRecord">File record holding attribute</param>
         /// <returns>AttributesBase containing resident or non-resident data</returns>
-        public static AttributeBodyBase GetAttribute(byte[] bytes, FileRecord fileRecord)
+        public static AttributeHeader GetAttribute(byte[] bytes, FileRecord fileRecord)
         {
             var header = bytes.ToStructure<NTFS_ATTRIBUTE_HEADER>();
 
@@ -51,7 +51,7 @@ namespace NtfsSharp.FileRecords.Attributes.Base
             else
                 attrHeader = new Resident(header, bytes, fileRecord);
             
-            return ReadBody(attrHeader);
+            return attrHeader;
         }
 
         public static Type GetClassTypeFromType(NTFS_ATTR_TYPE type)
