@@ -26,7 +26,6 @@ namespace NtfsSharp.FileRecords
             _data = data;
 
             ParseHeader();
-            ReadAttributes();
         }
 
         private void ParseHeader()
@@ -38,7 +37,7 @@ namespace NtfsSharp.FileRecords
                 throw new InvalidFileRecordException(nameof(Header));
         }
 
-        private void ReadAttributes()
+        public void ReadAttributes()
         {
             while (_currentOffset < _data.Length && BitConverter.ToUInt32(_data, (int) _currentOffset) != 0xffffffff)
             {

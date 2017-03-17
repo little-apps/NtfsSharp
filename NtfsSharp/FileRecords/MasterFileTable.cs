@@ -36,6 +36,7 @@ namespace NtfsSharp.FileRecords
                 }
 
                 var fileRecord = new FileRecord(bytes, volume);
+                fileRecord.ReadAttributes();
 
                 fileRecords.Add(fileRecord.Header.MFTRecordNumber, fileRecord);
             }
