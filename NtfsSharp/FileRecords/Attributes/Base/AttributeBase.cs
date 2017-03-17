@@ -26,7 +26,8 @@ namespace NtfsSharp.FileRecords.Attributes.Base
             {NTFS_ATTR_TYPE.INDEX_ALLOCATION, typeof(IndexAllocation.IndexAllocation)},
             {NTFS_ATTR_TYPE.ATTRIBUTE_LIST, typeof(AttributeList.AttributeList)},
             {NTFS_ATTR_TYPE.REPARSE_POINT, typeof(ReparsePoint)},
-            {NTFS_ATTR_TYPE.EA_INFORMATION,  typeof(ExtendedAttributeInformation)}
+            {NTFS_ATTR_TYPE.EA_INFORMATION,  typeof(ExtendedAttributeInformation)},
+            {NTFS_ATTR_TYPE.EA, typeof(ExtendedAttribute)}
         };
 
         protected AttributeBase()
