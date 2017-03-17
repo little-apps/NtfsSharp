@@ -66,6 +66,39 @@ namespace NtfsSharp.FileRecords
             }
         }
 
+        public AttributeBase FindAttribute(ushort attrNum, AttributeHeader.NTFS_ATTR_TYPE attrType, string name)
+        {
+            var found = false;
+
+            while (_currentOffset < _data.Length && BitConverter.ToUInt32(_data, (int)_currentOffset) != 0xffffffff)
+            {
+                var newData = new byte[_data.Length - _currentOffset];
+                Array.Copy(_data, _currentOffset, newData, 0, newData.Length);
+
+                var attrHeader = AttributeBase.GetAttribute(newData, this);
+
+                if (attrHeader.Header.Type == attrType)
+                {
+                    if (string.IsNullOrEmpty(name) && string.IsNullOrEmpty(attrHeader.Name) &&
+                        attrHeader.Header.AttributeID == attrNum)
+                        found = true;
+                    else if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(attrHeader.Name))
+                    {
+                        if (name == attrHeader.Name)
+                            found = true;
+                    }
+
+                }
+
+                _currentOffset += attrHeader.Header.Length;
+
+                if (found)
+                    return AttributeBase.ReadBody(attrHeader);
+            }
+
+            return null;
+        }
+
         [Flags]
         public enum Flags : ushort
         {
