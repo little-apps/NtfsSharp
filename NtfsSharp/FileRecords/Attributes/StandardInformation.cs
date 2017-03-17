@@ -7,7 +7,7 @@ namespace NtfsSharp.FileRecords.Attributes
 {
     public class StandardInformation : AttributeBodyBase
     {
-        public static new uint HeaderSize => (uint)Marshal.SizeOf<NTFS_ATTR_STANDARD>();
+        public static uint HeaderSize => (uint)Marshal.SizeOf<NTFS_ATTR_STANDARD>();
         public NTFS_ATTR_STANDARD Data { get; private set; }
 
         public StandardInformation(AttributeHeader header) : base(header, MustBe.Resident)
