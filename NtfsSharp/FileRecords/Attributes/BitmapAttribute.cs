@@ -3,7 +3,7 @@ using System.Collections;
 
 namespace NtfsSharp.FileRecords.Attributes
 {
-    class BitmapAttribute : AttributeBodyBase
+    public class BitmapAttribute : AttributeBodyBase
     {
         /// <summary>
         /// In an index, the bit field shows which index entries are in use. Each bit represents one VCN of the index allocation. 
