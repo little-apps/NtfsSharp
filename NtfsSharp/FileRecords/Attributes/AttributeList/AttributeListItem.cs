@@ -10,6 +10,11 @@ namespace NtfsSharp.FileRecords.Attributes.AttributeList
     public class AttributeListItem
     {
         public readonly NTFS_ATTRIBUTE_LIST_HEADER Header;
+
+        /// <summary>
+        /// Name of attribute
+        /// </summary>
+        /// <remarks>Null if NameLength and/or NameOffset is 0</remarks>
         public readonly string Name;
 
         /// <summary>
@@ -18,7 +23,10 @@ namespace NtfsSharp.FileRecords.Attributes.AttributeList
         /// <remarks>Can be null if there is attribute is located in this file record or it wasn't found</remarks>
         public readonly AttributeBase ChildAttribute;
 
-        public AttributeListItem(uint currentOffset, AttributeList attributeList)
+        /// <summary>
+        /// Constructor for AttributeListItem
+        /// </summary>
+        /// <param name="attributeList">AttributeList holding this item</param>
         public AttributeListItem(AttributeList attributeList)
         {
             Header = attributeList.Body.ToStructure<NTFS_ATTRIBUTE_LIST_HEADER>(attributeList.CurrentOffset);

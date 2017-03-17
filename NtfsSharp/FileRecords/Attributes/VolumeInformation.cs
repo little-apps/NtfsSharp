@@ -4,6 +4,9 @@ using System.Runtime.InteropServices;
 
 namespace NtfsSharp.FileRecords.Attributes
 {
+    /// <summary>
+    /// Indicates the version and the state of the volume. 
+    /// </summary>
     public class VolumeInformation : AttributeBodyBase
     {
         public static uint HeaderSize => (uint)Marshal.SizeOf<NTFS_ATTR_VOLUME_INFO>();

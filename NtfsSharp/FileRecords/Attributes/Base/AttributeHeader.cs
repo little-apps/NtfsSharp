@@ -53,6 +53,10 @@ namespace NtfsSharp.FileRecords.Attributes.Base
             CurrentOffset += (uint) Header.NameLength * 2;
         }
 
+        /// <summary>
+        /// Reads the body of the attribute
+        /// </summary>
+        /// <returns>Data in resident or non-resident part of disk</returns>
         public abstract byte[] ReadBody();
         
         public enum NTFS_ATTR_TYPE : uint

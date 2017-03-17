@@ -6,6 +6,9 @@ using NtfsSharp.PInvoke;
 
 namespace NtfsSharp.FileRecords.Attributes.IndexAllocation
 {
+    /// <summary>
+    /// Represents a file name entry inside a file index inside a $INDEX_ALLOCATION
+    /// </summary>
     public class FileNameEntry
     {
         public uint CurrentOffset { get; private set; }

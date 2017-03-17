@@ -7,6 +7,9 @@ using NtfsSharp.PInvoke;
 
 namespace NtfsSharp.FileRecords.Attributes.IndexAllocation
 {
+    /// <summary>
+    /// Represents a file index inside a $INDEX_ALLOCATION attribute
+    /// </summary>
     public class FileIndex
     {
         public uint CurrentOffset { get; private set; } = 0;
@@ -17,6 +20,10 @@ namespace NtfsSharp.FileRecords.Attributes.IndexAllocation
 
         public readonly List<FileNameEntry> FileNameEntries = new List<FileNameEntry>();
 
+        /// <summary>
+        /// Builds a list of <see cref="FileNameEntries"/>
+        /// </summary>
+        /// <param name="data">Data containing file index</param>
         public FileIndex(byte[] data)
         {
             Header = data.ToStructure<NTFS_INDEX_HEADER>();

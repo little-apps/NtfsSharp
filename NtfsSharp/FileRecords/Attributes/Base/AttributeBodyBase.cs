@@ -4,6 +4,9 @@ using System;
 
 namespace NtfsSharp.FileRecords.Attributes.Base
 {
+    /// <summary>
+    /// Abstract class that is used after the attribute header(s) have been parsed
+    /// </summary>
     public abstract class AttributeBodyBase : AttributeBase
     {
         public readonly AttributeHeader Header;
@@ -15,6 +18,12 @@ namespace NtfsSharp.FileRecords.Attributes.Base
         /// </summary>
         public readonly byte[] Body;
 
+        /// <summary>
+        /// Constructor for AttributeBodyBase
+        /// </summary>
+        /// <param name="header"><see cref="AttributeHeader"/> that contains this body</param>
+        /// <param name="mustBe">Whether body data must be resident and/or non-resident</param>
+        /// <param name="readBody">If false, the data is not read in constructor. Useful for when dealing with large amounts of data.</param>
         protected AttributeBodyBase(AttributeHeader header, MustBe mustBe = MustBe.Resident | MustBe.NonResident, bool readBody = true)
         {
             Header = header;

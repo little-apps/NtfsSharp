@@ -6,12 +6,18 @@ using NtfsSharp.Data;
 
 namespace NtfsSharp.FileRecords.Attributes.Base.NonResident
 {
+    /// <summary>
+    /// Non-resident data is data that is contained on one or more other sectors on the disk
+    /// </summary>
     public sealed class NonResident : AttributeHeader
     {
         public new static uint HeaderSize => (uint)Marshal.SizeOf<NonResidentAttribute>();
 
         public NonResidentAttribute SubHeader { get; private set; }
 
+        /// <summary>
+        /// A list of the data blocks or data runs to locate the data on the disk
+        /// </summary>
         public List<DataBlock> DataBlocks = new List<DataBlock>();
 
         public NonResident(NTFS_ATTRIBUTE_HEADER header, byte[] data, FileRecord fileRecord) : base(header, data, fileRecord)
@@ -23,6 +29,10 @@ namespace NtfsSharp.FileRecords.Attributes.Base.NonResident
             ReadDataBlocks(data);
         }
 
+        /// <summary>
+        /// Converts the data runs to <see cref="DataBlock"/>
+        /// </summary>
+        /// <param name="data"></param>
         private void ReadDataBlocks(byte[] data)
         {
             var currentOffset = CurrentOffset;
@@ -80,6 +90,10 @@ namespace NtfsSharp.FileRecords.Attributes.Base.NonResident
             return null;
         }
 
+        /// <summary>
+        /// Gets non-resident data as clusters
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<Cluster> GetAllDataAsClusters()
         {
             var clusters = new List<Cluster>();
@@ -92,6 +106,10 @@ namespace NtfsSharp.FileRecords.Attributes.Base.NonResident
             return clusters;
         }
 
+        /// <summary>
+        /// Gets non-resident data as byte array
+        /// </summary>
+        /// <returns></returns>
         public byte[] GetAllDataAsBytes()
         {
             var bytes = new List<byte>();
@@ -104,6 +122,11 @@ namespace NtfsSharp.FileRecords.Attributes.Base.NonResident
             return bytes.ToArray();
         }
 
+        /// <summary>
+        /// Uses data block to get it's cluster(s)
+        /// </summary>
+        /// <param name="dataBlock">DataBlock instance</param>
+        /// <returns>List of <see cref="Cluster"/> that data block has</returns>
         public IEnumerable<Cluster> GetDataAsClusters(DataBlock dataBlock)
         {
             if (!DataBlocks.Contains(dataBlock))
@@ -115,6 +138,11 @@ namespace NtfsSharp.FileRecords.Attributes.Base.NonResident
             }
         }
 
+        /// <summary>
+        /// Uses data block to get it's bytes
+        /// </summary>
+        /// <param name="dataBlock">DataBlock instance</param>
+        /// <returns>Bytes that data block has</returns>
         public byte[] GetDataAsBytes(DataBlock dataBlock)
         {
             if (!DataBlocks.Contains(dataBlock))

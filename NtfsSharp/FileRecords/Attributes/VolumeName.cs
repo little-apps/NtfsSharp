@@ -3,6 +3,9 @@ using System.Text;
 
 namespace NtfsSharp.FileRecords.Attributes
 {
+    /// <summary>
+    /// This attribute simply contains the name of the volume. 
+    /// </summary>
     public class VolumeName : AttributeBodyBase
     {
         public readonly string Name;

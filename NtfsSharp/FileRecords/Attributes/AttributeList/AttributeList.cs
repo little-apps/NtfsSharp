@@ -10,6 +10,10 @@ namespace NtfsSharp.FileRecords.Attributes.AttributeList
     {
         public readonly List<AttributeListItem> AttributeListItems = new List<AttributeListItem>();
 
+        /// <summary>
+        /// Represents $ATTRIBUTE_LIST
+        /// </summary>
+        /// <param name="header"></param>
         public AttributeList(AttributeHeader header) : base(header)
         {
             while (CurrentOffset <= header.Header.Length)

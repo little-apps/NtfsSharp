@@ -5,6 +5,9 @@ using FILETIME = System.Runtime.InteropServices.ComTypes.FILETIME;
 
 namespace NtfsSharp.FileRecords.Attributes
 {
+    /// <summary>
+    /// Includes information such as timestamp and link count.
+    /// </summary>
     public class StandardInformation : AttributeBodyBase
     {
         public static uint HeaderSize => (uint)Marshal.SizeOf<NTFS_ATTR_STANDARD>();

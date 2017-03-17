@@ -5,6 +5,13 @@ using System.Runtime.InteropServices;
 
 namespace NtfsSharp.FileRecords.Attributes
 {
+    /// <summary>
+    ///   The security descriptor is necessary to prevent unauthorised access to files. It stores information about:
+    ///
+    ///    The owner of the file
+    ///    Permissions the owner has granted to other users
+    ///    What actions should be logged (auditing)
+    /// </summary>
     public class SecurityDescriptor : AttributeBodyBase
     {
         public static uint SubHeaderSize => (uint) Marshal.SizeOf<NTFS_SECURITY_DESCRIPTOR>();

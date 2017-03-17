@@ -3,6 +3,9 @@ using System.Collections;
 
 namespace NtfsSharp.FileRecords.Attributes
 {
+    /// <summary>
+    /// This file attribute is a sequence of bits, each of which represents the status of an entity. 
+    /// </summary>
     public class BitmapAttribute : AttributeBodyBase
     {
         /// <summary>

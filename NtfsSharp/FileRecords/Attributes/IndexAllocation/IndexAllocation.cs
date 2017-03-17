@@ -5,10 +5,20 @@ using NtfsSharp.FileRecords.Attributes.Base.NonResident;
 
 namespace NtfsSharp.FileRecords.Attributes.IndexAllocation
 {
+    /// <summary>
+    /// Represents $INDEX_ALLOCATION attribute
+    /// </summary>
+    /// <remarks>
+    /// Must be located in non-resident data
+    /// </remarks>
     public class IndexAllocation : AttributeBodyBase
     {
         public readonly List<FileIndex> FileIndices = new List<FileIndex>();
 
+        /// <summary>
+        /// Finds file indices in index
+        /// </summary>
+        /// <param name="header"></param>
         public IndexAllocation(AttributeHeader header) : base(header, MustBe.NonResident)
         {
             if (!header.FileRecord.Header.Flags.HasFlag(FileRecord.Flags.IsDirectory))

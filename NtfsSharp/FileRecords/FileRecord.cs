@@ -8,6 +8,9 @@ using NtfsSharp.FileRecords.Attributes.Base;
 
 namespace NtfsSharp.FileRecords
 {
+    /// <summary>
+    /// Represents a FILE record
+    /// </summary>
     public class FileRecord
     {
         private uint _currentOffset;
@@ -17,6 +20,13 @@ namespace NtfsSharp.FileRecords
         public FILE_RECORD_HEADER_NTFS Header { get; private set; }
         public readonly List<AttributeBase> Attributes = new List<AttributeBase>();
 
+        /// <summary>
+        /// Reads file record from bytes
+        /// </summary>
+        /// <param name="data">Bytes with data for file record and attributes</param>
+        /// <param name="vol">Volume containing file record</param>
+        /// <exception cref="ArgumentNullException">Thrown if Volume is null</exception>
+        /// <exception cref="InvalidFileRecordException">Thrown if unable to read file record</exception>
         public FileRecord(byte[] data, Volume vol)
         {
             if (vol == null)
@@ -28,6 +38,13 @@ namespace NtfsSharp.FileRecords
             ParseHeader();
         }
 
+        /// <summary>
+        /// Reads a file record at specified number in the volume
+        /// </summary>
+        /// <param name="recordNum">File record number</param>
+        /// <param name="vol">Volume containing file record</param>
+        /// <exception cref="ArgumentNullException">Thrown if Volume is null</exception>
+        /// <exception cref="InvalidFileRecordException">Thrown if unable to read file record</exception>
         public FileRecord(ulong recordNum, Volume vol)
         {
             if (vol == null)
@@ -42,6 +59,10 @@ namespace NtfsSharp.FileRecords
             ParseHeader();
         }
 
+        /// <summary>
+        /// Parses the file record
+        /// </summary>
+        /// <exception cref="InvalidFileRecordException">Thrown if magic number is not FILE</exception>
         private void ParseHeader()
         {
             Header = _data.ToStructure<FILE_RECORD_HEADER_NTFS>();
@@ -51,6 +72,10 @@ namespace NtfsSharp.FileRecords
                 throw new InvalidFileRecordException(nameof(Header), this);
         }
 
+        /// <summary>
+        /// Reads attributes from file record
+        /// </summary>
+        /// <remarks>Current offset must be set back if calling this more than once</remarks>
         public void ReadAttributes()
         {
             while (_currentOffset < _data.Length && BitConverter.ToUInt32(_data, (int) _currentOffset) != 0xffffffff)
@@ -66,6 +91,13 @@ namespace NtfsSharp.FileRecords
             }
         }
 
+        /// <summary>
+        /// Tries to find an attribute in the file record
+        /// </summary>
+        /// <param name="attrNum">Attribute number</param>
+        /// <param name="attrType">Attribute type</param>
+        /// <param name="name">Name to match in attribute</param>
+        /// <returns>Matching AttributeBase or null if it wasn't found</returns>
         public AttributeBase FindAttribute(ushort attrNum, AttributeHeader.NTFS_ATTR_TYPE attrType, string name)
         {
             var found = false;
