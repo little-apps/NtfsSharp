@@ -6,7 +6,7 @@ namespace NtfsSharp.FileRecords.Attributes
     {
         public byte[] Data => Body;
 
-        public DataAttribute(AttributeHeader header) : base(header)
+        public DataAttribute(AttributeHeader header) : base(header, MustBe.Resident | MustBe.NonResident, false)
         {
         }
     }
