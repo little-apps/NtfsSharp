@@ -19,7 +19,7 @@ namespace NtfsSharp.FileRecords.Attributes.AttributeList
         {
             while (CurrentOffset <= header.Header.Length)
             {
-                var attrItem = new AttributeListItem(CurrentOffset, this);
+                var attrItem = new AttributeListItem(this);
 
                 AttributeListItems.Add(attrItem);
                 CurrentOffset += attrItem.Header.Length;
