@@ -4,7 +4,9 @@ using System.Runtime.InteropServices;
 using NtfsSharp.Exceptions;
 using NtfsSharp.Helpers;
 using System.Collections.Generic;
+using NtfsSharp.FileRecords.Attributes;
 using NtfsSharp.FileRecords.Attributes.Base;
+using NtfsSharp.FileRecords.Attributes.Shared;
 
 namespace NtfsSharp.FileRecords
 {
@@ -19,6 +21,29 @@ namespace NtfsSharp.FileRecords
 
         public FILE_RECORD_HEADER_NTFS Header { get; private set; }
         public readonly List<AttributeBase> Attributes = new List<AttributeBase>();
+
+        public string Filename
+        {
+            get
+            {
+                var isFirst = true;
+
+                foreach (
+                    var fileNameAttr in
+                    FindAttributeByType(AttributeHeader.NTFS_ATTR_TYPE.FILE_NAME).Cast<FileNameAttribute>())
+                {
+                    if (fileNameAttr.FileName.Data.Namespace != FileName.NTFS_NAMESPACE.Dos)
+                        return fileNameAttr.FileName.Filename;
+
+                    if (!isFirst)
+                        return fileNameAttr.FileName.Filename;
+
+                    isFirst = false;
+                }
+
+                return string.Empty;
+            }
+        }
 
         /// <summary>
         /// Reads file record from bytes
