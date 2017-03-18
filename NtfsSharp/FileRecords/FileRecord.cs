@@ -92,6 +92,16 @@ namespace NtfsSharp.FileRecords
         }
 
         /// <summary>
+        /// Finds attributes with specified type and returns list of ones matching it
+        /// </summary>
+        /// <param name="attrType">Attribute type</param>
+        /// <returns>Matching attributes or empty list if none found</returns>
+        public IEnumerable<AttributeBodyBase> FindAttributeByType(AttributeHeader.NTFS_ATTR_TYPE attrType)
+        {
+            return Attributes.Cast<AttributeBodyBase>().Where(attr => attr.Header.Header.Type == attrType);
+        }
+
+        /// <summary>
         /// Tries to find an attribute in the file record
         /// </summary>
         /// <param name="attrNum">Attribute number</param>
