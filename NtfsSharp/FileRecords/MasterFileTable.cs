@@ -1,16 +1,17 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace NtfsSharp.FileRecords
 {
-    public class MasterFileTable
+    public class MasterFileTable : IReadOnlyDictionary<uint, FileRecord>
     {
-        private const uint _recordsToRead = 16;
+        private const uint _recordsToRead = 26;
 
         private readonly uint SectorsPerMFTRecord;
         private readonly Volume Volume;
-        public readonly ReadOnlyDictionary<uint, FileRecord> Table;
+        private readonly SortedList<uint, FileRecord> _table = new SortedList<uint, FileRecord>();
 
         public MasterFileTable(Volume volume)
         {
@@ -18,11 +19,9 @@ namespace NtfsSharp.FileRecords
 
             SectorsPerMFTRecord = volume.BytesPerFileRecord / volume.BytesPerSector;
 
-            var fileRecords = new Dictionary<uint, FileRecord>((int) _recordsToRead);
-
             var currentOffset = volume.LcnToOffset(Volume.BootSector.MFTLCN);
 
-            for (var i = 0; i < _recordsToRead; i++)
+            for (uint i = 0; i < _recordsToRead; i++)
             {
                 var bytes = new byte[SectorsPerMFTRecord * volume.BytesPerSector];
 
@@ -38,10 +37,35 @@ namespace NtfsSharp.FileRecords
                 var fileRecord = new FileRecord(bytes, volume);
                 fileRecord.ReadAttributes();
 
-                fileRecords.Add(fileRecord.Header.MFTRecordNumber, fileRecord);
+                _table.Add(fileRecord.Header.MFTRecordNumber, fileRecord);
             }
-
-            Table = new ReadOnlyDictionary<uint, FileRecord>(fileRecords);
         }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        public IEnumerator<KeyValuePair<uint, FileRecord>> GetEnumerator()
+        {
+            return _table.GetEnumerator();
+        }
+
+        public int Count => _table.Count;
+
+        public bool ContainsKey(uint key)
+        {
+            return _table.ContainsKey(key);
+        }
+
+        public bool TryGetValue(uint key, out FileRecord value)
+        {
+            return _table.TryGetValue(key, out value);
+        }
+
+        public FileRecord this[uint key] => _table[key];
+
+        public IEnumerable<uint> Keys => _table.Keys;
+        public IEnumerable<FileRecord> Values => _table.Values;
     }
 }
