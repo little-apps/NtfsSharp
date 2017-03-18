@@ -17,6 +17,8 @@ namespace NtfsSharp.FileRecords
     {
         private uint _currentOffset;
         private readonly byte[] _data;
+        private bool _hasReadAttributes = false;
+
         public readonly Volume Volume;
 
         public FILE_RECORD_HEADER_NTFS Header { get; private set; }
@@ -114,6 +116,8 @@ namespace NtfsSharp.FileRecords
                 _currentOffset += attrHeader.Header.Length;
 
             }
+
+            _hasReadAttributes = true;
         }
 
         /// <summary>
@@ -135,34 +139,53 @@ namespace NtfsSharp.FileRecords
         /// <returns>Matching AttributeBase or null if it wasn't found</returns>
         public AttributeBase FindAttribute(ushort attrNum, AttributeHeader.NTFS_ATTR_TYPE attrType, string name)
         {
-            var found = false;
-
-            while (_currentOffset < _data.Length && BitConverter.ToUInt32(_data, (int)_currentOffset) != 0xffffffff)
+            if (!_hasReadAttributes)
             {
-                var newData = new byte[_data.Length - _currentOffset];
-                Array.Copy(_data, _currentOffset, newData, 0, newData.Length);
+                var found = false;
 
-                var attrHeader = AttributeBase.GetAttribute(newData, this);
-
-                if (attrHeader.Header.Type == attrType)
+                while (_currentOffset < _data.Length && BitConverter.ToUInt32(_data, (int) _currentOffset) != 0xffffffff)
                 {
-                    if (string.IsNullOrEmpty(name) && string.IsNullOrEmpty(attrHeader.Name) &&
-                        attrHeader.Header.AttributeID == attrNum)
-                        found = true;
-                    else if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(attrHeader.Name))
+                    var newData = new byte[_data.Length - _currentOffset];
+                    Array.Copy(_data, _currentOffset, newData, 0, newData.Length);
+
+                    var attrHeader = AttributeBase.GetAttribute(newData, this);
+
+                    if (attrHeader.Header.Type == attrType)
                     {
-                        if (name == attrHeader.Name)
+                        if (string.IsNullOrEmpty(name) && string.IsNullOrEmpty(attrHeader.Name) &&
+                            attrHeader.Header.AttributeID == attrNum)
                             found = true;
+                        else if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(attrHeader.Name))
+                        {
+                            if (name == attrHeader.Name)
+                                found = true;
+                        }
+
                     }
 
+                    _currentOffset += attrHeader.Header.Length;
+
+                    if (found)
+                        return AttributeBase.ReadBody(attrHeader);
                 }
-
-                _currentOffset += attrHeader.Header.Length;
-
-                if (found)
-                    return AttributeBase.ReadBody(attrHeader);
             }
+            else
+            {
+                foreach (var attr in Attributes.Cast<AttributeBodyBase>())
+                {
+                    if (attr.Header.Header.Type != attrType)
+                        continue;
 
+                    if (string.IsNullOrEmpty(name) && string.IsNullOrEmpty(attr.Header.Name) &&
+                        attr.Header.Header.AttributeID == attrNum)
+                        return attr;
+
+                    if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(attr.Header.Name) &&
+                        name == attr.Header.Name)
+                        return attr;
+                }
+            }
+            
             return null;
         }
 
