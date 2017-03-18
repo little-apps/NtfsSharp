@@ -68,6 +68,7 @@ namespace NtfsSharp
         private void ReadMft()
         {
             MFT = new MasterFileTable(this);
+            MFT.ReadRecords();
         }
 
         public Sector ReadSectorAtOffset(ulong offset)

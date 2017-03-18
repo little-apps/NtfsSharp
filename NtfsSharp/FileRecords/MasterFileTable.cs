@@ -18,26 +18,33 @@ namespace NtfsSharp.FileRecords
             Volume = volume;
 
             SectorsPerMFTRecord = volume.BytesPerFileRecord / volume.BytesPerSector;
+        }
 
-            var currentOffset = volume.LcnToOffset(Volume.BootSector.MFTLCN);
+        public void ReadRecords()
+        {
+            var currentOffset = Volume.LcnToOffset(Volume.BootSector.MFTLCN);
 
             for (uint i = 0; i < _recordsToRead; i++)
             {
-                var bytes = new byte[SectorsPerMFTRecord * volume.BytesPerSector];
+                var bytes = new byte[SectorsPerMFTRecord * Volume.BytesPerSector];
 
                 for (var j = 0; j < SectorsPerMFTRecord; j++)
                 {
-                    var sector = volume.ReadSectorAtOffset(currentOffset);
+                    var sector = Volume.ReadSectorAtOffset(currentOffset);
 
-                    Array.Copy(sector.Data, 0, bytes, j * volume.BytesPerSector, volume.BytesPerSector);
+                    Array.Copy(sector.Data, 0, bytes, j * Volume.BytesPerSector, Volume.BytesPerSector);
 
-                    currentOffset += volume.BytesPerSector;
+                    currentOffset += Volume.BytesPerSector;
                 }
 
-                var fileRecord = new FileRecord(bytes, volume);
+                var fileRecord = new FileRecord(bytes, Volume);
                 fileRecord.ReadAttributes();
 
-                _table.Add(fileRecord.Header.MFTRecordNumber, fileRecord);
+                var recordNum = fileRecord.Header.MFTRecordNumber;
+                if (recordNum == 0)
+                    recordNum = i;
+
+                _table.Add(recordNum, fileRecord);
             }
         }
 
