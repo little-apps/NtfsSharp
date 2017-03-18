@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using NtfsSharp;
 
 namespace Console
 {
@@ -24,6 +25,50 @@ namespace Console
 
             Volume = new NtfsSharp.Volume(Options.Drive);
 
+            Interactive();
+        }
+
+        private void Interactive()
+        {
+            var cmd = ' ';
+
+            while (cmd != 'Q')
+            {
+                DisplayCommands(System.Console.Out);
+
+                cmd = (char) System.Console.Read();
+
+                switch (cmd)
+                {
+                    case '1':
+                        {
+                            OutputBootSectorInfo(Output);
+                            break;
+                        }
+
+                    case '2':
+                    {
+                        ListMFT(Output);
+                        break;
+                    }
+
+                    default:
+                        break;
+                }
+            }
+            
+        }
+
+        private void DisplayCommands(TextWriter textWriter)
+        {
+            textWriter.WriteLine("Available commands:");
+            textWriter.WriteLine("1\t\tDisplay boot sector");
+            textWriter.WriteLine("2\t\tList MFT");
+            textWriter.WriteLine("Q\t\tQuit");
+            textWriter.WriteLine();
+            textWriter.Write("Enter command: ");
+        }
+
         private void OutputBootSectorInfo(TextWriter textWriter)
         {
             textWriter.WriteLine("JMP Instruction: {0}", Volume.BootSector.JMPInstruction.MakeReadable());
@@ -46,6 +91,18 @@ namespace Console
             textWriter.WriteLine("Signature: {0}", Volume.BootSector.Signature.MakeReadable());
         }
 
+        private void ListMFT(TextWriter textWriter)
+        {
+            if (Volume.MFT.Count == 0)
+            {
+                textWriter.WriteLine("Nothing in Master File Table.");
+                return;
+            }
+
+            foreach (var kvp in Volume.MFT)
+            {
+                textWriter.WriteLine("{0}: {1}", kvp.Key, kvp.Value.Filename);
+            }
         }
 
         static void Main(string[] args)
