@@ -13,18 +13,22 @@ namespace NtfsSharp.FileRecords.Attributes.IndexAllocation
     /// </remarks>
     public class IndexAllocation : AttributeBodyBase
     {
-        public readonly List<FileIndex> FileIndices = new List<FileIndex>();
-
-        /// <summary>
-        /// Finds file indices in index
-        /// </summary>
-        /// <param name="header"></param>
         public IndexAllocation(AttributeHeader header) : base(header, MustBe.NonResident)
         {
-            if (!header.FileRecord.Header.Flags.HasFlag(FileRecord.Flags.IsDirectory))
-                return;
+            
+        }
 
-            var headerNonResident = header as NonResident;
+        /// <summary>
+        /// Reads file indices in IndexAllocation
+        /// </summary>
+        /// <remarks>This can a bit of time (depending on the size of the IndexAllocation)</remarks>
+        /// <returns>List of file indices</returns>
+        public IEnumerable<FileIndex> ReadFileIndices()
+        {
+            if (!Header.FileRecord.Header.Flags.HasFlag(FileRecord.Flags.IsDirectory))
+                yield break;
+
+            var headerNonResident = Header as NonResident;
 
             for (ulong i = 0; i <= headerNonResident.SubHeader.LastVCN; i++)
             {
@@ -40,7 +44,7 @@ namespace NtfsSharp.FileRecords.Attributes.IndexAllocation
                 if (magicNum != 0x58444E49)
                     break;
 
-                FileIndices.Add(new FileIndex(cluster.Data));
+                yield return new FileIndex(cluster.Data);
             }
         }
     }
