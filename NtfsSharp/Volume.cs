@@ -1,9 +1,9 @@
 ﻿using System;
-using System.IO;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using NtfsSharp.Data;
+using NtfsSharp.Exceptions;
 using NtfsSharp.FileRecords;
-using NtfsSharp.Helpers;
 
 namespace NtfsSharp
 {
@@ -17,10 +17,13 @@ namespace NtfsSharp
         public NtfsBootSector BootSector { get; private set; }
         public MasterFileTable MFT { get; private set; }
 
+        public readonly SortedList<uint, FileRecord> FileRecords = new SortedList<uint, FileRecord>();
+
         #region Units
         public uint SectorsPerCluster = 8;
         public ushort BytesPerSector = 512;
         public uint BytesPerFileRecord = 1024;
+        public uint SectorsPerMFTRecord => BytesPerFileRecord / BytesPerSector;
         #endregion
 
         public Volume(char drive)
@@ -43,6 +46,7 @@ namespace NtfsSharp
         {
             ReadBootSector();
             ReadMft();
+            ReadFileRecords();
         }
 
         private void ReadBootSector()
@@ -69,6 +73,43 @@ namespace NtfsSharp
         {
             MFT = new MasterFileTable(this);
             MFT.ReadRecords();
+        }
+
+        private void ReadFileRecords()
+        {
+            // MFT record #5 is root directory
+            FileRecords[5] = MFT[5];
+
+            var shouldContinue = true;
+            var currentOffset = LcnToOffset(BootSector.MFTLCN) + (ulong) (MFT.Count * BytesPerFileRecord);
+
+            // Scan until InvalidFileRecordException is thrown (from invalid marker)
+            while (shouldContinue)
+            {
+                try
+                {
+                    var bytes = new byte[SectorsPerMFTRecord * BytesPerSector];
+
+                    for (var j = 0; j < SectorsPerMFTRecord; j++)
+                    {
+                        var sector = ReadSectorAtOffset(currentOffset);
+
+                        Array.Copy(sector.Data, 0, bytes, j * BytesPerSector, BytesPerSector);
+
+                        currentOffset += BytesPerSector;
+                    }
+
+                    var fileRecord = new FileRecord(bytes, this);
+                    fileRecord.ReadAttributes();
+
+                    FileRecords.Add(fileRecord.Header.MFTRecordNumber, fileRecord);
+                }
+                catch (InvalidFileRecordException ex)
+                {
+                    if (ex.ParamName == nameof(FileRecord.FILE_RECORD_HEADER_NTFS.Magic))
+                        shouldContinue = false;
+                }
+            }
         }
 
         public Sector ReadSectorAtOffset(ulong offset)
