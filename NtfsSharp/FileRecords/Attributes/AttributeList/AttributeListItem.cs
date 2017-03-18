@@ -1,7 +1,9 @@
-﻿using System.Runtime.InteropServices;
+﻿using System;
+using System.Linq;
 using System.Text;
 using NtfsSharp.Exceptions;
 using NtfsSharp.FileRecords.Attributes.Base;
+using NtfsSharp.FileRecords.Attributes.Base.NonResident;
 using NtfsSharp.Helpers;
 using NtfsSharp.PInvoke;
 
@@ -45,16 +47,64 @@ namespace NtfsSharp.FileRecords.Attributes.AttributeList
             if (parentFileRecord.Header.MFTRecordNumber == Header.BaseFileReference.FileRecordNumber)
                 return;
 
-            var fileRecord = new FileRecord(Header.BaseFileReference.FileRecordNumber,
-                attributeList.Header.FileRecord.Volume);
+            if (Header.BaseFileReference.FileRecordNumber < 16)
+            {
+                var fileRecord = new FileRecord(Header.BaseFileReference.FileRecordNumber,
+                    attributeList.Header.FileRecord.Volume);
 
-            if (!fileRecord.Header.Flags.HasFlag(FileRecord.Flags.InUse))
-                throw new InvalidFileRecordException(nameof(FileRecord.Flags), "File record is marked as free", fileRecord);
+                if (!fileRecord.Header.Flags.HasFlag(FileRecord.Flags.InUse))
+                    throw new InvalidFileRecordException(nameof(FileRecord.Flags), "File record is marked as free",
+                        fileRecord);
 
-            if (fileRecord.Header.FileReference == 0)
-                throw new InvalidFileRecordException(nameof(fileRecord.Header.FileReference), "Not a child record", fileRecord);
+                if (fileRecord.Header.FileReference == 0)
+                    throw new InvalidFileRecordException(nameof(fileRecord.Header.FileReference), "Not a child record",
+                        fileRecord);
 
-            ChildAttribute = fileRecord.FindAttribute(Header.AttributeId, Header.Type, attributeList.Header.Name);
+                ChildAttribute = fileRecord.FindAttribute(Header.AttributeId, Header.Type, attributeList.Header.Name);
+            }
+            else
+            {
+                var volume = attributeList.Header.FileRecord.Volume;
+                var mftRecord = volume.MFT[0];
+
+                var mftRecordDataAttrs = mftRecord.FindAttributeByType(AttributeHeader.NTFS_ATTR_TYPE.DATA);
+
+                var dataAttr = mftRecordDataAttrs.FirstOrDefault();
+
+                byte[] data;
+
+                if (dataAttr?.Header is Resident)
+                    data = dataAttr.Header.ReadBody();
+                else if (dataAttr?.Header is NonResident)
+                {
+                    // $DATA attribute in $MFT is huge, so it's best to go to where we want to read and get that cluster, rather than read entire thing
+                    var vcn = Header.BaseFileReference.FileRecordNumber * volume.BytesPerFileRecord /
+                              (volume.BytesPerSector * volume.SectorsPerCluster);
+                    var offsetInCluster = Header.BaseFileReference.FileRecordNumber * volume.BytesPerFileRecord %
+                                          (volume.BytesPerSector * volume.SectorsPerCluster);
+
+                    var lcn = ((NonResident) dataAttr.Header).VcnToLcn(vcn);
+
+                    if (!lcn.HasValue)
+                        return;
+
+                    var cluster = volume.ReadLcn(lcn.Value);
+
+                    data = new byte[volume.BytesPerFileRecord];
+
+                    Array.Copy(cluster.Data, (long) offsetInCluster, data, 0, data.Length);
+                }
+                else
+                {
+                    return;
+                }
+
+                var fileRecord = new FileRecord(data, volume);
+                fileRecord.ReadAttributes();
+
+                ChildAttribute = fileRecord.FindAttribute(Header.AttributeId, Header.Type, Name);
+            }
+
         }
 
         public struct NTFS_ATTRIBUTE_LIST_HEADER
@@ -66,8 +116,6 @@ namespace NtfsSharp.FileRecords.Attributes.AttributeList
             public readonly ulong StartingVcn;
             public readonly Structs.FILE_REFERENCE BaseFileReference;
             public readonly ushort AttributeId;
-            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 3)]
-            public readonly ushort[] Padding;
         }
     }
 }
