@@ -11,7 +11,7 @@ namespace NtfsSharp.PInvoke
             public ulong Data;
             
             public ulong FileRecordNumber => Data & 0xFFFFFFFFFFFF;
-            public ulong SequenceNumber => Data & 0xFFFF000000000000;
+            public ushort SequenceNumber => (ushort) (Data & 0xFFFF000000000000);
         }
 
         public struct NTFS_ATTR_INDEX_ENTRY_HEADER
