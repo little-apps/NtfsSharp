@@ -11,7 +11,7 @@ namespace NtfsSharp.FileRecords
     /// <summary>
     /// Represents a FILE record
     /// </summary>
-    public class FileRecord
+    public class FileRecord : IComparer<FileRecord>, IComparable<FileRecord>, IEquatable<FileRecord>
     {
         private uint _currentOffset;
         private readonly byte[] _data;
@@ -136,6 +136,30 @@ namespace NtfsSharp.FileRecords
         {
             InUse = 1 << 0,
             IsDirectory = 1 << 1
+        }
+
+        public int Compare(FileRecord x, FileRecord y)
+        {
+            if (x == null)
+                return -1;
+
+            if (y == null)
+                return 1;
+
+            return (int) (x.Header.MFTRecordNumber - y.Header.MFTRecordNumber);
+        }
+
+        public int CompareTo(FileRecord other)
+        {
+            if (other == null)
+                return -1;
+
+            return (int) (Header.MFTRecordNumber - other.Header.MFTRecordNumber);
+        }
+
+        public bool Equals(FileRecord other)
+        {
+            return CompareTo(other) == 0;
         }
 
         [StructLayout(LayoutKind.Sequential)]
