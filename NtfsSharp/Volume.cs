@@ -65,28 +65,6 @@ namespace NtfsSharp
             
         }
 
-        private void OutputBootSectorInfo(TextWriter textWriter)
-        {
-            textWriter.WriteLine("JMP Instruction: {0}", BootSector.JMPInstruction.MakeReadable());
-            textWriter.WriteLine("OEMID: {0}", BootSector.OEMID.MakeReadable());
-            textWriter.WriteLine("Bytes Per Sector: {0}", BootSector.BytesPerSector);
-            textWriter.WriteLine("Sectors Per Cluster: {0}", BootSector.SectorsPerCluster);
-            textWriter.WriteLine("Reserved Sectors: {0}", BootSector.ReservedSectors);
-            textWriter.WriteLine("Media Descriptor: {0}", BootSector.MediaDescriptor);
-            textWriter.WriteLine("Sectors Per Track: {0}", BootSector.SectorsPerTrack);
-            textWriter.WriteLine("Number Of Heads: {0}", BootSector.NumberOfHeads);
-            textWriter.WriteLine("Hidden Sectors: {0}", BootSector.HiddenSectors);
-            textWriter.WriteLine("Total Sectors: {0}", BootSector.TotalSectors);
-            textWriter.WriteLine("MFT LCN: {0}", BootSector.MFTLCN);
-            textWriter.WriteLine("MFT Mirror LCN: {0}", BootSector.MFTMirrLCN);
-            textWriter.WriteLine("Clusters Per MFT Record: {0}", BootSector.ClustersPerMFTRecord);
-            textWriter.WriteLine("Clusters Per Index Buffer: {0}", BootSector.ClustersPerIndexBuffer);
-            textWriter.WriteLine("Volume Serial Number: {0:X}", BootSector.VolumeSerialNumber);
-            textWriter.WriteLine("NTFS Checksum: {0:X}", BootSector.NTFSChecksum);
-
-            textWriter.WriteLine("Signature: {0}", BootSector.Signature.MakeReadable());
-        }
-
         private void ReadMft()
         {
             MFT = new MasterFileTable(this);
@@ -105,11 +83,6 @@ namespace NtfsSharp
         public ulong LcnToOffset(ulong lcn)
         {
             return lcn * BytesPerSector * SectorsPerCluster;
-        }
-
-        public void DisplayInfo(TextWriter textWriter)
-        {
-            OutputBootSectorInfo(textWriter);
         }
 
         private void ReleaseUnmanagedResources()
