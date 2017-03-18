@@ -4,6 +4,7 @@ namespace Console
 {
     internal class Program
     {
+        private NtfsSharp.Volume Volume;
         private Options Options;
 
         private TextWriter Output
@@ -21,9 +22,8 @@ namespace Console
         {
             Options = options;
 
-            var ntfs = new NtfsSharp.Volume(Options.Drive);
+            Volume = new NtfsSharp.Volume(Options.Drive);
 
-            ntfs.DisplayInfo(Output);
         }
 
         static void Main(string[] args)
