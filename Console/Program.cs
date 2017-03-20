@@ -1,5 +1,5 @@
-﻿using System.IO;
-using NtfsSharp;
+﻿using System.Diagnostics;
+using System.IO;
 
 namespace Console
 {
@@ -52,6 +52,19 @@ namespace Console
                         break;
                     }
 
+                    case '3':
+                    {
+                        ReadFileRecords(false, Output);
+                        break;
+                    }
+
+
+                    case '4':
+                    {
+                        ReadFileRecords(true, Output);
+                        break;
+                    }
+
                     default:
                         break;
                 }
@@ -64,6 +77,8 @@ namespace Console
             textWriter.WriteLine("Available commands:");
             textWriter.WriteLine("1\t\tDisplay boot sector");
             textWriter.WriteLine("2\t\tList MFT");
+            textWriter.WriteLine("3\t\tRead file records (without attributes)");
+            textWriter.WriteLine("4\t\tRead file records (with attributes)");
             textWriter.WriteLine("Q\t\tQuit");
             textWriter.WriteLine();
             textWriter.Write("Enter command: ");
@@ -103,6 +118,26 @@ namespace Console
             {
                 textWriter.WriteLine("{0}: {1}", kvp.Key, kvp.Value.Filename);
             }
+        }
+
+        private void ReadFileRecords(bool readAttrs, TextWriter textWriter)
+        {
+            var stopWatch = Stopwatch.StartNew();
+
+            using (var progress = new ProgressBar())
+            {
+                var i = 0;
+                var totalInodes = Volume.TotalInodes;
+
+                foreach (var fileRecord in Volume.ReadFileRecords(readAttrs))
+                {
+                    progress.Report((double)i / totalInodes);
+
+                    i++;
+                }
+            }
+
+            
         }
 
         static void Main(string[] args)
