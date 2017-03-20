@@ -13,7 +13,7 @@ namespace NtfsSharp.FileRecords.Attributes
     {
         public readonly NTFS_EA Data;
         public readonly string Name;
-        public readonly byte[] Value;
+        //public readonly byte[] Value;
 
         public ExtendedAttribute(AttributeHeader header) : base(header)
         {
@@ -26,8 +26,9 @@ namespace NtfsSharp.FileRecords.Attributes
                 CurrentOffset += Data.NameLength;
             }
 
-            Value = new byte[Data.ValueLength];
-            Array.Copy(Body, CurrentOffset, Value, 0, Data.ValueLength);
+            // TODO: ValueLength is larger than Body Length (causing ArgumentOutOfRangeException)
+            //Value = new byte[Data.ValueLength];
+            //Array.Copy(Body, CurrentOffset, Value, 0, Data.ValueLength);
         }
 
         public enum Flags : byte
