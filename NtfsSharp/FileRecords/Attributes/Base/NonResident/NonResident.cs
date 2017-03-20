@@ -246,6 +246,51 @@ namespace NtfsSharp.FileRecords.Attributes.Base.NonResident
             return new byte[0];
         }
 
+        /// <summary>
+        /// Reads number of VCNs from data
+        /// </summary>
+        /// <param name="vcn">Starting VCN to read from</param>
+        /// <param name="clusters">Number of clusters to read. Cannot be greater than the total number of VCNs</param>
+        /// <param name="bytesToRead">Bytes to read. Cannot be less than the number of clusters to read * 4096 (size of a cluster)</param>
+        /// <param name="actualBytesRead">Contains actual number of bytes read</param>
+        /// <returns>Array of bytes read</returns>
+        public byte[] ReadVirtualClusters(ulong vcn, uint clusters, uint bytesToRead, out uint actualBytesRead)
+        {
+            actualBytesRead = 0;
+
+            if (vcn + clusters > SubHeader.LastVCN - SubHeader.StartingVCN + 1)
+                throw new ArgumentOutOfRangeException(nameof(clusters), "Cluster exceeds datarun bounds");
+
+            if (bytesToRead < clusters * FileRecord.Volume.BytesPerSector * FileRecord.Volume.SectorsPerCluster)
+                throw new ArgumentOutOfRangeException(nameof(bytesToRead), "Bytes to read is too small");
+
+            var data = new List<byte>();
+
+            foreach (var dataBlock in DataBlocks)
+            {
+                if (vcn >= dataBlock.StartVcn && vcn <= dataBlock.LastVcn)
+                {
+                    var vcnsToRead = dataBlock.LastVcn - vcn + 1;
+
+                    var clustersToRead = (uint) (clusters > vcnsToRead ? vcnsToRead : clusters);
+
+                    data.AddRange(GetDataAsBytes(dataBlock, clustersToRead, (uint) (vcn - dataBlock.StartVcn)));
+
+                    clusters -= clustersToRead;
+                    actualBytesRead += clustersToRead;
+                    vcn += clustersToRead;
+                }
+
+                if (clusters == 0)
+                    break;
+            }
+
+            actualBytesRead *= FileRecord.Volume.BytesPerSector * FileRecord.Volume.SectorsPerCluster;
+
+            return data.ToArray();
+        }
+
+        /// <summary>
         /// Uses data block to get it's cluster(s)
         /// </summary>
         /// <param name="dataBlock">DataBlock instance</param>
