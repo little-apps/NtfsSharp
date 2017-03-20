@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
 using NtfsSharp.Data;
 using NtfsSharp.Exceptions;
 using NtfsSharp.FileRecords;
+using NtfsSharp.FileRecords.Attributes;
+using NtfsSharp.FileRecords.Attributes.Base;
+using NtfsSharp.FileRecords.Attributes.Base.NonResident;
 
 namespace NtfsSharp
 {
@@ -46,7 +50,6 @@ namespace NtfsSharp
         {
             ReadBootSector();
             ReadMft();
-            ReadFileRecords();
         }
 
         private void ReadBootSector()
@@ -91,39 +94,64 @@ namespace NtfsSharp
             }
             
         }
+
+        /// <summary>
+        /// Produces list of file records
+        /// </summary>
+        /// <param name="readAttributes">If true, attributes of files are read as well</param>
+        /// <returns>List of FileRecord objects</returns>
+        public IEnumerable<FileRecord> ReadFileRecords(bool readAttributes)
         {
             // MFT record #5 is root directory
             FileRecords[5] = MFT[5];
-
-            var shouldContinue = true;
+            
             var currentOffset = LcnToOffset(BootSector.MFTLCN) + (ulong) (MFT.Count * BytesPerFileRecord);
 
-            // Scan until InvalidFileRecordException is thrown (from invalid marker)
-            while (shouldContinue)
+            var mftRecord = MFT[0];
+            var mftBitmapAttr =
+                mftRecord.FindAttributeByType(AttributeHeader.NTFS_ATTR_TYPE.BITMAP).FirstOrDefault() as BitmapAttribute;
+            var mftDataAttr =
+                mftRecord.FindAttributeByType(AttributeHeader.NTFS_ATTR_TYPE.DATA).FirstOrDefault() as DataAttribute;
+
+            if (mftBitmapAttr == null)
+                throw new Exception("Unable to locate MFT $Bitmap");
+            
+            var mftBitmap = mftBitmapAttr.Bitmap;
+            
+            var bytesPerFileRecord = SectorsPerMFTRecord * BytesPerSector;
+
+            for (var currentInode = MFT.Count; currentInode < mftBitmap.Length; currentInode++)
             {
+                FileRecord fileRecord = null;
+                
+                if (!mftBitmap.Get(currentInode))
+                {
+                    // Skip to next LCN
+                    currentOffset += SectorsPerMFTRecord * BytesPerSector;
+
+                    continue;
+                }
+
                 try
                 {
-                    var bytes = new byte[SectorsPerMFTRecord * BytesPerSector];
+                    var bytes = (mftDataAttr.Header as NonResident).GetDataAtOffset((ulong) (currentInode * bytesPerFileRecord),
+                        bytesPerFileRecord, out uint actualBytesRead);
 
-                    for (var j = 0; j < SectorsPerMFTRecord; j++)
-                    {
-                        var sector = ReadSectorAtOffset(currentOffset);
-
-                        Array.Copy(sector.Data, 0, bytes, j * BytesPerSector, BytesPerSector);
-
-                        currentOffset += BytesPerSector;
-                    }
-
-                    var fileRecord = new FileRecord(bytes, this);
-                    fileRecord.ReadAttributes();
-
-                    FileRecords.Add(fileRecord.Header.MFTRecordNumber, fileRecord);
+                    fileRecord = new FileRecord(bytes, this);
                 }
                 catch (InvalidFileRecordException ex)
                 {
                     if (ex.ParamName == nameof(FileRecord.FILE_RECORD_HEADER_NTFS.Magic))
-                        shouldContinue = false;
+                        throw;
                 }
+
+                if (fileRecord == null)
+                    continue;
+
+                if (readAttributes)
+                    fileRecord.ReadAttributes();
+
+                yield return fileRecord;
             }
         }
 
