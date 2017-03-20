@@ -41,10 +41,10 @@ namespace Console
                 switch (cmd)
                 {
                     case '1':
-                        {
-                            OutputBootSectorInfo(Output);
-                            break;
-                        }
+                    {
+                        OutputBootSectorInfo(Output);
+                        break;
+                    }
 
                     case '2':
                     {
