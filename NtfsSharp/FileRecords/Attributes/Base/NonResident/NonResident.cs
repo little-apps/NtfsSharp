@@ -198,7 +198,7 @@ namespace NtfsSharp.FileRecords.Attributes.Base.NonResident
             if (!lcnOffset.HasValue)
                 return new byte[0];
 
-            for (long i = 0, currentLcn = dataBlock.LcnOffset; i < dataBlock.RunLength; i++, currentLcn++)
+            for (long i = 0, currentLcn = (long) lcnOffset.Value; i < clustersToRead; i++, currentLcn++)
             {
                 var cluster = FileRecord.Volume.ReadLcn((ulong) currentLcn);
 
