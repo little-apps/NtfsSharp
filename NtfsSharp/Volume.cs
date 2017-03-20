@@ -75,7 +75,22 @@ namespace NtfsSharp
             MFT.ReadRecords();
         }
 
-        private void ReadFileRecords()
+        public uint TotalInodes
+        {
+            get
+            {
+                var mftBitmapAttr =
+                MFT[0].FindAttributeByType(AttributeHeader.NTFS_ATTR_TYPE.BITMAP).FirstOrDefault() as BitmapAttribute;
+
+                if (mftBitmapAttr == null)
+                    throw new Exception("Unable to locate MFT $Bitmap");
+
+                var mftBitmap = mftBitmapAttr.Bitmap;
+
+                return (uint)mftBitmap.Cast<bool>().Count(bit => bit);
+            }
+            
+        }
         {
             // MFT record #5 is root directory
             FileRecords[5] = MFT[5];
