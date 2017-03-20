@@ -156,6 +156,96 @@ namespace NtfsSharp.FileRecords.Attributes.Base.NonResident
         }
 
         /// <summary>
+        /// Gets data at offset in non-resident data
+        /// </summary>
+        /// <param name="offset">Offset to read from</param>
+        /// <param name="bytesToRead">Number of bytes to read from offset</param>
+        /// <param name="actualBytesRead">Actual bytes read</param>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown if offset is larger than non-resident data size</exception>
+        /// <returns>Byte array containing data</returns>
+        public byte[] GetDataAtOffset(ulong offset, uint bytesToRead, out uint actualBytesRead)
+        {
+            actualBytesRead = 0;
+
+            if (bytesToRead == 0)
+                return new byte[0];
+
+            if (offset > SubHeader.AttributeSize)
+                throw new ArgumentOutOfRangeException(nameof(offset), "Offset is longer than attribute size");
+
+            if (offset + bytesToRead > SubHeader.AttributeSize)
+                bytesToRead = (uint) (SubHeader.AttributeSize - offset);
+
+            var clusterSize = FileRecord.Volume.BytesPerSector * FileRecord.Volume.SectorsPerCluster;
+
+            var startVcn = offset / clusterSize;
+            var startBytes =
+                (uint) (clusterSize - offset % (FileRecord.Volume.BytesPerSector * FileRecord.Volume.SectorsPerCluster));
+
+            var bytes = new byte[bytesToRead];
+            long bytesOffset = 0;
+            
+            uint length;
+
+            if (startBytes != FileRecord.Volume.BytesPerSector * FileRecord.Volume.SectorsPerCluster)
+            {
+                var unalignedBuffer1 = ReadVirtualClusters(startVcn, 1, clusterSize, out length);
+
+                if (length == clusterSize)
+                {
+                    length = startBytes < bytesToRead ? startBytes : bytesToRead;
+                    Array.Copy(unalignedBuffer1, clusterSize - startBytes, bytes, bytesOffset, length);
+
+                    bytesOffset += length;
+                    bytesToRead -= length;
+                    actualBytesRead += length;
+                    startVcn++;
+                }
+                else
+                    return new byte[0];
+            }
+
+            if (bytesToRead == 0)
+                return bytes;
+
+            var alignedClusters = bytesToRead / clusterSize;
+
+            if (alignedClusters > 0)
+            {
+                var alignedSize = alignedClusters * clusterSize;
+
+                var alignedBuffer = ReadVirtualClusters(startVcn, alignedClusters, alignedSize, out length);
+
+                if (length == alignedSize)
+                {
+                    Array.Copy(alignedBuffer, 0, bytes, bytesOffset, alignedSize);
+
+                    startVcn += alignedClusters;
+                    bytesOffset += alignedSize;
+                    bytesToRead %= clusterSize;
+                    actualBytesRead += length;
+
+                    if (bytesToRead == 0)
+                        return bytes;
+                }
+                else
+                    return new byte[0];
+                
+            }
+
+            var unalignedBuffer2 = ReadVirtualClusters(startVcn, 1, clusterSize, out length);
+
+            if (length == clusterSize)
+            {
+                Array.Copy(unalignedBuffer2, 0, bytes, bytesOffset, bytesToRead);
+                actualBytesRead += bytesToRead;
+
+                return bytes;
+            }
+
+            return new byte[0];
+        }
+
         /// Uses data block to get it's cluster(s)
         /// </summary>
         /// <param name="dataBlock">DataBlock instance</param>
