@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Runtime.Remoting.Messaging;
 using System.Threading;
 using Microsoft.Win32.SafeHandles;
 
@@ -30,6 +31,25 @@ namespace NtfsSharp
                 throw new Win32Exception(Marshal.GetLastWin32Error());
 
             return newOffset;
+        }
+
+        private static byte[] AllocateByteArray(uint bytesToRead, out uint leftOverBytes)
+        {
+            leftOverBytes = 512 - bytesToRead % 512;
+
+            return new byte[bytesToRead + leftOverBytes];
+        }
+
+        public byte[] SafeReadFile(uint bytesToRead)
+        {
+            var buffer = AllocateByteArray(bytesToRead, out uint leftOverBytes);
+
+            if (!ReadFile(Handle, buffer, (uint)buffer.Length, out uint bytesRead, IntPtr.Zero))
+                throw new Win32Exception(Marshal.GetLastWin32Error());
+
+            Array.Resize(ref buffer, (int) bytesToRead);
+            
+            return buffer;
         }
 
         public byte[] ReadFile(uint bytesToRead)
