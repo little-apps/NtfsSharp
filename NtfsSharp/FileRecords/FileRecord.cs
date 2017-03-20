@@ -96,7 +96,7 @@ namespace NtfsSharp.FileRecords
             _currentOffset = (uint)Marshal.SizeOf<FILE_RECORD_HEADER_NTFS>();
 
             if (!Header.Magic.SequenceEqual(new byte[] { 0x46, 0x49, 0x4C, 0x45 }))
-                throw new InvalidFileRecordException(nameof(Header), this);
+                throw new InvalidFileRecordException(nameof(Header.Magic), this);
         }
 
         /// <summary>
