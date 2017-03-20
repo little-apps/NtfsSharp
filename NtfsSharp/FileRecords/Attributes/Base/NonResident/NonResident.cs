@@ -113,10 +113,31 @@ namespace NtfsSharp.FileRecords.Attributes.Base.NonResident
         public byte[] GetAllDataAsBytes()
         {
             var bytes = new List<byte>();
+            ulong vcn = 0;
+            var lengthLeft = SubHeader.AttributeSize;
 
             foreach (var dataBlock in DataBlocks)
             {
-                bytes.AddRange(GetDataAsBytes(dataBlock));
+                if (dataBlock.LcnOffset == 0xFFFFFFFF)
+                    continue;
+
+                var dataBlockLcn = VcnToLcn(vcn);
+
+                if (!dataBlockLcn.HasValue)
+                    break;
+                
+                vcn += dataBlock.RunLength;
+                
+                var blockSize = dataBlock.RunLength * FileRecord.Volume.BytesPerSector * FileRecord.Volume.SectorsPerCluster;
+
+                FileRecord.Volume.Disk.Move(dataBlockLcn.Value * FileRecord.Volume.BytesPerSector *
+                                            FileRecord.Volume.SectorsPerCluster);
+                
+
+                var blockData = FileRecord.Volume.Disk.SafeReadFile((uint) (lengthLeft >= blockSize ? blockSize : lengthLeft));
+                bytes.AddRange(blockData);
+
+                lengthLeft -= dataBlock.RunLength * FileRecord.Volume.BytesPerSector * FileRecord.Volume.SectorsPerCluster;
             }
 
             return bytes.ToArray();
