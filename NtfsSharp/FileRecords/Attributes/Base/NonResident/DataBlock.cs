@@ -22,15 +22,19 @@ namespace NtfsSharp.FileRecords.Attributes.Base.NonResident
 
         public bool LcnOffsetNegative => LcnOffset >> ((OffsetFieldLength - 1) * 8) >= 0x80;
 
-        private DataBlock(ushort lengthFieldLength, ushort offsetFieldLength, uint runLength, uint lcnOffset)
+        public readonly ulong StartVcn;
+        public ulong LastVcn => StartVcn + RunLength - 1;
+
+        private DataBlock(ushort lengthFieldLength, ushort offsetFieldLength, uint runLength, uint lcnOffset, ulong startVcn)
         {
             LengthFieldLength = lengthFieldLength;
             OffsetFieldLength = offsetFieldLength;
             RunLength = runLength;
             LcnOffset = lcnOffset;
+            StartVcn = startVcn;
         }
 
-        public static DataBlock GetDataBlockFromRun(byte[] data, ref uint offset)
+        public static DataBlock GetDataBlockFromRun(byte[] data, ref uint offset, ulong startVcn)
         {
             var lengthOffsetFieldSize = new Nibble { Value = data[offset] };
 
@@ -57,7 +61,7 @@ namespace NtfsSharp.FileRecords.Attributes.Base.NonResident
 
             offset += offsetBytes;
 
-            return new DataBlock(lengthBytes, offsetBytes, runLength, runOffset);
+            return new DataBlock(lengthBytes, offsetBytes, runLength, runOffset, startVcn);
         }
     }
 }

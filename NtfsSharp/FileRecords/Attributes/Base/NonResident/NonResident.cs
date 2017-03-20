@@ -37,9 +37,21 @@ namespace NtfsSharp.FileRecords.Attributes.Base.NonResident
         {
             var currentOffset = CurrentOffset;
 
+            ulong vcn = 0;
+
             while (currentOffset < Header.Length && data[currentOffset] != 0)
             {
-                DataBlocks.Add(DataBlock.GetDataBlockFromRun(data, ref currentOffset));
+                var dataBlock = DataBlock.GetDataBlockFromRun(data, ref currentOffset, vcn);
+
+                if (dataBlock.LastVcn > SubHeader.LastVCN - SubHeader.StartingVCN)
+                {
+                    DataBlocks.Clear();
+                    return;
+                }
+
+                DataBlocks.Add(dataBlock);
+
+                vcn += dataBlock.RunLength;
             }
 
             CurrentOffset = currentOffset;
