@@ -28,7 +28,7 @@ namespace NtfsSharp.FileRecords
         {
             get
             {
-                var isFirst = true;
+                var defaultFilename = string.Empty;
 
                 foreach (
                     var fileNameAttr in
@@ -37,13 +37,10 @@ namespace NtfsSharp.FileRecords
                     if (fileNameAttr.FileName.Data.Namespace != FileName.NTFS_NAMESPACE.Dos)
                         return fileNameAttr.FileName.Filename;
 
-                    if (!isFirst)
-                        return fileNameAttr.FileName.Filename;
-
-                    isFirst = false;
+                    defaultFilename = fileNameAttr.FileName.Filename;
                 }
 
-                return string.Empty;
+                return defaultFilename;
             }
         }
 
