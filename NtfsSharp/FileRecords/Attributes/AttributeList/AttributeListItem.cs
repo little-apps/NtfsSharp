@@ -67,15 +67,13 @@ namespace NtfsSharp.FileRecords.Attributes.AttributeList
                 var volume = attributeList.Header.FileRecord.Volume;
                 var mftRecord = volume.MFT[0];
 
-                var mftRecordDataAttrs = mftRecord.FindAttributeByType(AttributeHeader.NTFS_ATTR_TYPE.DATA);
-
-                var dataAttr = mftRecordDataAttrs.FirstOrDefault();
+                var mftRecordDataAttr = mftRecord.FindAttributeByType(AttributeHeader.NTFS_ATTR_TYPE.DATA);
 
                 byte[] data;
 
-                if (dataAttr?.Header is Resident)
-                    data = dataAttr.Header.ReadBody();
-                else if (dataAttr?.Header is NonResident)
+                if (mftRecordDataAttr?.Header is Resident)
+                    data = mftRecordDataAttr.Header.ReadBody();
+                else if (mftRecordDataAttr?.Header is NonResident)
                 {
                     // $DATA attribute in $MFT is huge, so it's best to go to where we want to read and get that cluster, rather than read entire thing
                     var vcn = Header.BaseFileReference.FileRecordNumber * volume.BytesPerFileRecord /
@@ -83,7 +81,7 @@ namespace NtfsSharp.FileRecords.Attributes.AttributeList
                     var offsetInCluster = Header.BaseFileReference.FileRecordNumber * volume.BytesPerFileRecord %
                                           (volume.BytesPerSector * volume.SectorsPerCluster);
 
-                    var lcn = ((NonResident) dataAttr.Header).VcnToLcn(vcn);
+                    var lcn = ((NonResident) mftRecordDataAttr.Header).VcnToLcn(vcn);
 
                     if (!lcn.HasValue)
                         return;

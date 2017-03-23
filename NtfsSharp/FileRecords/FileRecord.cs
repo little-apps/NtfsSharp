@@ -128,6 +128,16 @@ namespace NtfsSharp.FileRecords
         }
 
         /// <summary>
+        /// Finds first attribute with specified type
+        /// </summary>
+        /// <param name="attrType">Attribute type</param>
+        /// <returns>First matching attribute or null none found</returns>
+        public AttributeBodyBase FindAttributeByType(AttributeHeader.NTFS_ATTR_TYPE attrType)
+        {
+            return Attributes.Cast<AttributeBodyBase>().FirstOrDefault(attr => attr.Header.Header.Type == attrType);
+        }
+
+        /// <summary>
         /// Tries to find an attribute in the file record
         /// </summary>
         /// <param name="attrNum">Attribute number</param>
