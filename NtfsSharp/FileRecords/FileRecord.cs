@@ -32,7 +32,7 @@ namespace NtfsSharp.FileRecords
 
                 foreach (
                     var fileNameAttr in
-                    FindAttributeByType(AttributeHeader.NTFS_ATTR_TYPE.FILE_NAME).Cast<FileNameAttribute>())
+                    FindAttributesByType(AttributeHeader.NTFS_ATTR_TYPE.FILE_NAME).Cast<FileNameAttribute>())
                 {
                     if (fileNameAttr.FileName.Data.Namespace != FileName.NTFS_NAMESPACE.Dos)
                         return fileNameAttr.FileName.Filename;
@@ -122,7 +122,7 @@ namespace NtfsSharp.FileRecords
         /// </summary>
         /// <param name="attrType">Attribute type</param>
         /// <returns>Matching attributes or empty list if none found</returns>
-        public IEnumerable<AttributeBodyBase> FindAttributeByType(AttributeHeader.NTFS_ATTR_TYPE attrType)
+        public IEnumerable<AttributeBodyBase> FindAttributesByType(AttributeHeader.NTFS_ATTR_TYPE attrType)
         {
             return Attributes.Cast<AttributeBodyBase>().Where(attr => attr.Header.Header.Type == attrType);
         }
