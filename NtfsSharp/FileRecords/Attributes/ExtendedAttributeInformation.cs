@@ -23,5 +23,10 @@ namespace NtfsSharp.FileRecords.Attributes
             public readonly ushort NeedEASize;
             public readonly uint UnpackedSize;
         }
+
+        public override string ToString()
+        {
+            return "$EA_INFORMATION (0xD0)";
+        }
     }
 }

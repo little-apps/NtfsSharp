@@ -15,6 +15,10 @@ namespace NtfsSharp.FileRecords.Attributes
             FileName = new FileName(Body, CurrentOffset);
             CurrentOffset = FileName.CurrentOffset;
         }
-        
+
+        public override string ToString()
+        {
+            return "$FILE_NAME (0x30)";
+        }
     }
 }

@@ -17,5 +17,10 @@ namespace NtfsSharp.FileRecords.Attributes
             Name = Encoding.Unicode.GetString(GetBytesFromCurrentOffset(residentHeader.SubHeader.AttributeLength));
             CurrentOffset += residentHeader.SubHeader.AttributeLength;
         }
+
+        public override string ToString()
+        {
+            return "$VOLUME_NAME (0x60)";
+        }
     }
 }

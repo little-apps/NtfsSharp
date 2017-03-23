@@ -45,6 +45,10 @@ namespace NtfsSharp.FileRecords.Attributes
 
             return guid;
         }
-        
+
+        public override string ToString()
+        {
+            return "$OBJECT_ID (0x40)";
+        }
     }
 }

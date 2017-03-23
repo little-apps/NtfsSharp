@@ -18,5 +18,10 @@ namespace NtfsSharp.FileRecords.Attributes
         {
             Bitmap = new BitArray(Body);
         }
+
+        public override string ToString()
+        {
+            return "$BITMAP (0xB0)";
+        }
     }
 }

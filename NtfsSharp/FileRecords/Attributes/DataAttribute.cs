@@ -19,5 +19,10 @@ namespace NtfsSharp.FileRecords.Attributes
         public DataAttribute(AttributeHeader header) : base(header, MustBe.Resident | MustBe.NonResident, false)
         {
         }
+
+        public override string ToString()
+        {
+            return "$DATA (0x80)";
+        }
     }
 }

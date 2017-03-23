@@ -27,5 +27,10 @@ namespace NtfsSharp.FileRecords.Attributes
             public readonly ushort Flags;
             public readonly uint Empty2;
         }
+
+        public override string ToString()
+        {
+            return "$VOLUME_INFORMATION (0x70)";
+        }
     }
 }

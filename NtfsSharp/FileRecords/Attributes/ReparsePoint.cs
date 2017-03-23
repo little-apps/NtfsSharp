@@ -41,5 +41,10 @@ namespace NtfsSharp.FileRecords.Attributes
             HSM = 0xA8000004,
             SymbolicLink = 0xE8000000
         };
+
+        public override string ToString()
+        {
+            return "$REPARSE_POINT (0xC0)";
+        }
     }
 }

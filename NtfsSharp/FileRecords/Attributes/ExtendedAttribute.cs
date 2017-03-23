@@ -43,5 +43,10 @@ namespace NtfsSharp.FileRecords.Attributes
             public readonly byte NameLength;
             public readonly ushort ValueLength;
         }
+
+        public override string ToString()
+        {
+            return "$EA (0xE0)";
+        }
     }
 }

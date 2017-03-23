@@ -70,5 +70,10 @@ namespace NtfsSharp.FileRecords.Attributes
             public readonly uint SaclOffset;
             public readonly uint DaclOffset;
         }
+
+        public override string ToString()
+        {
+            return "$SECURITY_DESCRIPTOR (0x50)";
+        }
     }
 }

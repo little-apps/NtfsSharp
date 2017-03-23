@@ -13,5 +13,10 @@ namespace NtfsSharp.FileRecords.Attributes
         public LoggedUtilityStream(AttributeHeader header) : base(header)
         {
         }
+
+        public override string ToString()
+        {
+            return "$LOGGED_UTILITY_STREAM (0x100)";
+        }
     }
 }

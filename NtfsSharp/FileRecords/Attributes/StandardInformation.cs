@@ -34,5 +34,10 @@ namespace NtfsSharp.FileRecords.Attributes
             public readonly ulong QuotaCharged;
             public readonly ulong UpdateSequenceNumber;
         }
+
+        public override string ToString()
+        {
+            return "$STANDARD_INFORMATION (0x10)";
+        }
     }
 }
