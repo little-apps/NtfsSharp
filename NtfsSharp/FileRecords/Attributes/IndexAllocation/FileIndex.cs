@@ -48,7 +48,9 @@ namespace NtfsSharp.FileRecords.Attributes.IndexAllocation
                 while (shouldContinue)
                 {
                     var fileNameEntry = new FileNameEntry(data, CurrentOffset);
-                    FileNameEntries.Add(fileNameEntry);
+
+                    if (!fileNameEntry.Header.Flags.HasFlag(Enums.IndexEntryFlags.IsLastEntry))
+                        FileNameEntries.Add(fileNameEntry);
 
                     CurrentOffset = fileNameEntry.CurrentOffset;
 
