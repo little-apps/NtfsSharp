@@ -15,7 +15,7 @@ namespace NtfsSharp.FileRecords.Attributes.IndexRoot
 
         public readonly List<FileNameIndex> FileNameEntries = new List<FileNameIndex>();
 
-        public Root(AttributeHeader header) : base(header)
+        public Root(AttributeHeaderBase header) : base(header)
         {
             Data = Body.ToStructure<NTFS_ATTR_INDEX_ROOT>(CurrentOffset);
             CurrentOffset += HeaderSize;

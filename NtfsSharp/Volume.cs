@@ -82,8 +82,7 @@ namespace NtfsSharp
         {
             get
             {
-                var mftBitmapAttr =
-                    MFT[0].FindAttributeByType(AttributeHeader.NTFS_ATTR_TYPE.BITMAP) as BitmapAttribute;
+                var mftBitmapAttr = MFT[0].FindAttributeBodyByType(AttributeHeaderBase.NTFS_ATTR_TYPE.BITMAP) as BitmapAttribute;
 
                 if (mftBitmapAttr == null)
                     throw new Exception("Unable to locate MFT $Bitmap");
@@ -109,9 +108,8 @@ namespace NtfsSharp
 
             var mftRecord = MFT[0];
             var mftBitmapAttr =
-                mftRecord.FindAttributeByType(AttributeHeader.NTFS_ATTR_TYPE.BITMAP) as BitmapAttribute;
-            var mftDataAttr =
-                mftRecord.FindAttributeByType(AttributeHeader.NTFS_ATTR_TYPE.DATA) as DataAttribute;
+                mftRecord.FindAttributeBodyByType(AttributeHeaderBase.NTFS_ATTR_TYPE.BITMAP) as BitmapAttribute;
+            var mftDataAttr = mftRecord.FindAttributeBodyByType(AttributeHeaderBase.NTFS_ATTR_TYPE.DATA) as DataAttribute;
 
             if (mftBitmapAttr == null)
                 throw new Exception("Unable to locate MFT $Bitmap");
@@ -167,7 +165,7 @@ namespace NtfsSharp
 
             var mftRecord = MFT[0];
             var mftDataAttr =
-                mftRecord.FindAttributeByType(AttributeHeader.NTFS_ATTR_TYPE.DATA) as DataAttribute;
+                mftRecord.FindAttributeByType(AttributeHeaderBase.NTFS_ATTR_TYPE.DATA).Body as DataAttribute;
 
             var bytes = (mftDataAttr.Header as NonResident).GetDataAtOffset((ulong)(inode * bytesPerFileRecord),
                         bytesPerFileRecord, out uint actualBytesRead);

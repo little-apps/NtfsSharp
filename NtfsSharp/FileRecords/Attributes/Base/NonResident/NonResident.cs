@@ -9,7 +9,7 @@ namespace NtfsSharp.FileRecords.Attributes.Base.NonResident
     /// <summary>
     /// Non-resident data is data that is contained on one or more other sectors on the disk
     /// </summary>
-    public sealed class NonResident : AttributeHeader
+    public sealed class NonResident : AttributeHeaderBase
     {
         public new static uint HeaderSize => (uint)Marshal.SizeOf<NonResidentAttribute>();
 

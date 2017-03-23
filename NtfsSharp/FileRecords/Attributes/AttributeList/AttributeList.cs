@@ -14,7 +14,7 @@ namespace NtfsSharp.FileRecords.Attributes.AttributeList
         /// Represents $ATTRIBUTE_LIST
         /// </summary>
         /// <param name="header"></param>
-        public AttributeList(AttributeHeader header) : base(header)
+        public AttributeList(AttributeHeaderBase header) : base(header)
         {
             while (CurrentOffset <= header.Header.Length)
             {

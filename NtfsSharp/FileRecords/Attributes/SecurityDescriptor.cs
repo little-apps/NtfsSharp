@@ -17,7 +17,7 @@ namespace NtfsSharp.FileRecords.Attributes
         public static uint SubHeaderSize => (uint) Marshal.SizeOf<NTFS_SECURITY_DESCRIPTOR>();
         public NTFS_SECURITY_DESCRIPTOR SubHeader { get; private set; }
         
-        public SecurityDescriptor(AttributeHeader header) : base(header)
+        public SecurityDescriptor(AttributeHeaderBase header) : base(header)
         {
             SubHeader = Body.ToStructure<NTFS_SECURITY_DESCRIPTOR>(CurrentOffset);
             CurrentOffset += SubHeaderSize;

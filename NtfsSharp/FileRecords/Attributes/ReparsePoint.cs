@@ -12,7 +12,7 @@ namespace NtfsSharp.FileRecords.Attributes
     {
         public readonly NTFS_REPARSE_POINT Data;
 
-        public ReparsePoint(AttributeHeader header) : base(header)
+        public ReparsePoint(AttributeHeaderBase header) : base(header)
         {
             Data = Body.ToStructure<NTFS_REPARSE_POINT>();
             CurrentOffset += (uint) Marshal.SizeOf<NTFS_REPARSE_POINT>();

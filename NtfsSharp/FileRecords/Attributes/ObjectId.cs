@@ -15,7 +15,7 @@ namespace NtfsSharp.FileRecords.Attributes
         public readonly Guid BirthObjectId;
         public readonly Guid DomainId;
         
-        public ObjectId(AttributeHeader header) : base(header)
+        public ObjectId(AttributeHeaderBase header) : base(header)
         {
             if (OffsetWithHeader == header.Header.Length)
                 return;

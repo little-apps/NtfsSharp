@@ -14,7 +14,7 @@ namespace NtfsSharp.FileRecords.Attributes
         /// </summary>
         public readonly BitArray Bitmap;
 
-        public BitmapAttribute(AttributeHeader header) : base(header)
+        public BitmapAttribute(AttributeHeaderBase header) : base(header)
         {
             Bitmap = new BitArray(Body);
         }

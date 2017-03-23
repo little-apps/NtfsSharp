@@ -15,7 +15,7 @@ namespace NtfsSharp.FileRecords.Attributes
         public readonly string Name;
         //public readonly byte[] Value;
 
-        public ExtendedAttribute(AttributeHeader header) : base(header)
+        public ExtendedAttribute(AttributeHeaderBase header) : base(header)
         {
             Data = Body.ToStructure<NTFS_EA>();
             CurrentOffset += (uint) Marshal.SizeOf<NTFS_EA>();

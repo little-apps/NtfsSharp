@@ -10,7 +10,7 @@ namespace NtfsSharp.FileRecords.Attributes
     {
         public readonly FileName FileName;
 
-        public FileNameAttribute(AttributeHeader header) : base(header, MustBe.Resident)
+        public FileNameAttribute(AttributeHeaderBase header) : base(header, MustBe.Resident)
         {
             FileName = new FileName(Body, CurrentOffset);
             CurrentOffset = FileName.CurrentOffset;

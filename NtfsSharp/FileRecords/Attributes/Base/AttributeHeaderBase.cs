@@ -5,8 +5,10 @@ using System.Text;
 
 namespace NtfsSharp.FileRecords.Attributes.Base
 {
-    public abstract class AttributeHeader : AttributeBase
+    public abstract class AttributeHeaderBase
     {
+        public uint CurrentOffset { get; protected set; }
+
         public static uint HeaderSize => (uint)Marshal.SizeOf<NTFS_ATTRIBUTE_HEADER>();
 
         /// <summary>
@@ -25,7 +27,7 @@ namespace NtfsSharp.FileRecords.Attributes.Base
         /// <param name="header">Header of attribute</param>
         /// <param name="data">Bytes of data (including header and body)</param>
         /// <param name="fileRecord">File record containing attribute</param>
-        protected AttributeHeader(NTFS_ATTRIBUTE_HEADER header, byte[] data, FileRecord fileRecord)
+        protected AttributeHeaderBase(NTFS_ATTRIBUTE_HEADER header, byte[] data, FileRecord fileRecord)
         {
             if (fileRecord == null)
                 throw new ArgumentNullException(nameof(fileRecord));

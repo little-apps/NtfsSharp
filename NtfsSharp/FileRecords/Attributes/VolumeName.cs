@@ -10,7 +10,7 @@ namespace NtfsSharp.FileRecords.Attributes
     {
         public readonly string Name;
 
-        public VolumeName(AttributeHeader header) : base(header, MustBe.Resident)
+        public VolumeName(AttributeHeaderBase header) : base(header, MustBe.Resident)
         {
             var residentHeader = header as Resident;
 

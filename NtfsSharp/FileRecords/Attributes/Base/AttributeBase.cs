@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using NtfsSharp.FileRecords.Attributes.IndexRoot;
 using NtfsSharp.Helpers;
-using static NtfsSharp.FileRecords.Attributes.Base.AttributeHeader;
+using static NtfsSharp.FileRecords.Attributes.Base.AttributeHeaderBase;
 
 namespace NtfsSharp.FileRecords.Attributes.Base
 {
-    public abstract class AttributeBase
+    public sealed class AttributeBase
     {
+        public AttributeHeaderBase Header { get; }
+        public AttributeBodyBase Body { get; private set; }
         
-        public uint CurrentOffset { get; protected set; }
-
         private static readonly Dictionary<NTFS_ATTR_TYPE, Type> Attributes = new Dictionary<NTFS_ATTR_TYPE, Type>
         {
             {NTFS_ATTR_TYPE.STANDARD_INFORMATION, typeof(StandardInformation)},
@@ -30,29 +30,33 @@ namespace NtfsSharp.FileRecords.Attributes.Base
             {NTFS_ATTR_TYPE.EA, typeof(ExtendedAttribute)}
         };
 
-        protected AttributeBase()
-        {
-
-        }
-        
         /// <summary>
         /// Creates attribute from bytes
         /// </summary>
         /// <param name="bytes">Bytes of data</param>
         /// <param name="fileRecord">File record holding attribute</param>
-        /// <returns>AttributesBase containing resident or non-resident data</returns>
-        public static AttributeHeader GetAttribute(byte[] bytes, FileRecord fileRecord)
+        public AttributeBase(byte[] bytes, FileRecord fileRecord)
         {
             var header = bytes.ToStructure<NTFS_ATTRIBUTE_HEADER>();
 
-            AttributeHeader attrHeader;
+            AttributeHeaderBase attrHeader;
 
             if (header.NonResident)
                 attrHeader = new NonResident.NonResident(header, bytes, fileRecord);
             else
                 attrHeader = new Resident(header, bytes, fileRecord);
-            
-            return attrHeader;
+
+            Header = attrHeader;
+            ReadBody();
+        }
+
+        public AttributeBase ReadBody()
+        {
+            var type = GetClassTypeFromType(Header.Header.Type);
+
+            Body = (AttributeBodyBase)Activator.CreateInstance(type, Header);
+
+            return this;
         }
 
         public static Type GetClassTypeFromType(NTFS_ATTR_TYPE type)
@@ -61,13 +65,6 @@ namespace NtfsSharp.FileRecords.Attributes.Base
                 throw new Exceptions.InvalidAttributeException("Attribute type is invalid");
 
             return Attributes[type];
-        }
-
-        public static AttributeBodyBase ReadBody(AttributeHeader header)
-        {
-            var type = GetClassTypeFromType(header.Header.Type);
-
-            return (AttributeBodyBase) Activator.CreateInstance(type, header);
         }
     }
 }

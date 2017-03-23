@@ -10,7 +10,7 @@ namespace NtfsSharp.FileRecords.Attributes
     /// </remarks>
     public class LoggedUtilityStream : AttributeBodyBase
     {
-        public LoggedUtilityStream(AttributeHeader header) : base(header)
+        public LoggedUtilityStream(AttributeHeaderBase header) : base(header)
         {
         }
 

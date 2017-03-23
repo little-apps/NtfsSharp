@@ -13,7 +13,7 @@ namespace NtfsSharp.FileRecords.Attributes
 
         public NTFS_ATTR_VOLUME_INFO Data { get; private set; }
 
-        public VolumeInformation(AttributeHeader header) : base(header)
+        public VolumeInformation(AttributeHeaderBase header) : base(header)
         {
             Data = Body.ToStructure<NTFS_ATTR_VOLUME_INFO>(CurrentOffset);
             CurrentOffset += HeaderSize;

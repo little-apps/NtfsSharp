@@ -67,7 +67,7 @@ namespace NtfsSharp.FileRecords.Attributes.AttributeList
                 var volume = attributeList.Header.FileRecord.Volume;
                 var mftRecord = volume.MFT[0];
 
-                var mftRecordDataAttr = mftRecord.FindAttributeByType(AttributeHeader.NTFS_ATTR_TYPE.DATA);
+                var mftRecordDataAttr = mftRecord.FindAttributeByType(AttributeHeaderBase.NTFS_ATTR_TYPE.DATA);
 
                 byte[] data;
 
@@ -107,7 +107,7 @@ namespace NtfsSharp.FileRecords.Attributes.AttributeList
 
         public struct NTFS_ATTRIBUTE_LIST_HEADER
         {
-            public readonly AttributeHeader.NTFS_ATTR_TYPE Type;
+            public readonly AttributeHeaderBase.NTFS_ATTR_TYPE Type;
             public readonly ushort Length;
             public readonly byte NameLength;
             public readonly byte NameOffset;

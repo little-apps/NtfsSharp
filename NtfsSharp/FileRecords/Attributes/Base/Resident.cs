@@ -7,7 +7,7 @@ namespace NtfsSharp.FileRecords.Attributes.Base
     /// <summary>
     /// Resident data is data that is able to fit in the FILE record itself
     /// </summary>
-    public sealed class Resident : AttributeHeader
+    public sealed class Resident : AttributeHeaderBase
     {
         public new static uint HeaderSize => (uint)Marshal.SizeOf<ResidentAttribute>();
 
