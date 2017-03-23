@@ -155,6 +155,31 @@ namespace NtfsSharp
             }
         }
 
+        /// <summary>
+        /// Reads file record at specified inode
+        /// </summary>
+        /// <param name="inode">Inode to read</param>
+        /// <param name="readAttributes">If true, attributes are read</param>
+        /// <returns>FileRecord object</returns>
+        public FileRecord ReadFileRecord(ulong inode, bool readAttributes)
+        {
+            var bytesPerFileRecord = SectorsPerMFTRecord * BytesPerSector;
+
+            var mftRecord = MFT[0];
+            var mftDataAttr =
+                mftRecord.FindAttributeByType(AttributeHeader.NTFS_ATTR_TYPE.DATA).FirstOrDefault() as DataAttribute;
+
+            var bytes = (mftDataAttr.Header as NonResident).GetDataAtOffset((ulong)(inode * bytesPerFileRecord),
+                        bytesPerFileRecord, out uint actualBytesRead);
+
+            var fileRecord = new FileRecord(bytes, this);
+
+            if (readAttributes)
+                fileRecord.ReadAttributes();
+
+            return fileRecord;
+        }
+
         public Sector ReadSectorAtOffset(ulong offset)
         {
             return new Sector(offset, this);
