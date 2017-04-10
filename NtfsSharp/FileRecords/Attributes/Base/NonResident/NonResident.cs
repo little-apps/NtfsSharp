@@ -130,9 +130,12 @@ namespace NtfsSharp.FileRecords.Attributes.Base.NonResident
 
             foreach (var dataBlock in DataBlocks)
             {
-                if (dataBlock.LcnOffset == 0xFFFFFFFF)
+                if (dataBlock.VirtualFragment)
+                {
+                    vcn += dataBlock.RunLength;
                     continue;
-
+                }
+                    
                 var dataBlockLcn = VcnToLcn(vcn);
 
                 if (!dataBlockLcn.HasValue)
