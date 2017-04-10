@@ -1,5 +1,5 @@
-﻿using NtfsSharp.FileRecords.Attributes.Base;
 ﻿using System.IO;
+using NtfsSharp.FileRecords.Attributes.Base;
 using NtfsSharp.Helpers;
 using System.Runtime.InteropServices;
 using FILETIME = System.Runtime.InteropServices.ComTypes.FILETIME;
@@ -22,10 +22,10 @@ namespace NtfsSharp.FileRecords.Attributes
 
         public struct NTFS_ATTR_STANDARD
         {
-            FILETIME CreationTime;
-            FILETIME ModifiedTime;
-            FILETIME MFTChangedTime;
-            FILETIME FileReadTime;
+            public FILETIME CreationTime;
+            public FILETIME ModifiedTime;
+            public FILETIME MFTChangedTime;
+            public FILETIME FileReadTime;
             public readonly FileAttributes DosPermissions;
             public readonly uint MaximumVersions;
             public readonly uint VersionNumber;
