@@ -277,10 +277,6 @@ namespace NtfsSharp.FileRecords
             public readonly ushort NextAttributeID;
             public readonly ushort Align;
             public readonly uint MFTRecordNumber;
-            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 2)]
-            public readonly byte[] EndTag;
-            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 6)]
-            public readonly byte[] FixupArray;
         }
     }
 }
