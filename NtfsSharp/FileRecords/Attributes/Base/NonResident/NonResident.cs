@@ -348,6 +348,7 @@ namespace NtfsSharp.FileRecords.Attributes.Base.NonResident
             return GetAllDataAsBytes();
         }
 
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
         public struct NonResidentAttribute
         {
             public readonly ulong StartingVCN;
