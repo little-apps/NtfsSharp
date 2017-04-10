@@ -1,0 +1,51 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Explorer"
+        xmlns:Tree="clr-namespace:Aga.Controls.Tree;assembly=Aga.Controls" x:Class="Explorer.MainWindow"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="582" Width="1086" DataContext="{Binding RelativeSource={RelativeSource Self}}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="270*"/>
+            <RowDefinition Height="40"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Center">
+            <ComboBox x:Name="Drives" Margin="5" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="50"></ComboBox>
+            <Button x:Name="ScanButton" Content="Scan" HorizontalAlignment="Left" Width="75"  VerticalContentAlignment="Center" Click="ScanButton_OnClick" />
+        </StackPanel>
+
+
+        <Tree:TreeList x:Name="Tree" Grid.Row="0" Grid.Column="0" HorizontalContentAlignment="Stretch">
+            <Tree:TreeList.View>
+                <GridView>
+                    <GridViewColumn Header="Name" Width="400">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Tree:RowExpander/>
+                                    <TextBlock Text="{Binding Filename}"></TextBlock>
+                                </StackPanel>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Date Modified" Width="150" DisplayMemberBinding="{Binding DateModified}"></GridViewColumn>
+                    <GridViewColumn Header="Actual Size" Width="100" DisplayMemberBinding="{Binding ActualSize}"></GridViewColumn>
+                    <GridViewColumn Header="Allocated Size" Width="100" DisplayMemberBinding="{Binding AllocatedSize}"></GridViewColumn>
+                    <GridViewColumn Header="Attributes" Width="100" DisplayMemberBinding="{Binding Attributes}"></GridViewColumn>
+                </GridView>
+            </Tree:TreeList.View>
+
+            <Tree:TreeList.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Save As..." Click="Save_OnClick"></MenuItem>
+                </ContextMenu>
+            </Tree:TreeList.ContextMenu>
+        </Tree:TreeList>
+
+
+    </Grid>
+</Window>

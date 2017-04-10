@@ -46,12 +46,14 @@
     <Compile Include="Exceptions\InvalidAttributeException.cs" />
     <Compile Include="Exceptions\InvalidBootSectorException.cs" />
     <Compile Include="Exceptions\InvalidFileRecordException.cs" />
+    <Compile Include="Exceptions\InvalidIndexAllocationException.cs" />
     <Compile Include="FileRecords\Attributes\AttributeList\AttributeListItem.cs" />
     <Compile Include="FileRecords\Attributes\AttributeList\AttributeList.cs" />
     <Compile Include="FileRecords\Attributes\Base\AttributeBase.cs" />
     <Compile Include="FileRecords\Attributes\Base\AttributeBodyBase.cs" />
     <Compile Include="FileRecords\Attributes\Base\AttributeHeaderBase.cs" />
     <Compile Include="FileRecords\Attributes\Base\NonResident\DataBlock.cs" />
+    <Compile Include="FileRecords\Attributes\Base\NonResident\DataStream.cs" />
     <Compile Include="FileRecords\Attributes\BitmapAttribute.cs" />
     <Compile Include="FileRecords\Attributes\DataAttribute.cs" />
     <Compile Include="FileRecords\Attributes\ExtendedAttribute.cs" />
@@ -74,6 +76,7 @@
     <Compile Include="FileRecords\Attributes\VolumeName.cs" />
     <Compile Include="FileRecords\FileRecord.cs" />
     <Compile Include="FileRecords\MasterFileTable.cs" />
+    <Compile Include="Helpers\Fixupable.cs" />
     <Compile Include="Helpers\MarshalHelper.cs" />
     <Compile Include="Helpers\ReadableHelper.cs" />
     <Compile Include="PInvoke\Enums.cs" />
