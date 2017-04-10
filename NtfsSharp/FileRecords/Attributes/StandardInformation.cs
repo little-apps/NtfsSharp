@@ -1,4 +1,5 @@
 ﻿using NtfsSharp.FileRecords.Attributes.Base;
+﻿using System.IO;
 using NtfsSharp.Helpers;
 using System.Runtime.InteropServices;
 using FILETIME = System.Runtime.InteropServices.ComTypes.FILETIME;
@@ -25,7 +26,7 @@ namespace NtfsSharp.FileRecords.Attributes
             FILETIME ModifiedTime;
             FILETIME MFTChangedTime;
             FILETIME FileReadTime;
-            public readonly uint DosPermissions;
+            public readonly FileAttributes DosPermissions;
             public readonly uint MaximumVersions;
             public readonly uint VersionNumber;
             public readonly uint ClassID;
