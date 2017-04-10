@@ -6,6 +6,7 @@ using NtfsSharp.Helpers;
 using System.Collections.Generic;
 using NtfsSharp.FileRecords.Attributes;
 using NtfsSharp.FileRecords.Attributes.Base;
+using NtfsSharp.FileRecords.Attributes.Base.NonResident;
 using NtfsSharp.FileRecords.Attributes.Shared;
 
 namespace NtfsSharp.FileRecords
@@ -13,7 +14,7 @@ namespace NtfsSharp.FileRecords
     /// <summary>
     /// Represents a FILE record
     /// </summary>
-    public class FileRecord : IComparer<FileRecord>, IComparable<FileRecord>, IEquatable<FileRecord>
+    public class FileRecord : Fixupable, IComparer<FileRecord>, IComparable<FileRecord>, IEquatable<FileRecord>
     {
         private uint _currentOffset;
         private readonly byte[] _data;
@@ -23,6 +24,8 @@ namespace NtfsSharp.FileRecords
 
         public FILE_RECORD_HEADER_NTFS Header { get; private set; }
         public readonly List<AttributeBase> Attributes = new List<AttributeBase>();
+
+        
 
         public string Filename
         {
@@ -78,6 +81,8 @@ namespace NtfsSharp.FileRecords
             _data = data;
 
             ParseHeader();
+            if (!Fixup(_data, Header.UpdateSequenceOffset, Header.UpdateSequenceSize, Volume.BytesPerSector, out short invalidSector))
+                throw new InvalidFileRecordException(nameof(EndTag), $"Last 2 bytes of sector {invalidSector} don't match update sequence array end tag.", this);
         }
 
         /// <summary>
@@ -99,6 +104,8 @@ namespace NtfsSharp.FileRecords
             _data = data;
 
             ParseHeader();
+            if (!Fixup(_data, Header.UpdateSequenceOffset, Header.UpdateSequenceSize, Volume.BytesPerSector, out short invalidSector))
+                throw new InvalidFileRecordException(nameof(EndTag), $"Last 2 bytes of sector {invalidSector} don't match update sequence array end tag.", this);
         }
 
         /// <summary>
@@ -112,8 +119,11 @@ namespace NtfsSharp.FileRecords
 
             if (!Header.Magic.SequenceEqual(new byte[] { 0x46, 0x49, 0x4C, 0x45 }))
                 throw new InvalidFileRecordException(nameof(Header.Magic), this);
-        }
 
+            if (Header.UpdateSequenceSize - 1 > Volume.SectorsPerMFTRecord)
+                throw new InvalidFileRecordException(nameof(Header.UpdateSequenceSize), "Update sequence size exceeds number of sectors in file record", this);
+        }
+        
         /// <summary>
         /// Reads attributes from file record
         /// </summary>

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
+using NtfsSharp.Exceptions;
 using NtfsSharp.Helpers;
 using NtfsSharp.PInvoke;
 
@@ -10,7 +11,7 @@ namespace NtfsSharp.FileRecords.Attributes.IndexAllocation
     /// <summary>
     /// Represents a file index inside a $INDEX_ALLOCATION attribute
     /// </summary>
-    public class FileIndex
+    public class FileIndex : Fixupable
     {
         public uint CurrentOffset { get; private set; } = 0;
 
@@ -31,12 +32,10 @@ namespace NtfsSharp.FileRecords.Attributes.IndexAllocation
 
             if (Header.UpdateSequenceSize > 0)
             {
-                UpdateSequenceArray = new ushort[Header.UpdateSequenceSize];
-
-                for (var i = 0; i < Header.UpdateSequenceSize; CurrentOffset += 2, i++)
-                {
-                    UpdateSequenceArray[i] = BitConverter.ToUInt16(data, (int) CurrentOffset);
-                }
+                if (!Fixup(data, Header.UpdateSequenceOffset, Header.UpdateSequenceSize,
+                    indexAllocation.Header.FileRecord.Volume.BytesPerSector, out short invalidSector))
+                    throw new InvalidIndexAllocationException(this,
+                        $"Fixup could not be performed on sector {invalidSector} in FileIndex");
             }
 
             if (Header.Magic.SequenceEqual(new byte[] {0x49, 0x4E, 0x44, 0x58}))
