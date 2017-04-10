@@ -44,7 +44,7 @@ namespace NtfsSharp.FileRecords.Attributes.IndexAllocation
                 if (magicNum != 0x58444E49)
                     break;
 
-                yield return new FileIndex(cluster.Data);
+                yield return new FileIndex(cluster.Data, this);
             }
         }
     }

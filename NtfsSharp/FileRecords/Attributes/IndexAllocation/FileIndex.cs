@@ -24,7 +24,7 @@ namespace NtfsSharp.FileRecords.Attributes.IndexAllocation
         /// Builds a list of <see cref="FileNameEntries"/>
         /// </summary>
         /// <param name="data">Data containing file index</param>
-        public FileIndex(byte[] data)
+        public FileIndex(byte[] data, IndexAllocation indexAllocation)
         {
             Header = data.ToStructure<NTFS_INDEX_HEADER>();
             CurrentOffset += (uint) Marshal.SizeOf<NTFS_INDEX_HEADER>();
