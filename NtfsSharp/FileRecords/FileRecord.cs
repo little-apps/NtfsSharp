@@ -49,6 +49,19 @@ namespace NtfsSharp.FileRecords
             }
         }
 
+        public DataStream FileStream
+        {
+            get
+            {
+                var dataAttr = FindAttributeByType(AttributeHeaderBase.NTFS_ATTR_TYPE.DATA);
+
+                if (dataAttr == null)
+                    return null;
+
+                return new DataStream(dataAttr);
+            }
+        }
+
         /// <summary>
         /// Reads file record from bytes
         /// </summary>
