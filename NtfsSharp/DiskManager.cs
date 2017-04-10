@@ -18,9 +18,9 @@ namespace NtfsSharp
         {
             Path = path;
             Handle = CreateFile(path, FileAccess.Read, FileShare.ReadWrite, IntPtr.Zero, FileMode.Open, 0, IntPtr.Zero);
-
+            
             if (Handle.IsClosed || Handle.IsInvalid)
-                throw new FileNotFoundException();
+                throw new Win32Exception(Marshal.GetHRForLastWin32Error());
         }
 
         public long Move(ulong offset, MoveMethod moveMethod = MoveMethod.Begin)
