@@ -120,6 +120,8 @@ namespace NtfsSharp.FileRecords
         /// <remarks>Current offset must be set back if calling this more than once</remarks>
         public void ReadAttributes()
         {
+            _currentOffset = Header.FirstAttributeOffset;
+
             while (_currentOffset < _data.Length && BitConverter.ToUInt32(_data, (int) _currentOffset) != 0xffffffff)
             {
                 var newData = new byte[_data.Length - _currentOffset];
