@@ -113,6 +113,28 @@ namespace Explorer
             }
         }
 
+        /// <summary>
+        /// Gets the complete file path of the file with a leading backslash (\)
+        /// </summary>
+        /// <example>\Windows\System32\kernel32.dll</example>
+        public string FilePath
+        {
+            get
+            {
+                var filePath = Filename;
+                var currentFileModelEntry = ParentFileModelEntry;
+
+                while (currentFileModelEntry != null)
+                {
+                    filePath = $"{currentFileModelEntry.Filename}\\{filePath}";
+
+                    currentFileModelEntry = currentFileModelEntry.ParentFileModelEntry;
+                }
+
+                return $"\\{filePath}";
+            }
+        }
+
         public readonly FileModelEntry ParentFileModelEntry;
 
         public readonly ObservableCollection<FileAttribute> FileAttributes = new ObservableCollection<FileAttribute>();
