@@ -41,6 +41,7 @@
 
             <Tree:TreeList.ContextMenu>
                 <ContextMenu>
+                    <MenuItem Header="Open In Explorer" Click="OpenExplorer_OnClick"></MenuItem>
                     <MenuItem Header="Save As..." Click="Save_OnClick"></MenuItem>
                 </ContextMenu>
             </Tree:TreeList.ContextMenu>

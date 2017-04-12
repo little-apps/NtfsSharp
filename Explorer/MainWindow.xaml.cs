@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -121,6 +122,52 @@ namespace Explorer
                 MessageBox.Show(this, "Copied $DATA stream to file.", "NtfsSharp Explorer", MessageBoxButton.OK,
                     MessageBoxImage.Information);
             }
+        }
+
+        private void OpenExplorer_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (SelectedFileModelEntry == null)
+            {
+                MessageBox.Show(this, "No file selected", "NtfsSharp Explorer", MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+                return;
+            }
+
+            var explorerPath = $"{Environment.GetFolderPath(Environment.SpecialFolder.Windows)}\\explorer.exe";
+
+            if (!File.Exists(explorerPath))
+            {
+                MessageBox.Show(this, "Unable to locate \"explorer.exe\" in Windows directory.", "NtfsSharp Explorer",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+            
+            var filePath = $"{Drives.Text.Substring(0, 2)}{SelectedFileModelEntry.FilePath}";
+
+            if (!filePath.EndsWith("\\"))
+            {
+                if (!File.Exists(filePath))
+                {
+                    MessageBox.Show(this,
+                        "File does not seem to exist. It may be hidden as part of the master file table.",
+                        "NtfsSharp Explorer", MessageBoxButton.OK,
+                        MessageBoxImage.Error);
+                    return;
+                }
+            }
+            else
+            {
+                if (!Directory.Exists(filePath))
+                {
+                    MessageBox.Show(this,
+                        "Directory does not seem to exist. It may be hidden as part of the master file table.",
+                        "NtfsSharp Explorer", MessageBoxButton.OK,
+                        MessageBoxImage.Error);
+                    return;
+                }
+            }
+            
+            Process.Start(explorerPath, $"/select, \"{filePath}\"");
         }
     }
 }
