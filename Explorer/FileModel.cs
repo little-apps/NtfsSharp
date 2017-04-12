@@ -32,9 +32,10 @@ namespace Explorer
         /// </remarks>
         public IEnumerable GetChildren(object parent)
         {
-            var parentFileRecord = parent == null
+            var parentFileModelEntry = parent as FileModelEntry;
+            var parentFileRecord = parentFileModelEntry == null
                 ? _volume.ReadFileRecord(RootRecordNum, true)
-                : (parent as FileModelEntry)?.FileRecord;
+                : parentFileModelEntry.FileRecord;
 
             var sortedList = new SortedList<string, FileModelEntry>();
 
