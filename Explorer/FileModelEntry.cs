@@ -113,11 +113,14 @@ namespace Explorer
             }
         }
 
+        public readonly FileModelEntry ParentFileModelEntry;
+
         public readonly ObservableCollection<FileAttribute> FileAttributes = new ObservableCollection<FileAttribute>();
 
-        public FileModelEntry(FileRecord fileRecord)
+        public FileModelEntry(FileRecord fileRecord, FileModelEntry parentFileModelEntry)
         {
             FileRecord = fileRecord;
+            ParentFileModelEntry = parentFileModelEntry;
 
             foreach (var attr in FileRecord.Attributes)
             {

@@ -54,7 +54,7 @@ namespace Explorer
                         var fileName = fileNameEntry.FileName.Filename;
                         var fileRecord =
                             _volume.ReadFileRecord(fileNameEntry.Header.FileReference.FileRecordNumber, true);
-                        var fileEntry = new FileModelEntry(fileRecord);
+                        var fileEntry = new FileModelEntry(fileRecord, parentFileModelEntry);
 
                         if (!sortedList.ContainsValue(fileEntry))
                             sortedList.Add(fileName, fileEntry);
@@ -73,7 +73,7 @@ namespace Explorer
 
                     var fileName = fileNameIndex.FileName.Filename;
                     var fileRecord = _volume.ReadFileRecord(fileNameIndex.Header.FileReference.FileRecordNumber, true);
-                    var fileEntry = new FileModelEntry(fileRecord);
+                    var fileEntry = new FileModelEntry(fileRecord, parentFileModelEntry);
 
                     if (!sortedList.ContainsValue(fileEntry))
                         sortedList.Add(fileName, fileEntry);
