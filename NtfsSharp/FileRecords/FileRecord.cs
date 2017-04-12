@@ -148,6 +148,16 @@ namespace NtfsSharp.FileRecords
         }
 
         /// <summary>
+        /// Checks if file record has attribute with type
+        /// </summary>
+        /// <param name="attrType">Attribute type</param>
+        /// <returns>True if file record has any attributes of type</returns>
+        public bool HasAttribute(AttributeHeaderBase.NTFS_ATTR_TYPE attrType)
+        {
+            return Attributes.Any(attr => attr.Header.Header.Type == attrType);
+        }
+
+        /// <summary>
         /// Finds attributes with specified type and returns list of ones matching it
         /// </summary>
         /// <param name="attrType">Attribute type</param>
