@@ -114,15 +114,19 @@ namespace Explorer
         }
 
         /// <summary>
-        /// Gets the complete file path of the file with a leading backslash (\)
+        /// Gets the complete file path of the file with a leading backslash (\) and trailing backslash (if it is a directory)
         /// </summary>
         /// <example>\Windows\System32\kernel32.dll</example>
+        /// <example>\Windows\System32\</example>
         public string FilePath
         {
             get
             {
                 var filePath = Filename;
                 var currentFileModelEntry = ParentFileModelEntry;
+
+                if (FileRecord.Header.Flags.HasFlag(FileRecord.Flags.IsDirectory))
+                    filePath += "\\";
 
                 while (currentFileModelEntry != null)
                 {
