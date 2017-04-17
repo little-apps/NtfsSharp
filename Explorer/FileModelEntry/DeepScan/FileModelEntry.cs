@@ -14,6 +14,13 @@ namespace Explorer.FileModelEntry.DeepScan
         private readonly ulong _fileRecordNum;
         private readonly FileRecord _fileRecord;
 
+        private string _filename = "(Unknown)";
+        private string _dateModified = "(Unknown)";
+        private string _actualSize = "(Unknown)";
+        private string _allocatedSize = "(Unknown)";
+        private string _attributes = "(Unknown)";
+        private string _filePath = "";
+
         public override ulong FileRecordNum
         {
             get { return _fileRecordNum; }
@@ -23,14 +30,6 @@ namespace Explorer.FileModelEntry.DeepScan
         {
             get { return _fileRecord; }
         }
-
-        public override string FilePath { get; }
-
-        private string _filename = "(Unknown)";
-        private string _dateModified = "(Unknown)";
-        private string _actualSize = "(Unknown)";
-        private string _allocatedSize = "(Unknown)";
-        private string _attributes = "(Unknown)";
 
         public override string Filename
         {
@@ -55,6 +54,11 @@ namespace Explorer.FileModelEntry.DeepScan
         public override string Attributes
         {
             get { return _attributes; }
+        }
+
+        public override string FilePath
+        {
+            get { return _filePath; }
         }
 
         public FileModelEntry(ulong fileRecordNum)
@@ -109,8 +113,14 @@ namespace Explorer.FileModelEntry.DeepScan
             }
 
 
-        }   
+        }
+
+        public void SetFilePath(string prepend)
+        {
+            _filePath = prepend + "\\" + Filename;
+        }
     }
+
 
     public class FileModelEntryByFileName : IComparer<FileModelEntry>
     {

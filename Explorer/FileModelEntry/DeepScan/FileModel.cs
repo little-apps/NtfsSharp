@@ -45,6 +45,7 @@ namespace Explorer.FileModelEntry.DeepScan
             foreach (var childFileRecord in childFileRecords)
             {
                 childFileRecord.ReadFileRecord(_volume);
+                childFileRecord.SetFilePath(parentFileModelEntry.FilePath);
 
                 sortedFileModelEntries.Add(childFileRecord);
             }
