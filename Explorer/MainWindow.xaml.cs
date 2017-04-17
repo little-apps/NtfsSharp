@@ -1,20 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.ComTypes;
 using System.Windows;
-using System.Windows.Controls;
 using Explorer.Annotations;
 using Microsoft.Win32;
 using NtfsSharp;
-using NtfsSharp.FileRecords.Attributes;
-using NtfsSharp.FileRecords.Attributes.Base;
 
 namespace Explorer
 {
