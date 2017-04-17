@@ -7,6 +7,8 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.ComTypes;
 using System.Windows;
 using Explorer.Annotations;
+using Explorer.FileModelEntry;
+using Explorer.FileModelEntry.DeepScan;
 using Microsoft.Win32;
 using NtfsSharp;
 
@@ -17,7 +19,7 @@ namespace Explorer
     /// </summary>
     public partial class MainWindow : INotifyPropertyChanged
     {
-        public FileModelEntry SelectedFileModelEntry => Tree.SelectedNode?.Tag as FileModelEntry;
+        public BaseFileModelEntry SelectedFileModelEntry => Tree.SelectedNode?.Tag as BaseFileModelEntry;
 
         public MainWindow()
         {
@@ -31,10 +33,22 @@ namespace Explorer
             Drives.SelectedIndex = 0;
         }
 
-        private void ScanButton_OnClick(object sender, RoutedEventArgs e)
+        private void QuickScanButton_OnClick(object sender, RoutedEventArgs e)
         {
             var selectedDrive = Drives.Text[0];
-            Tree.Model = new FileModel(new Volume(selectedDrive));
+            Tree.Model = new FileModelEntry.QuickScan.FileModel(new Volume(selectedDrive));
+        }
+
+        private async void DeepScanButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            var selectedDrive = Drives.Text[0];
+            var scanning = new Scanning {Owner = this};
+
+            scanning.Show();
+
+            Tree.Model = await scanning.Scan(new Volume(selectedDrive));
+
+            scanning.Close();
         }
 
         #region INotifyPropertyChanged

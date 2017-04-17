@@ -8,7 +8,7 @@ using NtfsSharp.FileRecords.Attributes.IndexAllocation;
 using NtfsSharp.FileRecords.Attributes.IndexRoot;
 using NtfsSharp.PInvoke;
 
-namespace Explorer
+namespace Explorer.FileModelEntry.QuickScan
 {
     class FileModel : ITreeModel
     {
@@ -25,7 +25,7 @@ namespace Explorer
         /// Gets the children (files and folders) of file record
         /// </summary>
         /// <param name="parent"><see cref="FileModelEntry"/> or null if it is the root directory</param>
-        /// <returns>File records contained in <see cref="parent"/></returns>
+        /// <returns>File records contained in <see cref="FileModelEntry"/></returns>
         /// <remarks>
         /// This does not utilize the B+ tree structure of the NTFS properly.
         /// It will use the index allocation. If it doesn't exist, it will attempt to use the index root.
@@ -74,7 +74,7 @@ namespace Explorer
 
                     var fileName = fileNameIndex.FileName.Filename;
                     var fileRecord = _volume.ReadFileRecord(fileNameIndex.Header.FileReference.FileRecordNumber, true);
-                    var fileEntry = new FileModelEntry(fileRecord, parentFileModelEntry);
+                    var fileEntry = new Explorer.FileModelEntry.QuickScan.FileModelEntry(fileRecord, parentFileModelEntry);
 
                     if (!sortedList.ContainsValue(fileEntry))
                         sortedList.Add(fileName, fileEntry);

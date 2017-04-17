@@ -1,21 +1,28 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
-using System.Linq;
 using NtfsSharp.FileRecords;
 using NtfsSharp.FileRecords.Attributes;
 using NtfsSharp.FileRecords.Attributes.Base;
 using NtfsSharp.FileRecords.Attributes.Base.NonResident;
-using NtfsSharp.FileRecords.Attributes.IndexRoot;
 
-namespace Explorer
+namespace Explorer.FileModelEntry.QuickScan
 {
-    public class FileModelEntry : IComparer<FileModelEntry>, IEquatable<FileModelEntry>
+    public class FileModelEntry : BaseFileModelEntry
     {
-        public readonly FileRecord FileRecord;
+        private readonly FileRecord _fileRecord;
 
-        public string Filename
+        public override FileRecord FileRecord
+        {
+            get { return _fileRecord; }
+        }
+
+        public override ulong FileRecordNum
+        {
+            get { return FileRecord.Header.MFTRecordNumber; }
+        }
+
+        public override string Filename
         {
             get
             {
@@ -33,7 +40,7 @@ namespace Explorer
             get { return FileRecord.FindAttributeByType(AttributeHeaderBase.NTFS_ATTR_TYPE.DATA); }
         }
 
-        public string DateModified
+        public override string DateModified
         {
             get
             {
@@ -50,7 +57,7 @@ namespace Explorer
             }
         }
 
-        public string ActualSize
+        public override string ActualSize
         {
             get
             {
@@ -66,16 +73,16 @@ namespace Explorer
 
                     return nonResidentAttr == null
                         ? "(Unknown)"
-                        : SizeToString(nonResidentAttr.SubHeader.AttributeAllocated);
+                        : BaseFileModelEntry.SizeToString(nonResidentAttr.SubHeader.AttributeAllocated);
                 }
 
                 var residentAttr = DataAttribute.Header as Resident;
 
-                return residentAttr == null ? "(Unknown)" : SizeToString(residentAttr.SubHeader.AttributeLength);
+                return residentAttr == null ? "(Unknown)" : BaseFileModelEntry.SizeToString(residentAttr.SubHeader.AttributeLength);
             }
         }
 
-        public string AllocatedSize
+        public override string AllocatedSize
         {
             get
             {
@@ -91,16 +98,16 @@ namespace Explorer
 
                     return nonResidentAttr == null
                         ? "(Unknown)"
-                        : SizeToString(nonResidentAttr.SubHeader.AttributeSize);
+                        : BaseFileModelEntry.SizeToString(nonResidentAttr.SubHeader.AttributeSize);
                 }
 
                 var residentAttr = DataAttribute.Header as Resident;
 
-                return residentAttr == null ? "(Unknown)" : SizeToString(residentAttr.SubHeader.AttributeLength);
+                return residentAttr == null ? "(Unknown)" : BaseFileModelEntry.SizeToString(residentAttr.SubHeader.AttributeLength);
             }
         }
 
-        public string Attributes
+        public override string Attributes
         {
             get
             {
@@ -118,7 +125,7 @@ namespace Explorer
         /// </summary>
         /// <example>\Windows\System32\kernel32.dll</example>
         /// <example>\Windows\System32\</example>
-        public string FilePath
+        public override string FilePath
         {
             get
             {
@@ -145,7 +152,7 @@ namespace Explorer
 
         public FileModelEntry(FileRecord fileRecord, FileModelEntry parentFileModelEntry)
         {
-            FileRecord = fileRecord;
+            _fileRecord = fileRecord;
             ParentFileModelEntry = parentFileModelEntry;
 
             foreach (var attr in FileRecord.Attributes)
@@ -182,24 +189,7 @@ namespace Explorer
             if (obj.GetType() != GetType()) return false;
             return Equals((FileModelEntry) obj);
         }
-
-        public static string SizeToString(ulong size)
-        {
-            double len = size;
-
-            var sizes = new [] { "B", "KB", "MB", "GB", "TB" };
-            var order = 0;
-            while (len >= 1024 && order < sizes.Length - 1)
-            {
-                order++;
-                len = len / 1024;
-            }
-
-            // Adjust the format string to your preferences. For example "{0:0.#}{1}" would
-            // show a single decimal place, and no space.
-            return $"{len:0.##} {sizes[order]}";
-        }
-
+        
         public class FileAttribute
         {
 

@@ -15,7 +15,8 @@
 
         <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Center">
             <ComboBox x:Name="Drives" Margin="5" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="50"></ComboBox>
-            <Button x:Name="ScanButton" Content="Scan" HorizontalAlignment="Left" Width="75"  VerticalContentAlignment="Center" Click="ScanButton_OnClick" />
+            <Button Content="Quick Scan" HorizontalAlignment="Left" Width="75"  VerticalContentAlignment="Center" Click="QuickScanButton_OnClick" />
+            <Button Content="Deep Scan" HorizontalAlignment="Left" Width="75" Margin="10,0,0,0"  VerticalContentAlignment="Center" Click="DeepScanButton_OnClick" />
         </StackPanel>
 
 
