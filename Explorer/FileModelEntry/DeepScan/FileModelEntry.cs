@@ -12,7 +12,7 @@ namespace Explorer.FileModelEntry.DeepScan
     public class FileModelEntry : BaseFileModelEntry
     {
         private readonly ulong _fileRecordNum;
-        private readonly FileRecord _fileRecord;
+        private FileRecord _fileRecord;
 
         private string _filename = "(Unknown)";
         private string _dateModified = "(Unknown)";
@@ -68,12 +68,12 @@ namespace Explorer.FileModelEntry.DeepScan
 
         public void ReadFileRecord(Volume vol)
         {
-            var fileRecord = vol.ReadFileRecord(FileRecordNum, true);
+            _fileRecord = vol.ReadFileRecord(FileRecordNum, true);
 
-            if (!string.IsNullOrEmpty(fileRecord.Filename))
-                _filename = fileRecord.Filename;
+            if (!string.IsNullOrEmpty(_fileRecord.Filename))
+                _filename = _fileRecord.Filename;
 
-            var standardInfo = fileRecord.FindAttributeBodyByType(AttributeHeaderBase.NTFS_ATTR_TYPE.STANDARD_INFORMATION) as StandardInformation;
+            var standardInfo = _fileRecord.FindAttributeBodyByType(AttributeHeaderBase.NTFS_ATTR_TYPE.STANDARD_INFORMATION) as StandardInformation;
 
             if (standardInfo != null)
             {
@@ -86,7 +86,7 @@ namespace Explorer.FileModelEntry.DeepScan
                 _attributes = standardInfo.Data.DosPermissions.ToString();
             }
 
-            var dataAttribute = fileRecord.FindAttributeByType(AttributeHeaderBase.NTFS_ATTR_TYPE.DATA);
+            var dataAttribute = _fileRecord.FindAttributeByType(AttributeHeaderBase.NTFS_ATTR_TYPE.DATA);
 
             if (dataAttribute == null)
                 return;
