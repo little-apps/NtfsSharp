@@ -9,18 +9,25 @@
         Title="MainWindow" Height="582" Width="1086" DataContext="{Binding RelativeSource={RelativeSource Self}}">
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="25"/>
             <RowDefinition Height="270*"/>
             <RowDefinition Height="40"/>
         </Grid.RowDefinitions>
+        
+        <Menu Grid.Row="0">
+            <MenuItem Header="File">
+                <MenuItem Header="Quick Scan" Click="QuickScanButton_OnClick" />
+                <MenuItem Header="Deep Scan" Click="DeepScanButton_OnClick" />
+                <Separator/>
+                <MenuItem Header="Exit" Command="Close"/>
+            </MenuItem>
+            <MenuItem Header="Selection">
+                <MenuItem Header="Open In Explorer" Click="OpenExplorer_OnClick"/>
+                <MenuItem Header="Save As..." Click="Save_OnClick"/>
+            </MenuItem>
+        </Menu>
 
-        <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Center">
-            <ComboBox x:Name="Drives" Margin="5" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="50"></ComboBox>
-            <Button Content="Quick Scan" HorizontalAlignment="Left" Width="75"  VerticalContentAlignment="Center" Click="QuickScanButton_OnClick" />
-            <Button Content="Deep Scan" HorizontalAlignment="Left" Width="75" Margin="10,0,0,0"  VerticalContentAlignment="Center" Click="DeepScanButton_OnClick" />
-        </StackPanel>
-
-
-        <Tree:TreeList x:Name="Tree" Grid.Row="0" Grid.Column="0" HorizontalContentAlignment="Stretch">
+        <Tree:TreeList x:Name="Tree" Grid.Row="1" Grid.Column="0" HorizontalContentAlignment="Stretch">
             <Tree:TreeList.View>
                 <GridView>
                     <GridViewColumn Header="Name" Width="400">
@@ -47,7 +54,12 @@
                 </ContextMenu>
             </Tree:TreeList.ContextMenu>
         </Tree:TreeList>
+        
 
-
+        <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Center">
+            <ComboBox x:Name="Drives" Margin="5" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="50"></ComboBox>
+            <Button Content="Quick Scan" HorizontalAlignment="Left" Width="75"  VerticalContentAlignment="Center" Click="QuickScanButton_OnClick" />
+            <Button Content="Deep Scan" HorizontalAlignment="Left" Width="75" Margin="10,0,0,0"  VerticalContentAlignment="Center" Click="DeepScanButton_OnClick" />
+        </StackPanel>
     </Grid>
 </Window>
