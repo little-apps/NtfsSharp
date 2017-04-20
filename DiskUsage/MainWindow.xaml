@@ -1,0 +1,96 @@
+﻿<Window x:Class="DiskUsage.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:dv="clr-namespace:System.Windows.Controls.DataVisualization;assembly=System.Windows.Controls.DataVisualization.Toolkit"
+        xmlns:dvc="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit"
+        xmlns:local="clr-namespace:DiskUsage"
+        mc:Ignorable="d"
+        Title="Disk Usage" MinHeight="350" MinWidth="525" DataContext="{Binding Source={RelativeSource Self}}" d:DataContext="{d:DesignInstance local:MainWindow}">
+    <Window.Resources>
+        <SolidColorBrush x:Key="UsedColor" Color="Blue"/>
+        <SolidColorBrush x:Key="FreeColor" Color="Purple"/>
+        
+        <local:BytesToReadableConverter x:Key="BytesToReadableConverter"></local:BytesToReadableConverter>
+
+        <ControlTemplate
+            x:Key="CustomToolTip"
+            TargetType="dvc:PieDataPoint">
+            <Path
+                x:Name="Slice"
+                Data="{TemplateBinding Geometry}"
+                Fill="{TemplateBinding Background}"
+                Stroke="{TemplateBinding BorderBrush}"
+                StrokeMiterLimit="1">
+                <ToolTipService.ToolTip>
+                    <StackPanel>
+                        <ContentControl Content="{TemplateBinding FormattedIndependentValue}" FontWeight="Bold"/>
+                        <ContentControl Content="{TemplateBinding FormattedDependentValue, Converter={StaticResource BytesToReadableConverter}}"/>
+                        <ContentControl Content="{TemplateBinding FormattedRatio}"/>
+                    </StackPanel>
+                </ToolTipService.ToolTip>
+            </Path>
+        </ControlTemplate>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="100*"/>
+            <RowDefinition Height="40"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition MinWidth="300"></ColumnDefinition>
+            <ColumnDefinition Width="150"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <dvc:Chart Title="Disk Usage" Grid.Row="0" Grid.Column="0">
+            <dvc:Chart.Series>
+                <dvc:PieSeries Name="PieSeries1" Title="Disk Usage" 
+                               ItemsSource="{Binding UsageCollection}"
+                               IndependentValueBinding="{Binding Path=Key}"
+                               DependentValueBinding="{Binding Path=Value}">
+                    <dvc:PieSeries.Palette>
+                        <dv:ResourceDictionaryCollection>
+                            <ResourceDictionary>
+                                <Style x:Key="DataPointStyle" TargetType="Control">
+                                    <Setter Property="Background" Value="{StaticResource UsedColor}"></Setter>
+                                    <Setter Property="Template" Value="{StaticResource CustomToolTip}"/>
+                                </Style>
+                            </ResourceDictionary>
+                            <ResourceDictionary>
+                                <Style x:Key="DataPointStyle" TargetType="Control">
+                                    <Setter Property="Background" Value="{StaticResource FreeColor}"></Setter>
+                                    <Setter Property="Template" Value="{StaticResource CustomToolTip}"/>
+                                </Style>
+                            </ResourceDictionary>
+                        </dv:ResourceDictionaryCollection>
+                    </dvc:PieSeries.Palette>
+                </dvc:PieSeries>
+                
+            </dvc:Chart.Series>
+        </dvc:Chart>
+        <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="1">
+            <Label FontWeight="Bold" HorizontalContentAlignment="Center">Statistics</Label>
+            <StackPanel Orientation="Vertical">
+                <Label HorizontalContentAlignment="Center">Total (bytes):</Label>
+                <TextBlock Margin="5,0,0,0" Text="{Binding TotalBytes, Mode=OneWay}" TextAlignment="Center"/>
+            </StackPanel>
+            <StackPanel Orientation="Vertical">
+                <Label HorizontalContentAlignment="Center">Used (bytes): </Label>
+                <TextBlock Margin="5,0,0,0" Text="{Binding UsedBytes, Mode=OneWay}" TextAlignment="Center"/>
+            </StackPanel>
+            <StackPanel Orientation="Vertical" Margin="0,10,0,0">
+                <Label HorizontalContentAlignment="Center">Free (bytes):</Label>
+                <TextBlock Margin="5,0,0,0" Text="{Binding FreeBytes, Mode=OneWay}" TextAlignment="Center"/>
+            </StackPanel>
+            <StackPanel Orientation="Vertical" Margin="0,10,0,0">
+                <Label HorizontalContentAlignment="Center">Clusters:</Label>
+                <TextBlock Margin="5,0,0,0" Text="{Binding Clusters, Mode=OneWay}" TextAlignment="Center"/>
+            </StackPanel>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" Margin="0,5,0,5" >
+            <ComboBox Name="DriveComboBox"  Width="50" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+            <Button Margin="5,0,0,0" Padding="7,0,7,0" Click="Update_OnClicked">Update</Button>
+        </StackPanel>
+        
+    </Grid>
+</Window>

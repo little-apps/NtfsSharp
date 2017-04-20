@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26228.9
+VisualStudioVersion = 15.0.26403.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Console", "Console\Console.csproj", "{64AAB239-C773-4C29-9B8C-6C3736BAC810}"
 EndProject
@@ -15,6 +15,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Explorer", "Explorer\Explorer.csproj", "{5F464073-3601-4EAE-A16D-E689DB5D7D12}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aga.Controls", "TreeListView\Aga.Controls\Aga.Controls.csproj", "{D17CD489-1B14-47EB-8C22-C189D078AEC9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiskUsage", "DiskUsage\DiskUsage.csproj", "{82275FD3-FA38-4C80-A40E-75BE4CEE8F56}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -38,6 +40,10 @@ Global
 		{D17CD489-1B14-47EB-8C22-C189D078AEC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D17CD489-1B14-47EB-8C22-C189D078AEC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D17CD489-1B14-47EB-8C22-C189D078AEC9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{82275FD3-FA38-4C80-A40E-75BE4CEE8F56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{82275FD3-FA38-4C80-A40E-75BE4CEE8F56}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{82275FD3-FA38-4C80-A40E-75BE4CEE8F56}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{82275FD3-FA38-4C80-A40E-75BE4CEE8F56}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
