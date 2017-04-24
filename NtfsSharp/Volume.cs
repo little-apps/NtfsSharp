@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using NtfsSharp.Data;
+using NtfsSharp.DiskManager;
 using NtfsSharp.Exceptions;
 using NtfsSharp.FileRecords;
 using NtfsSharp.FileRecords.Attributes;
@@ -16,7 +17,7 @@ namespace NtfsSharp
         public readonly char Drive;
         public string VolumePath => $@"\\.\{Drive}:";
 
-        public readonly DiskManager Disk;
+        public readonly BaseDiskManager Disk;
 
         public NtfsBootSector BootSector { get; private set; }
         public MasterFileTable MFT { get; private set; }
@@ -30,14 +31,9 @@ namespace NtfsSharp
         public uint SectorsPerMFTRecord => BytesPerFileRecord / BytesPerSector;
         #endregion
 
-        public Volume(char drive)
+        public Volume(BaseDiskManager diskManager)
         {
-            if (!char.IsUpper(drive))
-                throw new ArgumentException("Drive letter must be between A and Z", nameof(drive));
-
-            Drive = drive;
-            Disk = new DiskManager(VolumePath);
-
+            Disk = diskManager;
             Read();
         }
 

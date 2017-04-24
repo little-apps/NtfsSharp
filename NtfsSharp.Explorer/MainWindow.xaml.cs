@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.ComTypes;
 using System.Windows;
 using Microsoft.Win32;
+using NtfsSharp.DiskManager;
 using NtfsSharp.Explorer.FileModelEntry;
 using NtfsSharp.Explorer.FileModelEntry.DeepScan;
 using NtfsSharp.Explorer.Properties;
@@ -35,7 +36,9 @@ namespace NtfsSharp.Explorer
         private void QuickScanButton_OnClick(object sender, RoutedEventArgs e)
         {
             var selectedDrive = Drives.Text[0];
-            Tree.Model = new global::NtfsSharp.Explorer.FileModelEntry.QuickScan.FileModel(new Volume(selectedDrive));
+            Tree.Model =
+                new FileModelEntry.QuickScan.FileModel(
+                    new Volume(new PartitionManager($@"\\.\{selectedDrive}:")));
         }
 
         private async void DeepScanButton_OnClick(object sender, RoutedEventArgs e)
@@ -45,7 +48,7 @@ namespace NtfsSharp.Explorer
 
             scanning.Show();
 
-            Tree.Model = await scanning.Scan(new Volume(selectedDrive));
+            Tree.Model = await scanning.Scan(new Volume(new PartitionManager($@"\\.\{selectedDrive}:")));
 
             scanning.Close();
         }

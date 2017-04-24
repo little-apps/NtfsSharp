@@ -114,7 +114,7 @@ namespace NtfsSharp.DiskUsage
 
             try
             {
-                _volume = new Volume(volumeChar);
+                _volume = new Volume(new DiskManager.PartitionManager($@"\\.\{volumeChar}:"));
             }
             catch (Exception)
             {

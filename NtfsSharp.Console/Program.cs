@@ -23,7 +23,7 @@ namespace NtfsSharp.Console
         {
             Options = options;
 
-            Volume = new NtfsSharp.Volume(Options.Drive);
+            Volume = new Volume(new DiskManager.PartitionManager($@"\\.\{Options.Drive}:"));
 
             Interactive();
         }
