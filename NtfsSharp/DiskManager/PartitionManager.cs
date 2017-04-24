@@ -2,19 +2,18 @@
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.InteropServices;
-using System.Runtime.Remoting.Messaging;
 using System.Threading;
 using Microsoft.Win32.SafeHandles;
 
-namespace NtfsSharp
+namespace NtfsSharp.DiskManager
 {
-    public class DiskManager : IDisposable
+    public class PartitionManager : BaseDiskManager
     {
         private SafeFileHandle Handle { get; }
 
         public readonly string Path;
 
-        public DiskManager(string path)
+        public PartitionManager(string path)
         {
             Path = path;
             Handle = CreateFile(path, FileAccess.Read, FileShare.ReadWrite, IntPtr.Zero, FileMode.Open, 0, IntPtr.Zero);
@@ -23,7 +22,7 @@ namespace NtfsSharp
                 throw new Win32Exception(Marshal.GetHRForLastWin32Error());
         }
 
-        public long Move(ulong offset, MoveMethod moveMethod = MoveMethod.Begin)
+        public override long Move(ulong offset, MoveMethod moveMethod = MoveMethod.Begin)
         {
             long newOffset = 0;
 
@@ -40,7 +39,7 @@ namespace NtfsSharp
             return new byte[bytesToRead + leftOverBytes];
         }
 
-        public byte[] SafeReadFile(uint bytesToRead)
+        public override byte[] SafeReadFile(uint bytesToRead)
         {
             var buffer = AllocateByteArray(bytesToRead, out uint leftOverBytes);
 
@@ -52,7 +51,7 @@ namespace NtfsSharp
             return buffer;
         }
 
-        public byte[] ReadFile(uint bytesToRead)
+        public override byte[] ReadFile(uint bytesToRead)
         {
             var buffer = new byte[bytesToRead];
             uint bytesRead;
@@ -63,7 +62,7 @@ namespace NtfsSharp
             return buffer;
         }
 
-        public byte[] ReadFile(uint bytesToRead, out uint bytesRead)
+        public override byte[] ReadFile(uint bytesToRead, out uint bytesRead)
         {
             var buffer = new byte[bytesToRead];
 
@@ -73,7 +72,7 @@ namespace NtfsSharp
             return buffer;
         }
 
-        public byte[] ReadFile(uint bytesToRead, out uint bytesRead, ref NativeOverlapped overlapped)
+        public override byte[] ReadFile(uint bytesToRead, out uint bytesRead, ref NativeOverlapped overlapped)
         {
             var buffer = new byte[bytesToRead];
 
@@ -83,16 +82,9 @@ namespace NtfsSharp
             return buffer;
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
             Handle?.Dispose();
-        }
-
-        public enum MoveMethod : uint
-        {
-            Begin = 0,
-            Current = 1,
-            End = 2
         }
 
         [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
