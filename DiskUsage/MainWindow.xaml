@@ -35,6 +35,7 @@
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="25"/>
             <RowDefinition Height="100*"/>
             <RowDefinition Height="40"/>
         </Grid.RowDefinitions>
@@ -42,7 +43,25 @@
             <ColumnDefinition MinWidth="300"></ColumnDefinition>
             <ColumnDefinition Width="150"></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <dvc:Chart Title="Disk Usage" Grid.Row="0" Grid.Column="0">
+
+        <Menu Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+            <MenuItem Header="File">
+                <MenuItem Header="Exit" Click="MenuItemExit_OnClick" />
+            </MenuItem>
+            <MenuItem Header="Edit">
+                <MenuItem Header="Update Interval">
+                    <MenuItem Name="UpdateIntervalNever" Header="Never" IsCheckable="True" Click="UpdateInterval_OnClick" Tag="0"/>
+                    <MenuItem Name="UpdateInterval5Seconds" Header="5 seconds" IsCheckable="True" Click="UpdateInterval_OnClick" Tag="5"/>
+                    <MenuItem Name="UpdateInterval10Seconds" Header="10 seconds" IsCheckable="True" Click="UpdateInterval_OnClick" Tag="10"/>
+                    <MenuItem Name="UpdateInterval15Seconds" Header="15 seconds" IsCheckable="True" Click="UpdateInterval_OnClick" Tag="15"/>
+                    <MenuItem Name="UpdateInterval30Seconds" Header="30 seconds" IsCheckable="True" Click="UpdateInterval_OnClick" Tag="30"/>
+                    <MenuItem Name="UpdateInterval1Minute" Header="1 minute" IsCheckable="True" Click="UpdateInterval_OnClick" Tag="60"/>
+                    <MenuItem Name="UpdateInterval5Minutes" Header="5 minutes" IsCheckable="True" Click="UpdateInterval_OnClick" Tag="300"/>
+                </MenuItem>
+            </MenuItem>
+        </Menu>
+        
+        <dvc:Chart Title="Disk Usage" Grid.Row="1" Grid.Column="0">
             <dvc:Chart.Series>
                 <dvc:PieSeries Name="PieSeries1" Title="Disk Usage" 
                                ItemsSource="{Binding UsageCollection}"
@@ -65,17 +84,17 @@
                         </dv:ResourceDictionaryCollection>
                     </dvc:PieSeries.Palette>
                 </dvc:PieSeries>
-                
+
             </dvc:Chart.Series>
         </dvc:Chart>
-        <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="1">
+        <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="1">
             <Label FontWeight="Bold" HorizontalContentAlignment="Center">Statistics</Label>
             <StackPanel Orientation="Vertical">
                 <Label HorizontalContentAlignment="Center">Total (bytes):</Label>
                 <TextBlock Margin="5,0,0,0" Text="{Binding TotalBytes, Mode=OneWay}" TextAlignment="Center"/>
             </StackPanel>
             <StackPanel Orientation="Vertical">
-                <Label HorizontalContentAlignment="Center">Used (bytes): </Label>
+                <Label HorizontalContentAlignment="Center">Used (bytes):</Label>
                 <TextBlock Margin="5,0,0,0" Text="{Binding UsedBytes, Mode=OneWay}" TextAlignment="Center"/>
             </StackPanel>
             <StackPanel Orientation="Vertical" Margin="0,10,0,0">
@@ -87,7 +106,7 @@
                 <TextBlock Margin="5,0,0,0" Text="{Binding Clusters, Mode=OneWay}" TextAlignment="Center"/>
             </StackPanel>
         </StackPanel>
-        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" Margin="0,5,0,5" >
+        <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" Margin="0,5,0,5" >
             <ComboBox Name="DriveComboBox"  Width="50" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
             <Button Margin="5,0,0,0" Padding="7,0,7,0" Click="Update_OnClicked">Update</Button>
         </StackPanel>

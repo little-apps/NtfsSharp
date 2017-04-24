@@ -19,7 +19,8 @@ namespace DiskUsage
     {
         private Volume _volume;
         private readonly UsageCollection _usageCollection = new UsageCollection();
-        private readonly Timer _timer = new Timer(10 * 1000);
+        private readonly Timer _timer = new Timer();
+        private readonly MenuItem[] _updateIntervalItems;
 
         public UsageCollection UsageCollection
         {
@@ -61,12 +62,23 @@ namespace DiskUsage
         {
             InitializeComponent();
 
+            _updateIntervalItems = new[]
+            {
+                UpdateIntervalNever,
+                UpdateInterval5Seconds,
+                UpdateInterval10Seconds,
+                UpdateInterval15Seconds,
+                UpdateInterval30Seconds,
+                UpdateInterval1Minute,
+                UpdateInterval5Minutes
+            };
+
             DataContext = this;
             
             PopulateDrives();
 
             _timer.Elapsed += TimerOnElapsed;
-            _timer.Start();
+            SetUpdateInterval(UpdateInterval10Seconds);
         }
 
         private void TimerOnElapsed(object sender, ElapsedEventArgs elapsedEventArgs)
@@ -142,6 +154,70 @@ namespace DiskUsage
         private void Update_OnClicked(object sender, RoutedEventArgs e)
         {
             ChangeVolume();
+        }
+
+        private void UpdateInterval_OnChecked(object sender, RoutedEventArgs e)
+        {
+            if (ReferenceEquals(sender, UpdateIntervalNever))
+                return;
+        }
+
+        private void UpdateInterval_OnClick(object sender, RoutedEventArgs e)
+        {
+            MenuItem newMenuItem;
+            var menuItem = sender as MenuItem;
+
+            if (menuItem == null)
+                return;
+
+            if (!menuItem.IsChecked)
+            {
+                if (ReferenceEquals(sender, UpdateIntervalNever))
+                {
+                    MessageBox.Show(this,
+                        "The \"Never\" option cannot be unchecked. Please choose a different interval.",
+                        "NtfsSharp DiskUsage", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                newMenuItem = UpdateIntervalNever;
+            }
+            else
+            {
+                newMenuItem = menuItem;
+            }
+
+            SetUpdateInterval(newMenuItem);
+
+            MessageBox.Show(this, $"Updated update interval: {menuItem.Header}", "NtfsSharp DiskUsage",
+                MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        private void SetUpdateInterval(MenuItem menuItem)
+        {
+            var newIntervalSecs = uint.Parse(menuItem.Tag.ToString());
+
+            foreach (var item in _updateIntervalItems)
+            {
+                item.IsChecked = false;
+            }
+
+            menuItem.IsChecked = true;
+
+            if (_timer.Enabled)
+                _timer.Stop();
+
+            if (newIntervalSecs == 0)
+                return;
+
+            _timer.Interval = newIntervalSecs * 1000;
+            _timer.Start();
+        }
+
+        private void MenuItemExit_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (MessageBox.Show(this, "Are you sure you want to exit?", "NtfsSharp DiskUsage", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                Close();
         }
     }
 }
