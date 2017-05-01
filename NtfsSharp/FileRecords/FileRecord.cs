@@ -97,7 +97,7 @@ namespace NtfsSharp.FileRecords
             if (vol == null)
                 throw new ArgumentNullException(nameof(vol), "Volume cannot be null");
 
-            vol.Driver.Move(vol.LcnToOffset(vol.BootSector.MFTLCN) + vol.BytesPerFileRecord * recordNum);
+            vol.Driver.Move((long) (vol.LcnToOffset(vol.BootSector.MFTLCN) + vol.BytesPerFileRecord * recordNum));
             var data = vol.Driver.ReadFile(vol.BytesPerFileRecord);
 
             Volume = vol;

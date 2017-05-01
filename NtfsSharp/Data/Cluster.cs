@@ -15,7 +15,7 @@ namespace NtfsSharp.Data
 
             var offset = lcn * vol.BytesPerSector * vol.SectorsPerCluster;
 
-            vol.Driver.Move(lcn * vol.BytesPerSector * vol.SectorsPerCluster);
+            vol.Driver.Move((long) (lcn * vol.BytesPerSector * vol.SectorsPerCluster));
             Data = vol.Driver.ReadFile(vol.BytesPerSector * vol.SectorsPerCluster);
 
             Sectors = new Sector[vol.SectorsPerCluster];

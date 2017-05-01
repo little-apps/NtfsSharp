@@ -5,7 +5,7 @@ namespace NtfsSharp.Drivers
 {
     public abstract class BaseDiskDriver : IDisposable
     {
-        public abstract long Move(ulong offset, MoveMethod moveMethod = MoveMethod.Begin);
+        public abstract long Move(long offset, MoveMethod moveMethod = MoveMethod.Begin);
         public abstract byte[] ReadFile(uint bytesToRead);
         public abstract byte[] ReadFile(uint bytesToRead, out uint bytesRead);
         public abstract byte[] ReadFile(uint bytesToRead, out uint bytesRead, ref NativeOverlapped overlapped);
