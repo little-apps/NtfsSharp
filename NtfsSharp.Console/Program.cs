@@ -1,5 +1,8 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.IO;
+using NtfsSharp.DiskManager;
+using NtfsSharp.DiskManager.Physical;
 
 namespace NtfsSharp.Console
 {
@@ -23,9 +26,76 @@ namespace NtfsSharp.Console
         {
             Options = options;
 
-            Volume = new Volume(new DiskManager.PartitionManager($@"\\.\{Options.Drive}:"));
+            if (options.ListPhysicalDrives)
+            {
+                ListPhysicalDrives();
+                return;
+            }
+
+            if (options.PhysicalDrive.Length > 0 && !string.IsNullOrEmpty(options.PhysicalDrive[0]))
+            {
+                if (options.PhysicalDrive.Length != 2)
+                {
+                    OutputError("Two options (drive and partition number) are not specified.");
+                    return;
+                }
+
+                if (string.IsNullOrEmpty(options.PhysicalDrive[0]) || string.IsNullOrEmpty(options.PhysicalDrive[1]))
+                {
+                    OutputError("Either the drive or partition number are empty.");
+                    return;
+                }
+
+                ushort driveNum, partitionNum;
+
+                try
+                {
+                    driveNum = Convert.ToUInt16(options.PhysicalDrive[0]);
+                }
+                catch
+                {
+                    OutputError("Drive must a number between 0-65535");
+                    return;
+                }
+
+                try
+                {
+                    partitionNum = Convert.ToUInt16(options.PhysicalDrive[1]);
+                }
+                catch
+                {
+                    OutputError("Partition must a number between 0-65535");
+                    return;
+                }
+
+                Volume = new Volume(new PhysicalDiskManager($@"\\.\PhysicalDrive{driveNum}", partitionNum));
+            }
+            else
+            {
+                if (!char.IsUpper(Options.Drive))
+                {
+                    OutputError("Drive must be a upper case letter (A-Z)");
+                    return;
+                }
+
+                Volume = new Volume(new PartitionManager($@"\\.\{Options.Drive}:"));
+            }
 
             Interactive();
+        }
+
+        private void ListPhysicalDrives()
+        {
+            var i = 0;
+
+            Output.WriteLine("Available drives:");
+            Output.WriteLine();
+            
+            foreach (var physicalDrive in PhysicalDiskManager.GetPhysicalDrives())
+            {
+                Output.WriteLine("{0}: {1}", i, physicalDrive);
+                i++;
+            }
         }
 
         private void Interactive()
@@ -138,6 +208,11 @@ namespace NtfsSharp.Console
             }
 
             
+        }
+
+        private void OutputError(string message)
+        {
+            Output.WriteLine("Error: {0}", message);
         }
 
         static void Main(string[] args)
