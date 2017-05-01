@@ -14,9 +14,6 @@ namespace NtfsSharp
 {
     public class Volume : IDisposable
     {
-        public readonly char Drive;
-        public string VolumePath => $@"\\.\{Drive}:";
-
         public readonly BaseDiskDriver Driver;
 
         public NtfsBootSector BootSector { get; private set; }
