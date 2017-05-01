@@ -22,7 +22,7 @@ namespace NtfsSharp.Drivers
                 throw new Win32Exception(Marshal.GetHRForLastWin32Error());
         }
 
-        public override long Move(ulong offset, MoveMethod moveMethod = MoveMethod.Begin)
+        public override long Move(long offset, MoveMethod moveMethod = MoveMethod.Begin)
         {
             long newOffset = 0;
 
@@ -99,7 +99,7 @@ namespace NtfsSharp.Drivers
         
         [DllImport("kernel32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern bool SetFilePointerEx(SafeFileHandle hFile, ulong liDistanceToMove,
+        private static extern bool SetFilePointerEx(SafeFileHandle hFile, long liDistanceToMove,
             [Out] out long lpNewFilePointer, MoveMethod dwMoveMethod);
 
         [DllImport("kernel32.dll", SetLastError = true)]

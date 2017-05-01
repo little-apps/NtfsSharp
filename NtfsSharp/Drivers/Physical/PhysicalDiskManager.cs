@@ -120,17 +120,17 @@ namespace NtfsSharp.Drivers.Physical
             }
         }
 
-        public override long Move(ulong offset, MoveMethod moveMethod = MoveMethod.Begin)
+        public override long Move(long offset, MoveMethod moveMethod = MoveMethod.Begin)
         {
             if (_readBootRecord)
             {
                 switch (moveMethod)
                 {
                     case MoveMethod.Begin:
-                        offset = _partitionStartSector * 512 + offset;
+                        offset = (long) (_partitionStartSector * 512 + (ulong) offset);
                         break;
                     case MoveMethod.End:
-                        offset = offset + _partitionEndSector * 512;
+                        offset = offset + (long) (_partitionEndSector * 512);
                         moveMethod = MoveMethod.End;
                         break;
                 }
@@ -149,7 +149,7 @@ namespace NtfsSharp.Drivers.Physical
         /// <returns>New offset on disk</returns>
         public long MoveToLba(ulong lba)
         {
-            return Move(LbaToOffset(lba));
+            return Move((long) LbaToOffset(lba));
         }
 
         /// <summary>
@@ -475,7 +475,7 @@ namespace NtfsSharp.Drivers.Physical
 
         [DllImport("kernel32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern bool SetFilePointerEx(SafeFileHandle hFile, ulong liDistanceToMove,
+        private static extern bool SetFilePointerEx(SafeFileHandle hFile, long liDistanceToMove,
             [Out] out long lpNewFilePointer, MoveMethod dwMoveMethod);
 
         [DllImport("kernel32.dll", SetLastError = true)]

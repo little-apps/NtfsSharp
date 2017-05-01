@@ -14,7 +14,7 @@ namespace NtfsSharp.Data
         {
             Offset = offset;
 
-            vol.Driver.Move(offset);
+            vol.Driver.Move((long) offset);
             Data = vol.Driver.ReadFile(vol.BytesPerSector);
         }
 
