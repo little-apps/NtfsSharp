@@ -14,8 +14,8 @@ namespace NtfsSharp.Data
         {
             Offset = offset;
 
-            vol.Disk.Move(offset);
-            Data = vol.Disk.ReadFile(vol.BytesPerSector);
+            vol.Driver.Move(offset);
+            Data = vol.Driver.ReadFile(vol.BytesPerSector);
         }
 
         public Sector(ulong offset, byte[] data)

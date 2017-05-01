@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.DataVisualization.Charting;
 using NtfsSharp.DiskUsage.Properties;
+using NtfsSharp.Drivers;
 
 namespace NtfsSharp.DiskUsage
 {
@@ -114,7 +115,7 @@ namespace NtfsSharp.DiskUsage
 
             try
             {
-                _volume = new Volume(new DiskManager.PartitionManager($@"\\.\{volumeChar}:"));
+                _volume = new Volume(new PartitionDriver($@"\\.\{volumeChar}:"));
             }
             catch (Exception)
             {

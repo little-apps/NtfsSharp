@@ -3,16 +3,16 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.InteropServices;
-using NtfsSharp.DiskManager.Physical.Exceptions;
+using NtfsSharp.Drivers.Physical.Exceptions;
 using NtfsSharp.Helpers;
 
-namespace NtfsSharp.DiskManager.Physical
+namespace NtfsSharp.Drivers.Physical
 {
     public class GuidPartitionTable : IReadOnlyCollection<GuidPartitionTable.EfiPartitionEntry>
     {
         private const uint HeaderLba = 1;
 
-        private PhysicalDiskManager DiskManager { get; }
+        private PhysicalDiskDriver DiskManager { get; }
 
         public PartitionTableHeader Header { get; }
 
@@ -28,15 +28,15 @@ namespace NtfsSharp.DiskManager.Physical
         /// <summary>
         /// Constructor for GuidPartitionTable
         /// </summary>
-        /// <param name="diskManager">Instance of <see cref="PhysicalDiskManager"/> containing the GPT</param>
-        /// <exception cref="InvalidGuidPartitionTable">Thrown if the GPT signature is not 'EFI PART'</exception>
-        public GuidPartitionTable(PhysicalDiskManager diskManager)
+        /// <param name="diskManager">Instance of <see cref="InvalidGuidPartitionTable"/> containing the GPT</param>
+        /// <exception cref="PhysicalDiskDriver">Thrown if the GPT signature is not 'EFI PART'</exception>
+        public GuidPartitionTable(PhysicalDiskDriver diskManager)
         {
             DiskManager = diskManager;
 
             DiskManager.MoveToLba(HeaderLba);
 
-            var partitionTableHeaderBytes = DiskManager.ReadFile(PhysicalDiskManager.LogicalBlockAddressSize);
+            var partitionTableHeaderBytes = DiskManager.ReadFile(PhysicalDiskDriver.LogicalBlockAddressSize);
             Header = partitionTableHeaderBytes.ToStructure<PartitionTableHeader>();
 
             if (Header.Signature != 0x5452415020494645) // 'EFI PART'
@@ -55,14 +55,14 @@ namespace NtfsSharp.DiskManager.Physical
 
             for (var offset = 0; offset < Header.PartitionEntries * Header.PartitionEntrySize; offset += (int)Header.PartitionEntrySize)
             {
-                if (offset % PhysicalDiskManager.LogicalBlockAddressSize == 0)
+                if (offset % PhysicalDiskDriver.LogicalBlockAddressSize == 0)
                 {
                     // If offset is a multiple of 512, we're reading a new sector
                     var currentLba = Header.PartitionEntriesStartLba +
-                                     (ulong)(offset / PhysicalDiskManager.LogicalBlockAddressSize);
+                                     (ulong)(offset / PhysicalDiskDriver.LogicalBlockAddressSize);
                     DiskManager.MoveToLba(currentLba);
 
-                    sectorBytes = DiskManager.ReadFile(PhysicalDiskManager.LogicalBlockAddressSize);
+                    sectorBytes = DiskManager.ReadFile(PhysicalDiskDriver.LogicalBlockAddressSize);
                 }
 
                 var partitionEntryBytes = new byte[Header.PartitionEntrySize];

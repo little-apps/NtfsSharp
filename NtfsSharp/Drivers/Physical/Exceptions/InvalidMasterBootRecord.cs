@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NtfsSharp.DiskManager.Physical.Exceptions
+namespace NtfsSharp.Drivers.Physical.Exceptions
 {
     public class InvalidMasterBootRecord : Exception
     {

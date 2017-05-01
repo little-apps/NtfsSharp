@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading;
 
-namespace NtfsSharp.DiskManager
+namespace NtfsSharp.Drivers
 {
-    public abstract class BaseDiskManager : IDisposable
+    public abstract class BaseDiskDriver : IDisposable
     {
         public abstract long Move(ulong offset, MoveMethod moveMethod = MoveMethod.Begin);
         public abstract byte[] ReadFile(uint bytesToRead);

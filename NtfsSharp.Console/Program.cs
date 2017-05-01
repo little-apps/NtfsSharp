@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using NtfsSharp.DiskManager;
-using NtfsSharp.DiskManager.Physical;
+using NtfsSharp.Drivers;
+using NtfsSharp.Drivers.Physical;
 
 namespace NtfsSharp.Console
 {
@@ -68,7 +68,7 @@ namespace NtfsSharp.Console
                     return;
                 }
 
-                Volume = new Volume(new PhysicalDiskManager($@"\\.\PhysicalDrive{driveNum}", partitionNum));
+                Volume = new Volume(new PhysicalDiskDriver($@"\\.\PhysicalDrive{driveNum}", partitionNum));
             }
             else
             {
@@ -78,7 +78,7 @@ namespace NtfsSharp.Console
                     return;
                 }
 
-                Volume = new Volume(new PartitionManager($@"\\.\{Options.Drive}:"));
+                Volume = new Volume(new PartitionDriver($@"\\.\{Options.Drive}:"));
             }
 
             Interactive();
@@ -91,7 +91,7 @@ namespace NtfsSharp.Console
             Output.WriteLine("Available drives:");
             Output.WriteLine();
             
-            foreach (var physicalDrive in PhysicalDiskManager.GetPhysicalDrives())
+            foreach (var physicalDrive in PhysicalDiskDriver.GetPhysicalDrives())
             {
                 Output.WriteLine("{0}: {1}", i, physicalDrive);
                 i++;

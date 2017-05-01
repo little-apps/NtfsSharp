@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using NtfsSharp.Data;
-using NtfsSharp.DiskManager;
+using NtfsSharp.Drivers;
 using NtfsSharp.Exceptions;
 using NtfsSharp.FileRecords;
 using NtfsSharp.FileRecords.Attributes;
@@ -17,7 +17,7 @@ namespace NtfsSharp
         public readonly char Drive;
         public string VolumePath => $@"\\.\{Drive}:";
 
-        public readonly BaseDiskManager Disk;
+        public readonly BaseDiskDriver Driver;
 
         public NtfsBootSector BootSector { get; private set; }
         public MasterFileTable MFT { get; private set; }
@@ -31,9 +31,9 @@ namespace NtfsSharp
         public uint SectorsPerMFTRecord => BytesPerFileRecord / BytesPerSector;
         #endregion
 
-        public Volume(BaseDiskManager diskManager)
+        public Volume(BaseDiskDriver diskDriver)
         {
-            Disk = diskManager;
+            Driver = diskDriver;
             Read();
         }
 
@@ -200,7 +200,7 @@ namespace NtfsSharp
 
             if (disposing)
             {
-                Disk?.Dispose();
+                Driver?.Dispose();
             }
         }
 
