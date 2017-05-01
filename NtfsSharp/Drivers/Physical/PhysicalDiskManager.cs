@@ -6,12 +6,12 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using Microsoft.Win32.SafeHandles;
-using NtfsSharp.DiskManager.Physical.Exceptions;
+using NtfsSharp.Drivers.Physical.Exceptions;
 using NtfsSharp.Helpers;
 
-namespace NtfsSharp.DiskManager.Physical
+namespace NtfsSharp.Drivers.Physical
 {
-    public class PhysicalDiskManager : BaseDiskManager
+    public class PhysicalDiskDriver : BaseDiskDriver
     {
         /// <summary>
         /// The maximum of partitions in a MBR
@@ -47,7 +47,7 @@ namespace NtfsSharp.DiskManager.Physical
         /// </summary>
         /// <param name="physicalDrivePath">Path to physical drive (with trailing "\\.\")</param>
         /// <param name="partition">Partition number on physical drive (default: 0)</param>
-        public PhysicalDiskManager(string physicalDrivePath, uint partition = 0)
+        public PhysicalDiskDriver(string physicalDrivePath, uint partition = 0)
         {
             Handle = CreateFile(physicalDrivePath, FileAccess.Read, FileShare.ReadWrite, IntPtr.Zero, FileMode.Open, 0,
                 IntPtr.Zero);

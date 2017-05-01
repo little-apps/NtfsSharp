@@ -145,11 +145,11 @@ namespace NtfsSharp.FileRecords.Attributes.Base.NonResident
                 
                 var blockSize = dataBlock.RunLength * FileRecord.Volume.BytesPerSector * FileRecord.Volume.SectorsPerCluster;
 
-                FileRecord.Volume.Disk.Move(dataBlockLcn.Value * FileRecord.Volume.BytesPerSector *
+                FileRecord.Volume.Driver.Move(dataBlockLcn.Value * FileRecord.Volume.BytesPerSector *
                                             FileRecord.Volume.SectorsPerCluster);
                 
 
-                var blockData = FileRecord.Volume.Disk.SafeReadFile((uint) (lengthLeft >= blockSize ? blockSize : lengthLeft));
+                var blockData = FileRecord.Volume.Driver.SafeReadFile((uint) (lengthLeft >= blockSize ? blockSize : lengthLeft));
                 bytes.AddRange(blockData);
 
                 lengthLeft -= dataBlock.RunLength * FileRecord.Volume.BytesPerSector * FileRecord.Volume.SectorsPerCluster;

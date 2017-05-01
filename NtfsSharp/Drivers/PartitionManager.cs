@@ -5,15 +5,15 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using Microsoft.Win32.SafeHandles;
 
-namespace NtfsSharp.DiskManager
+namespace NtfsSharp.Drivers
 {
-    public class PartitionManager : BaseDiskManager
+    public class PartitionDriver : BaseDiskDriver
     {
         private SafeFileHandle Handle { get; }
 
         public readonly string Path;
 
-        public PartitionManager(string path)
+        public PartitionDriver(string path)
         {
             Path = path;
             Handle = CreateFile(path, FileAccess.Read, FileShare.ReadWrite, IntPtr.Zero, FileMode.Open, 0, IntPtr.Zero);
