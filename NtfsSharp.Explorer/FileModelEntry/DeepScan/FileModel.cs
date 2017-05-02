@@ -43,6 +43,9 @@ namespace NtfsSharp.Explorer.FileModelEntry.DeepScan
 
             foreach (var childFileRecord in childFileRecords)
             {
+                if (childFileRecord == parentFileModelEntry)
+                    continue;
+
                 childFileRecord.ReadFileRecord(_volume);
                 childFileRecord.SetFilePath(parentFileModelEntry.FilePath);
 
