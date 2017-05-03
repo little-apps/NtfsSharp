@@ -28,10 +28,12 @@ namespace NtfsSharp
         public uint SectorsPerMFTRecord => BytesPerFileRecord / BytesPerSector;
         #endregion
 
-        public Volume(BaseDiskDriver diskDriver)
+        public Volume(BaseDiskDriver diskDriver, bool doRead = true)
         {
             Driver = diskDriver;
-            Read();
+
+            if (doRead)
+                Read();
         }
 
         ~Volume()
