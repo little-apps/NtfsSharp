@@ -41,13 +41,13 @@ namespace NtfsSharp
             Dispose(false);
         }
 
-        private void Read()
+        public void Read()
         {
             ReadBootSector();
             ReadMft();
         }
 
-        private void ReadBootSector()
+        public void ReadBootSector()
         {
             BootSector = ReadLcn(0).ReadFile<NtfsBootSector>(0);
 
@@ -72,7 +72,7 @@ namespace NtfsSharp
             
         }
 
-        private void ReadMft()
+        public void ReadMft()
         {
             MFT = new MasterFileTable(this);
             MFT.ReadRecords();
