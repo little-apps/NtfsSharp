@@ -54,6 +54,18 @@ namespace NtfsSharp
             BytesPerSector = BootSector.BytesPerSector;
             SectorsPerCluster = BootSector.SectorsPerCluster;
 
+            if (BytesPerSector == 0)
+                throw new InvalidBootSectorException(nameof(BootSector.BytesPerSector), "BytesPerSector cannot be zero.");
+
+            if (BytesPerSector % 512 != 0)
+                throw new InvalidBootSectorException(nameof(BootSector.BytesPerSector), "BytesPerSector must be multiple of 512.");
+
+            if (BytesPerSector > 4096)
+                throw new InvalidBootSectorException(nameof(BootSector.BytesPerSector), "BytesPerSector must be equal to or less than 4096.");
+
+            if (SectorsPerCluster == 0)
+                throw new InvalidBootSectorException(nameof(BootSector.SectorsPerCluster), "SectorsPerCluster cannot be zero.");
+
             // If ClustersPerMFTRecord is positive (up to 0x7F), it represents clusters per MFT record
             if (BootSector.ClustersPerMFTRecord <= 0x7F)
                 BytesPerFileRecord =
