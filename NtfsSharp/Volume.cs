@@ -61,8 +61,8 @@ namespace NtfsSharp
             {
                 // Otherwise if it's negative (from 0x80 to 0xFF), the size is 2 raised to its absolute value
 
-                // Anything between 0xE0 and 0x80 will result in an integer overflow (since it's a 32 bit integer)
-                if (BootSector.ClustersPerMFTRecord >= 0xE0 && BootSector.ClustersPerMFTRecord <= 0x80)
+                // Anything between 0x80 and 0xE0 will result in an integer overflow (since it's a 32 bit integer)
+                if (BootSector.ClustersPerMFTRecord >= 0x80 && BootSector.ClustersPerMFTRecord <= 0xE0)
                     throw new InvalidBootSectorException(nameof(BootSector.ClustersPerMFTRecord), "ClustersPerMFTRecord cannot be between 0xE0 and 0x80");
                 
                 BytesPerFileRecord = (uint)(1 << 256 - BootSector.ClustersPerMFTRecord);
