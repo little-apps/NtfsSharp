@@ -188,7 +188,7 @@ namespace NtfsSharp
 
         private void ReleaseUnmanagedResources()
         {
-            Driver.Dispose();
+            
         }
 
         private void Dispose(bool disposing)
