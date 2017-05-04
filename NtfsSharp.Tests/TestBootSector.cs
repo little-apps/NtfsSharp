@@ -31,6 +31,9 @@ namespace NtfsSharp.Tests
             Volume.Dispose();
         }
 
+        /// <summary>
+        /// Tests clusters per MFT as valid positive value (0x7F or 127)
+        /// </summary>
         [Test]
         public void TestClustersPerMFTRecordPositive()
         {
@@ -45,6 +48,9 @@ namespace NtfsSharp.Tests
             Assert.Greater(Volume.BytesPerFileRecord, 0);
         }
 
+        /// <summary>
+        /// Tests clusters per MFT as valid negative value (0xF6 or -10)
+        /// </summary>
         [Test]
         public void TestClustersPerMFTRecordNegativeValid()
         {
@@ -59,6 +65,9 @@ namespace NtfsSharp.Tests
             Assert.Greater(Volume.BytesPerFileRecord, 0);
         }
 
+        /// <summary>
+        /// Tests that <seealso cref="InvalidBootSectorException"/> is thrown from setting clusters per MFT to an invalid negative value (0x80 or -128)
+        /// </summary>
         [Test]
         public void TestClustersPerMFTRecordNegativeInvalid()
         {
@@ -70,6 +79,9 @@ namespace NtfsSharp.Tests
             Assert.AreEqual(nameof(BootSector.DummyBootSector.ClustersPerMFTRecord), ex.FieldName);
         }
 
+        /// <summary>
+        /// Tests that the bytes per sector is set to a valid value (512)
+        /// </summary>
         [Test]
         public void TestBytesPerSectorValid()
         {
@@ -83,6 +95,9 @@ namespace NtfsSharp.Tests
             Assert.AreEqual(Volume.BytesPerFileRecord / Volume.BytesPerSector, Volume.SectorsPerMFTRecord);
         }
 
+        /// <summary>
+        /// Tests that <seealso cref="InvalidBootSectorException"/> is thrown from setting bytes per sector to 0
+        /// </summary>
         [Test]
         public void TestBytesPerSectorZero()
         {
@@ -94,6 +109,9 @@ namespace NtfsSharp.Tests
             Assert.AreEqual(nameof(BootSector.DummyBootSector.BytesPerSector), ex.FieldName);
         }
 
+        /// <summary>
+        /// Tests that <seealso cref="InvalidBootSectorException"/> is thrown from setting bytes per sectors to something not a multiple of 512
+        /// </summary>
         [Test]
         public void TestBytesPerSectorNotMultiple()
         {
@@ -105,6 +123,9 @@ namespace NtfsSharp.Tests
             Assert.AreEqual(nameof(BootSector.DummyBootSector.BytesPerSector), ex.FieldName);
         }
 
+        /// <summary>
+        /// Tests that <seealso cref="InvalidBootSectorException"/> is thrown from setting the bytes per sector to greater than 4096
+        /// </summary>
         [Test]
         public void TestBytesPerSectorOverflow()
         {
@@ -116,6 +137,9 @@ namespace NtfsSharp.Tests
             Assert.AreEqual(nameof(BootSector.DummyBootSector.BytesPerSector), ex.FieldName);
         }
 
+        /// <summary>
+        /// Tests setting the sectors per cluster to 8 is valid
+        /// </summary>
         [Test]
         public void TestSectorsPerClusterValid()
         {
@@ -128,6 +152,9 @@ namespace NtfsSharp.Tests
             Assert.AreEqual(sectorsPerCluster, Volume.SectorsPerCluster);
         }
 
+        /// <summary>
+        /// Tests setting the sectors per cluster is reflected in the bytes per file record value (when clusters per MFT is a positive value)
+        /// </summary>
         [Test]
         public void TestSectorsPerClusterMFTValid()
         {
