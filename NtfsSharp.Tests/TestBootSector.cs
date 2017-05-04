@@ -25,6 +25,12 @@ namespace NtfsSharp.Tests
             Driver.Parts[0] = BootSector;
         }
 
+        [TearDown]
+        public void DisposeDummyDisk()
+        {
+            Volume.Dispose();
+        }
+
         [Test]
         public void TestClustersPerMFTRecordPositive()
         {
