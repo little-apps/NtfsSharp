@@ -1,6 +1,6 @@
 NtfsSharp
 =====================
-[![Build status](https://ci.appveyor.com/api/projects/status/ny7ro7468l64xulv?svg=true)](https://ci.appveyor.com/project/little-apps/ntfssharp)
+[![Build status](https://ci.appveyor.com/api/projects/status/ny7ro7468l64xulv?svg=true)](https://ci.appveyor.com/project/little-apps/ntfssharp) [![Coverage Status](https://coveralls.io/repos/github/little-apps/NtfsSharp/badge.svg?branch=master)](https://coveralls.io/github/little-apps/NtfsSharp?branch=master)
 
 
 NtfsSharp parses a NTFS (or New Technology File System) volume using C#
