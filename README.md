@@ -1,5 +1,8 @@
 NtfsSharp
 =====================
+[![Build status](https://ci.appveyor.com/api/projects/status/ny7ro7468l64xulv?svg=true)](https://ci.appveyor.com/project/little-apps/ntfssharp)
+
+
 NtfsSharp parses a NTFS (or New Technology File System) volume using C#
 
 ## Development ##
