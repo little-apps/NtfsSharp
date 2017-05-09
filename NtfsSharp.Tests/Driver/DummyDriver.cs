@@ -1,9 +1,7 @@
 ﻿using NtfsSharp.Drivers;
 using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using System.Threading;
-using NUnit.Compatibility;
 
 namespace NtfsSharp.Tests.Driver
 {
