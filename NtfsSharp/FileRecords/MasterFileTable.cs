@@ -7,37 +7,37 @@ namespace NtfsSharp.FileRecords
 {
     public class MasterFileTable : IReadOnlyDictionary<uint, FileRecord>
     {
-        private const uint _recordsToRead = 26;
+        private const uint RecordsToRead = 26;
 
-        private readonly uint SectorsPerMFTRecord;
-        private readonly Volume Volume;
+        private readonly uint _sectorsPerMftRecord;
+        private readonly Volume _volume;
         private readonly SortedList<uint, FileRecord> _table = new SortedList<uint, FileRecord>();
 
         public MasterFileTable(Volume volume)
         {
-            Volume = volume;
+            _volume = volume;
 
-            SectorsPerMFTRecord = volume.BytesPerFileRecord / volume.BytesPerSector;
+            _sectorsPerMftRecord = volume.BytesPerFileRecord / volume.BytesPerSector;
         }
 
         public void ReadRecords()
         {
-            var currentOffset = Volume.LcnToOffset(Volume.BootSector.MFTLCN);
+            var currentOffset = _volume.LcnToOffset(_volume.BootSector.MFTLCN);
 
-            for (uint i = 0; i < _recordsToRead; i++)
+            for (uint i = 0; i < RecordsToRead; i++)
             {
-                var bytes = new byte[SectorsPerMFTRecord * Volume.BytesPerSector];
+                var bytes = new byte[_sectorsPerMftRecord * _volume.BytesPerSector];
 
-                for (var j = 0; j < SectorsPerMFTRecord; j++)
+                for (var j = 0; j < _sectorsPerMftRecord; j++)
                 {
-                    var sector = Volume.ReadSectorAtOffset(currentOffset);
+                    var sector = _volume.ReadSectorAtOffset(currentOffset);
 
-                    Array.Copy(sector.Data, 0, bytes, j * Volume.BytesPerSector, Volume.BytesPerSector);
+                    Array.Copy(sector.Data, 0, bytes, j * _volume.BytesPerSector, _volume.BytesPerSector);
 
-                    currentOffset += Volume.BytesPerSector;
+                    currentOffset += _volume.BytesPerSector;
                 }
 
-                var fileRecord = new FileRecord(bytes, Volume);
+                var fileRecord = new FileRecord(bytes, _volume);
                 fileRecord.ReadAttributes();
 
                 var recordNum = fileRecord.Header.MFTRecordNumber;
