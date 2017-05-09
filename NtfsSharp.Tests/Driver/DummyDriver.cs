@@ -15,6 +15,10 @@ namespace NtfsSharp.Tests.Driver
 
         public const uint MasterFileTableLcn = 1;
         
+        /// <summary>
+        /// The parts of the NTFS Volume.
+        /// </summary>
+        /// <remarks>Each key represents the LCN on the volume.</remarks>
         public Dictionary<long, BaseDriverPart> Parts { get; } = new Dictionary<long, BaseDriverPart>();
 
         private long _currentOffset;
