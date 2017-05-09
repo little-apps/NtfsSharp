@@ -10,10 +10,23 @@ namespace NtfsSharp.Tests.Driver
             GenerateDefaultDummy();
         }
 
+        /// <summary>
+        /// Generates the default data for the part
+        /// </summary>
         protected abstract void GenerateDefaultDummy();
 
+        /// <summary>
+        /// Builds the part of the NTFS volume
+        /// </summary>
+        /// <returns>Part in bytes</returns>
+        /// <remarks>The size of the part should be no greater than 4096 bytes</remarks>
         public abstract byte[] BuildPart();
 
+        /// <summary>
+        /// Reads the part as a cluster (8 sectors)
+        /// </summary>
+        /// <returns>The bytes in the cluster</returns>
+        /// <remarks>The part will be resized to the size of cluster (4096 bytes) if it's not already</remarks>
         public byte[] ReadAsCluster()
         {
             var partBytes = BuildPart();
@@ -28,6 +41,14 @@ namespace NtfsSharp.Tests.Driver
             return clusterBytes;
         }
 
+        /// <summary>
+        /// Converts a structure into it's bytes
+        /// </summary>
+        /// <typeparam name="T">Structure type</typeparam>
+        /// <param name="structure">Structure to convert</param>
+        /// <param name="size">Number of bytes to be return. If zero, the <seealso cref="Marshal"/>.SizeOf of the structure is used. (default: 0)</param>
+        /// <returns>Byte array containing structure</returns>
+        /// <remarks>If the size is bigger than the actual structure, any extra bytes will be 0x00.</remarks>
         protected byte[] StructureToBytes<T>(T structure, uint size = 0) where T:struct
         {
             if (size == 0)
