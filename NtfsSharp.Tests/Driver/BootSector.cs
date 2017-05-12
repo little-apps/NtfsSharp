@@ -6,6 +6,11 @@ namespace NtfsSharp.Tests.Driver
     {
         public NtfsBootSector DummyBootSector;
 
+        protected override bool ShouldGenerateDefault
+        {
+            get { return false; }
+        }
+
         protected override void GenerateDefaultDummy()
         {
             DummyBootSector = new NtfsBootSector

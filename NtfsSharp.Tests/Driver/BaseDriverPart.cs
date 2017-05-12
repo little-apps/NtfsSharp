@@ -10,6 +10,8 @@ namespace NtfsSharp.Tests.Driver
             GenerateDefaultDummy();
         }
 
+        protected abstract bool ShouldGenerateDefault { get; }
+
         /// <summary>
         /// Generates the default data for the part
         /// </summary>
