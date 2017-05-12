@@ -52,6 +52,7 @@
     <Compile Include="Exceptions\InvalidBootSectorException.cs" />
     <Compile Include="Exceptions\InvalidFileRecordException.cs" />
     <Compile Include="Exceptions\InvalidIndexAllocationException.cs" />
+    <Compile Include="Exceptions\InvalidMasterFileTableException.cs" />
     <Compile Include="FileRecords\Attributes\AttributeList\AttributeListItem.cs" />
     <Compile Include="FileRecords\Attributes\AttributeList\AttributeList.cs" />
     <Compile Include="FileRecords\Attributes\Base\AttributeBase.cs" />
