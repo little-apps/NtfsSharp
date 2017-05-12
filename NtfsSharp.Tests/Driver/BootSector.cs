@@ -11,6 +11,11 @@ namespace NtfsSharp.Tests.Driver
             get { return false; }
         }
 
+        public BootSector()
+        {
+            GenerateDefaultDummy();
+        }
+
         protected override void GenerateDefaultDummy()
         {
             DummyBootSector = new NtfsBootSector

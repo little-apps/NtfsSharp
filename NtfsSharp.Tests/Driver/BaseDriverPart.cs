@@ -7,7 +7,6 @@ namespace NtfsSharp.Tests.Driver
     {
         public BaseDriverPart()
         {
-            GenerateDefaultDummy();
         }
 
         protected abstract bool ShouldGenerateDefault { get; }
@@ -31,6 +30,9 @@ namespace NtfsSharp.Tests.Driver
         /// <remarks>The part will be resized to the size of cluster (4096 bytes) if it's not already</remarks>
         public byte[] ReadAsCluster()
         {
+            if (ShouldGenerateDefault)
+                GenerateDefaultDummy();
+
             var partBytes = BuildPart();
 
             if (partBytes.Length == DummyDriver.BytesPerSector * DummyDriver.SectorsPerCluster)
