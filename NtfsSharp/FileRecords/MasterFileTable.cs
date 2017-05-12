@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using NtfsSharp.Exceptions;
 
 namespace NtfsSharp.FileRecords
 {
@@ -43,6 +44,9 @@ namespace NtfsSharp.FileRecords
                 var recordNum = fileRecord.Header.MFTRecordNumber;
                 if (recordNum == 0)
                     recordNum = i;
+
+                if (recordNum != i)
+                    throw new InvalidMasterFileTableException(nameof(fileRecord.Header.MFTRecordNumber), "MFT Record Number must be 0 or match it's index in the MFT.", fileRecord);
 
                 _table.Add(recordNum, fileRecord);
             }
