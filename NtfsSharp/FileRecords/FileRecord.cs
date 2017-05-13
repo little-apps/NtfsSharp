@@ -24,9 +24,7 @@ namespace NtfsSharp.FileRecords
 
         public FILE_RECORD_HEADER_NTFS Header { get; private set; }
         public readonly List<AttributeBase> Attributes = new List<AttributeBase>();
-
         
-
         public string Filename
         {
             get
@@ -255,6 +253,7 @@ namespace NtfsSharp.FileRecords
             IsDirectory = 1 << 1
         }
 
+        #region IComparer Implementation
         public int Compare(FileRecord x, FileRecord y)
         {
             if (x == null)
@@ -263,21 +262,27 @@ namespace NtfsSharp.FileRecords
             if (y == null)
                 return 1;
 
-            return (int) (x.Header.MFTRecordNumber - y.Header.MFTRecordNumber);
+            return (int)(x.Header.MFTRecordNumber - y.Header.MFTRecordNumber);
         }
+        #endregion
 
+        #region IComparable Implementation
         public int CompareTo(FileRecord other)
         {
             if (other == null)
                 return -1;
 
-            return (int) (Header.MFTRecordNumber - other.Header.MFTRecordNumber);
+            return (int)(Header.MFTRecordNumber - other.Header.MFTRecordNumber);
         }
-
+        #endregion
+        
+        #region IEquatable Implementation
         public bool Equals(FileRecord other)
         {
             return CompareTo(other) == 0;
         }
+        #endregion
+
 
         [StructLayout(LayoutKind.Sequential)]
         public struct FILE_RECORD_HEADER_NTFS
