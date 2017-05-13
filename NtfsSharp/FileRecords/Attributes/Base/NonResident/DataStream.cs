@@ -177,18 +177,15 @@ namespace NtfsSharp.FileRecords.Attributes.Base.NonResident
         /// <returns>The total number of bytes read into the buffer. This can be less than the number of bytes requested if that many bytes are not currently available, or zero (0) if the end of the stream has been reached.</returns>
         private int ReadNonResident(byte[] buffer, int offset, int count)
         {
-            ulong currentLcn;
-            long offsetInCluster;
-            Cluster currentCluster;
-            int totalBytesRead = 0;
+            var totalBytesRead = 0;
 
             while (offset < count)
             {
                 if (EndOfFile)
                     break;
 
-                currentLcn = PositionToLcn(out offsetInCluster);
-                currentCluster = Volume.ReadLcn(currentLcn);
+                var currentLcn = PositionToLcn(out long offsetInCluster);
+                var currentCluster = Volume.ReadLcn(currentLcn);
 
                 var bytesRead = ClusterSize - offsetInCluster;
 
