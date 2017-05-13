@@ -73,7 +73,7 @@ namespace NtfsSharp.FileRecords
         public FileRecord(byte[] data, Volume vol)
         {
             Volume = vol ?? throw new ArgumentNullException(nameof(vol), "Volume cannot be null");
-            _data = data;
+            _data = data ?? throw new ArgumentNullException(nameof(data), "Data cannot be null");
 
             ParseHeader();
             if (!Fixup(_data, Header.UpdateSequenceOffset, Header.UpdateSequenceSize, Volume.BytesPerSector,
