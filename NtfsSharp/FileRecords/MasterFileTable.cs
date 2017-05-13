@@ -13,6 +13,11 @@ namespace NtfsSharp.FileRecords
         private readonly Volume _volume;
         private readonly SortedList<uint, FileRecord> _table = new SortedList<uint, FileRecord>();
 
+        /// <summary>
+        /// Constructor of MasterFileTable
+        /// </summary>
+        /// <param name="volume">Volume instance</param>
+        /// <remarks>This object will have 0 elements until <seealso cref="ReadRecords"/> is called.</remarks>
         public MasterFileTable(Volume volume)
         {
             _volume = volume;
@@ -20,6 +25,14 @@ namespace NtfsSharp.FileRecords
             _sectorsPerMftRecord = volume.BytesPerFileRecord / volume.BytesPerSector;
         }
         
+        /// <summary>
+        /// Reads master file table records from the specified LCN
+        /// </summary>
+        /// <param name="mftLcn">Logical cluster number to look for master file table records</param>
+        /// <exception cref="InvalidMasterFileTableException">Thrown when the MFT record number does not match the index of it</exception>
+        /// <remarks>
+        ///     The attributes of each MFT record are parsed as well.
+        /// </remarks>
         public void ReadRecords(ulong mftLcn)
         {
             var currentCluster = _volume.ReadLcn(mftLcn);
