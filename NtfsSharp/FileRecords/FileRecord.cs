@@ -66,9 +66,10 @@ namespace NtfsSharp.FileRecords
         /// <summary>
         /// Reads file record from bytes
         /// </summary>
-        /// <param name="data">Bytes with data for file record and attributes</param>
-        /// <param name="vol">Volume containing file record</param>
-        /// <exception cref="ArgumentNullException">Thrown if Volume is null</exception>
+        /// <param name="data">Bytes with data for file record and attributes. Cannot be empty or null.</param>
+        /// <param name="vol">Volume containing file record. Cannot be null.</param>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="data"/> or <paramref name="vol"/> is null</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="data"/> is empty</exception>
         /// <exception cref="InvalidFileRecordException">Thrown if unable to read file record</exception>
         public FileRecord(byte[] data, Volume vol)
         {
