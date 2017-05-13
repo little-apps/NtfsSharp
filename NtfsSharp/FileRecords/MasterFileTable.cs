@@ -19,10 +19,10 @@ namespace NtfsSharp.FileRecords
 
             _sectorsPerMftRecord = volume.BytesPerFileRecord / volume.BytesPerSector;
         }
-
-        public void ReadRecords()
+        
+        public void ReadRecords(ulong mftLcn)
         {
-            var currentCluster = _volume.ReadLcn(_volume.BootSector.MFTLCN);
+            var currentCluster = _volume.ReadLcn(mftLcn);
             var bytesPerFileRecord = _sectorsPerMftRecord * _volume.BytesPerSector;
             
             for (uint i = 0; i < RecordsToRead * _sectorsPerMftRecord; i += _sectorsPerMftRecord)

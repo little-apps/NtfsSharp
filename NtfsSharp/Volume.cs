@@ -87,7 +87,7 @@ namespace NtfsSharp
         public void ReadMft()
         {
             MFT = new MasterFileTable(this);
-            MFT.ReadRecords();
+            MFT.ReadRecords(BootSector.MFTLCN);
         }
 
         public uint TotalInodes
