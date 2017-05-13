@@ -23,30 +23,32 @@ namespace NtfsSharp.FileRecords
 
         public void ReadRecords()
         {
-            var currentOffset = _volume.LcnToOffset(_volume.BootSector.MFTLCN);
-
-            for (uint i = 0; i < RecordsToRead; i++)
+            var currentCluster = _volume.ReadLcn(_volume.BootSector.MFTLCN);
+            var bytesPerFileRecord = _sectorsPerMftRecord * _volume.BytesPerSector;
+            
+            for (uint i = 0; i < RecordsToRead * _sectorsPerMftRecord; i += _sectorsPerMftRecord)
             {
-                var bytes = new byte[_sectorsPerMftRecord * _volume.BytesPerSector];
+                var sectorOffsetInLcn = i % _volume.SectorsPerCluster;
 
-                for (var j = 0; j < _sectorsPerMftRecord; j++)
-                {
-                    var sector = _volume.ReadSectorAtOffset(currentOffset);
+                if (sectorOffsetInLcn == 0 && i > 0)
+                    currentCluster = _volume.ReadLcn(currentCluster.Lcn + 1);
 
-                    Array.Copy(sector.Data, 0, bytes, j * _volume.BytesPerSector, _volume.BytesPerSector);
+                var fileRecordBytes = new byte[bytesPerFileRecord];
 
-                    currentOffset += _volume.BytesPerSector;
-                }
+                Array.Copy(currentCluster.Data, sectorOffsetInLcn * _volume.BytesPerSector, fileRecordBytes, 0,
+                    bytesPerFileRecord);
 
-                var fileRecord = new FileRecord(bytes, _volume);
+                var fileRecord = new FileRecord(fileRecordBytes, _volume);
                 fileRecord.ReadAttributes();
 
+                var index = i / 2;
                 var recordNum = fileRecord.Header.MFTRecordNumber;
                 if (recordNum == 0)
-                    recordNum = i;
+                    recordNum = index;
 
-                if (recordNum != i)
-                    throw new InvalidMasterFileTableException(nameof(fileRecord.Header.MFTRecordNumber), "MFT Record Number must be 0 or match it's index in the MFT.", fileRecord);
+                if (recordNum != index)
+                    throw new InvalidMasterFileTableException(nameof(fileRecord.Header.MFTRecordNumber),
+                        "MFT Record Number must be 0 or match it's index in the MFT.", fileRecord);
 
                 _table.Add(recordNum, fileRecord);
             }
