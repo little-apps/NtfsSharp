@@ -5,12 +5,14 @@ namespace NtfsSharp.Data
 {
     public class Cluster : IComparable, IComparable<Cluster>
     {
+        private readonly Volume Volume;
         public readonly Sector[] Sectors;
         public readonly ulong Lcn;
         public readonly byte[] Data;
 
         public Cluster(ulong lcn, Volume vol)
         {
+            Volume = vol;
             Lcn = lcn;
 
             var offset = lcn * vol.BytesPerSector * vol.SectorsPerCluster;
@@ -58,6 +60,9 @@ namespace NtfsSharp.Data
         public int CompareTo(Cluster other)
         {
             if (other == null)
+                return -1;
+
+            if (!ReferenceEquals(Volume, other.Volume))
                 return -1;
 
             return (int) (Lcn - other.Lcn);
