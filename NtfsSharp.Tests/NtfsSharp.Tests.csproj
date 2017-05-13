@@ -40,8 +40,11 @@
     <Compile Include="Driver\BaseDriverPart.cs" />
     <Compile Include="Driver\BootSector.cs" />
     <Compile Include="Driver\DummyDriver.cs" />
+    <Compile Include="Driver\MasterFileTablePart.cs" />
+    <Compile Include="Driver\DummyFileRecord.cs" />
     <Compile Include="TestBootSector.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestMasterFileTable.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -51,6 +54,9 @@
       <Project>{d9848cd4-008e-4270-b2ad-3dce2af21e41}</Project>
       <Name>NtfsSharp</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
