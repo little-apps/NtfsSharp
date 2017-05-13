@@ -72,15 +72,14 @@ namespace NtfsSharp.FileRecords
         /// <exception cref="InvalidFileRecordException">Thrown if unable to read file record</exception>
         public FileRecord(byte[] data, Volume vol)
         {
-            if (vol == null)
-                throw new ArgumentNullException(nameof(vol), "Volume cannot be null");
-
-            Volume = vol;
+            Volume = vol ?? throw new ArgumentNullException(nameof(vol), "Volume cannot be null");
             _data = data;
 
             ParseHeader();
-            if (!Fixup(_data, Header.UpdateSequenceOffset, Header.UpdateSequenceSize, Volume.BytesPerSector, out short invalidSector))
-                throw new InvalidFileRecordException(nameof(EndTag), $"Last 2 bytes of sector {invalidSector} don't match update sequence array end tag.", this);
+            if (!Fixup(_data, Header.UpdateSequenceOffset, Header.UpdateSequenceSize, Volume.BytesPerSector,
+                out short invalidSector))
+                throw new InvalidFileRecordException(nameof(EndTag),
+                    $"Last 2 bytes of sector {invalidSector} don't match update sequence array end tag.", this);
         }
 
         /// <summary>
