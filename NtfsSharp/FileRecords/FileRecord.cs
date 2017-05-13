@@ -75,6 +75,9 @@ namespace NtfsSharp.FileRecords
             Volume = vol ?? throw new ArgumentNullException(nameof(vol), "Volume cannot be null");
             _data = data ?? throw new ArgumentNullException(nameof(data), "Data cannot be null");
 
+            if (data.Length == 0)
+                throw new ArgumentOutOfRangeException(nameof(data), "Data cannot be empty");
+
             ParseHeader();
             if (!Fixup(_data, Header.UpdateSequenceOffset, Header.UpdateSequenceSize, Volume.BytesPerSector,
                 out short invalidSector))
