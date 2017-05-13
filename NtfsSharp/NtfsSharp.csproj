@@ -43,11 +43,11 @@
     <Compile Include="Data\Cluster.cs" />
     <Compile Include="Data\Sector.cs" />
     <Compile Include="Drivers\BaseDiskDriver.cs" />
-    <Compile Include="Drivers\PartitionManager.cs" />
+    <Compile Include="Drivers\PartitionDriver.cs" />
     <Compile Include="Drivers\Physical\Exceptions\InvalidGuidPartitionTable.cs" />
     <Compile Include="Drivers\Physical\Exceptions\InvalidMasterBootRecord.cs" />
     <Compile Include="Drivers\Physical\GuidPartitionTable.cs" />
-    <Compile Include="Drivers\Physical\PhysicalDiskManager.cs" />
+    <Compile Include="Drivers\Physical\PhysicalDiskDriver.cs" />
     <Compile Include="Exceptions\InvalidAttributeException.cs" />
     <Compile Include="Exceptions\InvalidBootSectorException.cs" />
     <Compile Include="Exceptions\InvalidFileRecordException.cs" />
