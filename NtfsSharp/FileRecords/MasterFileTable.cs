@@ -40,7 +40,7 @@ namespace NtfsSharp.FileRecords
                 var fileRecord = new FileRecord(fileRecordBytes, _volume);
                 fileRecord.ReadAttributes();
 
-                var index = i / 2;
+                var index = i / _sectorsPerMftRecord;
                 var recordNum = fileRecord.Header.MFTRecordNumber;
                 if (recordNum == 0)
                     recordNum = index;
