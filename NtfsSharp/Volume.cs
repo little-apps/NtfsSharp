@@ -12,7 +12,7 @@ using NtfsSharp.FileRecords.Attributes.Base.NonResident;
 
 namespace NtfsSharp
 {
-    public class Volume : IDisposable
+    public class Volume : IDisposable, IComparable, IComparable<Volume>, IEquatable<Volume>
     {
         public readonly BaseDiskDriver Driver;
 
@@ -36,10 +36,62 @@ namespace NtfsSharp
                 Read();
         }
 
+        
+
         ~Volume()
         {
             Dispose(false);
         }
+
+        #region IComparable Implementation
+        public int CompareTo(object obj)
+        {
+            return CompareTo(obj as Volume);
+        }
+        #endregion
+
+        #region IComparable<Volume> Implementation
+        public int CompareTo(Volume other)
+        {
+            if (ReferenceEquals(null, other))
+                return -1;
+
+            if (ReferenceEquals(this, other))
+                return 0;
+
+            if (BootSector.VolumeSerialNumber == 0)
+                return -1;
+
+            if (other.BootSector.VolumeSerialNumber == 0)
+                return 1;
+
+            return BootSector.VolumeSerialNumber.CompareTo(other.BootSector.VolumeSerialNumber);
+        }
+        #endregion
+
+        #region IEquatable<Volume> Implementation
+        public bool Equals(Volume other)
+        {
+            return CompareTo(other) == 0;
+        }
+
+        public static bool operator ==(Volume left, Volume right)
+        {
+            if (ReferenceEquals(left, right))
+                return true;
+
+            if (ReferenceEquals(null, left) || ReferenceEquals(null, right))
+                return false;
+
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(Volume left, Volume right)
+        {
+            return !(left == right);
+        }
+        #endregion
+
 
         public void Read()
         {
