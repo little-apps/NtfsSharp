@@ -62,7 +62,7 @@ namespace NtfsSharp.Data
             if (other == null)
                 return -1;
 
-            if (!ReferenceEquals(Volume, other.Volume))
+            if (Volume != other.Volume)
                 return -1;
 
             return (int) (Lcn - other.Lcn);
