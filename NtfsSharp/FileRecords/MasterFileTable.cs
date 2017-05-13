@@ -66,6 +66,7 @@ namespace NtfsSharp.FileRecords
             }
         }
 
+        #region IReadOnlyDictionary Implementation
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
@@ -92,5 +93,6 @@ namespace NtfsSharp.FileRecords
 
         public IEnumerable<uint> Keys => _table.Keys;
         public IEnumerable<FileRecord> Values => _table.Values;
+        #endregion
     }
 }
