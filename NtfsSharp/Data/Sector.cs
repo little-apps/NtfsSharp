@@ -5,6 +5,9 @@ namespace NtfsSharp.Data
 {
     public class Sector
     {
+        /// <summary>
+        /// Specifys the BytesPerSector. The value from <seealso cref="Volume"/> is used if it is not null, otherwise, 512 is used.
+        /// </summary>
         private ushort BytesPerSector => (ushort) (_volume != null ? _volume.BytesPerSector : 512);
 
         private byte[] _data;
@@ -12,6 +15,10 @@ namespace NtfsSharp.Data
 
         public readonly ulong Offset;
 
+        /// <summary>
+        /// Data contained in sector
+        /// </summary>
+        /// <remarks>If using Volume, data is retreived once (and only once) when this property is accessed.</remarks>
         public byte[] Data
         {
             get
@@ -26,6 +33,12 @@ namespace NtfsSharp.Data
             }
         }
 
+        /// <summary>
+        /// Constructor for Sector on <seealso cref="Volume"/>
+        /// </summary>
+        /// <param name="offset">Offset of sector</param>
+        /// <param name="vol">Volume containing sector</param>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="vol"/> is null.</exception>
         public Sector(ulong offset, Volume vol)
         {
             if (ReferenceEquals(null, vol))
@@ -35,6 +48,13 @@ namespace NtfsSharp.Data
             _volume = vol;
         }
 
+        /// <summary>
+        /// Constructor for Sector with data for it specified
+        /// </summary>
+        /// <param name="offset">Offset that sector is located</param>
+        /// <param name="data">Data contained in sector</param>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="data"/> is null.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="data"/> is not <seealso cref="BytesPerSector"/></exception>
         public Sector(ulong offset, byte[] data)
         {
             if (data == null)
@@ -47,6 +67,13 @@ namespace NtfsSharp.Data
             _data = data;
         }
 
+        /// <summary>
+        /// Reads data in sector as specified type
+        /// </summary>
+        /// <typeparam name="T">Type to return from data</typeparam>
+        /// <param name="offset">Offset in sector to read from</param>
+        /// <returns>Instance of <typeparamref name="T"/></returns>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="offset"/> + the size of <typeparamref name="T"/> is greater than <seealso cref="BytesPerSector"/></exception>
         public T ReadFile<T>(uint offset)
         {
             var bytesToRead = Marshal.SizeOf<T>();
