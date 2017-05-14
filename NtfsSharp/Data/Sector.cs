@@ -40,6 +40,9 @@ namespace NtfsSharp.Data
             if (data == null)
                 throw new ArgumentNullException(nameof(data), "Data cannot be null");
 
+            if (data.Length != BytesPerSector)
+                throw new ArgumentOutOfRangeException(nameof(data), $"Data must be {BytesPerSector} bytes.");
+
             Offset = offset;
             _data = data;
         }
