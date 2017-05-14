@@ -35,6 +35,9 @@ namespace NtfsSharp.Data
 
         public Sector(ulong offset, byte[] data)
         {
+            if (data == null)
+                throw new ArgumentNullException(nameof(data), "Data cannot be null");
+
             Offset = offset;
             _data = data;
         }
