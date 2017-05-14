@@ -49,6 +49,9 @@ namespace NtfsSharp.Data
 
         public Cluster(ulong lcn, Volume vol)
         {
+            if (ReferenceEquals(null, vol))
+                throw new ArgumentNullException(nameof(vol), "Volume cannot be null.");
+
             _volume = vol;
             Lcn = lcn;
         }
