@@ -5,30 +5,58 @@ namespace NtfsSharp.Data
 {
     public class Cluster : IComparable, IComparable<Cluster>
     {
-        private readonly Volume Volume;
-        public readonly Sector[] Sectors;
+        private byte[] _data;
+        private Sector[] _sectors;
+
+        private readonly Volume _volume;
+        
         public readonly ulong Lcn;
-        public readonly byte[] Data;
+
+        public byte[] Data
+        {
+            get
+            {
+                if (_data != null)
+                    return _data;
+
+                _data = DataOnDemand();
+
+                return _data;
+            }
+        }
+
+        public Sector[] Sectors
+        {
+            get
+            {
+                if (_sectors != null)
+                    return _sectors;
+
+                var data = _data ?? DataOnDemand();
+                _sectors = new Sector[_volume.SectorsPerCluster];
+
+                for (var i = 0; i < _volume.SectorsPerCluster; i++)
+                {
+                    var sectorData = new byte[_volume.BytesPerSector];
+                    Array.Copy(data, i * _volume.BytesPerSector, sectorData, 0, _volume.BytesPerSector);
+
+                    Sectors[i] = new Sector((Lcn * _volume.BytesPerSector * _volume.SectorsPerCluster) + (ulong)(i * _volume.BytesPerSector), sectorData);
+                }
+
+                return _sectors;
+            }
+        }
 
         public Cluster(ulong lcn, Volume vol)
         {
-            Volume = vol;
+            _volume = vol;
             Lcn = lcn;
+        }
 
-            var offset = lcn * vol.BytesPerSector * vol.SectorsPerCluster;
-
-            vol.Driver.Move((long) (lcn * vol.BytesPerSector * vol.SectorsPerCluster));
-            Data = vol.Driver.ReadFile(vol.BytesPerSector * vol.SectorsPerCluster);
-
-            Sectors = new Sector[vol.SectorsPerCluster];
-
-            for (var i = 0; i < vol.SectorsPerCluster; i++)
-            {
-                var sectorData = new byte[vol.BytesPerSector];
-                Array.Copy(Data, i * vol.BytesPerSector, sectorData, 0, vol.BytesPerSector);
-
-                Sectors[i] = new Sector(offset + (ulong) (i * vol.BytesPerSector), sectorData);
-            }
+        private byte[] DataOnDemand()
+        {
+            _volume.Driver.Move((long)(Lcn * _volume.BytesPerSector * _volume.SectorsPerCluster));
+            return _volume.Driver.ReadFile(_volume.BytesPerSector * _volume.SectorsPerCluster);
         }
 
         public T ReadFile<T>(uint offset)
@@ -62,7 +90,7 @@ namespace NtfsSharp.Data
             if (other == null)
                 return -1;
 
-            if (Volume != other.Volume)
+            if (_volume != other._volume)
                 return -1;
 
             return (int) (Lcn - other.Lcn);
