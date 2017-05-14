@@ -26,6 +26,9 @@ namespace NtfsSharp.Data
 
         public Sector(ulong offset, Volume vol)
         {
+            if (ReferenceEquals(null, vol))
+                throw new ArgumentNullException(nameof(vol), "Volume cannot be null.");
+
             Offset = offset;
             _volume = vol;
         }
