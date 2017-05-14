@@ -5,8 +5,6 @@ namespace NtfsSharp.Data
 {
     public class Sector
     {
-        public static ushort BytesPerSector = 512;
-
         private byte[] _data;
         private readonly Volume Volume;
 
@@ -42,7 +40,7 @@ namespace NtfsSharp.Data
         {
             var bytesToRead = Marshal.SizeOf<T>();
 
-            if (offset + bytesToRead > BytesPerSector)
+            if (offset + bytesToRead > Volume.BytesPerSector)
                 throw new ArgumentOutOfRangeException(nameof(offset));
 
             var gcHandle = GCHandle.Alloc(Data, GCHandleType.Pinned);
