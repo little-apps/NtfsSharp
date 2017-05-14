@@ -6,7 +6,7 @@ namespace NtfsSharp.Data
     public class Sector
     {
         private byte[] _data;
-        private readonly Volume Volume;
+        private readonly Volume _volume;
 
         public readonly ulong Offset;
 
@@ -17,8 +17,8 @@ namespace NtfsSharp.Data
                 if (_data != null)
                     return _data;
 
-                Volume.Driver.Move((long) Offset);
-                _data = Volume.Driver.ReadFile(Volume.BytesPerSector);
+                _volume.Driver.Move((long) Offset);
+                _data = _volume.Driver.ReadFile(_volume.BytesPerSector);
 
                 return _data;
             }
@@ -27,7 +27,7 @@ namespace NtfsSharp.Data
         public Sector(ulong offset, Volume vol)
         {
             Offset = offset;
-            Volume = vol;
+            _volume = vol;
         }
 
         public Sector(ulong offset, byte[] data)
@@ -40,7 +40,7 @@ namespace NtfsSharp.Data
         {
             var bytesToRead = Marshal.SizeOf<T>();
 
-            if (offset + bytesToRead > Volume.BytesPerSector)
+            if (offset + bytesToRead > _volume.BytesPerSector)
                 throw new ArgumentOutOfRangeException(nameof(offset));
 
             var gcHandle = GCHandle.Alloc(Data, GCHandleType.Pinned);
