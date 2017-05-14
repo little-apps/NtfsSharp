@@ -5,6 +5,8 @@ namespace NtfsSharp.Data
 {
     public class Sector
     {
+        private ushort BytesPerSector => (ushort) (_volume != null ? _volume.BytesPerSector : 512);
+
         private byte[] _data;
         private readonly Volume _volume;
 
@@ -18,7 +20,7 @@ namespace NtfsSharp.Data
                     return _data;
 
                 _volume.Driver.Move((long) Offset);
-                _data = _volume.Driver.ReadFile(_volume.BytesPerSector);
+                _data = _volume.Driver.ReadFile(BytesPerSector);
 
                 return _data;
             }
@@ -46,7 +48,7 @@ namespace NtfsSharp.Data
         {
             var bytesToRead = Marshal.SizeOf<T>();
 
-            if (offset + bytesToRead > _volume.BytesPerSector)
+            if (offset + bytesToRead > BytesPerSector)
                 throw new ArgumentOutOfRangeException(nameof(offset));
 
             var gcHandle = GCHandle.Alloc(Data, GCHandleType.Pinned);
