@@ -39,10 +39,14 @@ namespace NtfsSharp.Data
         /// <param name="offset">Offset of sector</param>
         /// <param name="vol">Volume containing sector</param>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="vol"/> is null.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="offset"/> is not a multiple of <seealso cref="Volume.BytesPerSector"/></exception>
         public Sector(ulong offset, Volume vol)
         {
             if (ReferenceEquals(null, vol))
                 throw new ArgumentNullException(nameof(vol), "Volume cannot be null.");
+
+            if (offset % vol.BytesPerSector > 0)
+                throw new ArgumentOutOfRangeException(nameof(offset), $"Offset must be multiple of {vol.BytesPerSector}");
 
             Offset = offset;
             _volume = vol;
