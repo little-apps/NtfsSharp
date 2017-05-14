@@ -7,21 +7,35 @@ namespace NtfsSharp.Data
     {
         public static ushort BytesPerSector = 512;
 
+        private byte[] _data;
+        private readonly Volume Volume;
+
         public readonly ulong Offset;
-        public readonly byte[] Data;
+
+        public byte[] Data
+        {
+            get
+            {
+                if (_data != null)
+                    return _data;
+
+                Volume.Driver.Move((long) Offset);
+                _data = Volume.Driver.ReadFile(Volume.BytesPerSector);
+
+                return _data;
+            }
+        }
 
         public Sector(ulong offset, Volume vol)
         {
             Offset = offset;
-
-            vol.Driver.Move((long) offset);
-            Data = vol.Driver.ReadFile(vol.BytesPerSector);
+            Volume = vol;
         }
 
         public Sector(ulong offset, byte[] data)
         {
             Offset = offset;
-            Data = data;
+            _data = data;
         }
 
         public T ReadFile<T>(uint offset)
