@@ -12,6 +12,10 @@ namespace NtfsSharp.Data
         
         public readonly ulong Lcn;
 
+        /// <summary>
+        /// The data contained in entire cluster. The number of bytes is <seealso cref="Volume.BytesPerSector"/> * <seealso cref="Volume.SectorsPerCluster"/>.
+        /// </summary>
+        /// <remarks>The data is stored once (and only once) this property is accessed</remarks>
         public byte[] Data
         {
             get
@@ -25,6 +29,10 @@ namespace NtfsSharp.Data
             }
         }
 
+        /// <summary>
+        /// <seealso cref="Sector"/> objects contained in cluster. The number of sectors is <seealso cref="Volume.SectorsPerCluster"/>
+        /// </summary>
+        /// <remarks>The sectors are stored once (and only once) this property is accessed</remarks>
         public Sector[] Sectors
         {
             get
@@ -47,6 +55,12 @@ namespace NtfsSharp.Data
             }
         }
 
+        /// <summary>
+        /// Constructor for Cluster
+        /// </summary>
+        /// <param name="lcn">Logical cluster number on <seealso cref="Volume"/></param>
+        /// <param name="vol">Volume containg cluster</param>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="vol"/> is null.</exception>
         public Cluster(ulong lcn, Volume vol)
         {
             if (ReferenceEquals(null, vol))
@@ -56,12 +70,23 @@ namespace NtfsSharp.Data
             Lcn = lcn;
         }
 
+        /// <summary>
+        /// Reads the data on demand from the volume
+        /// </summary>
+        /// <returns>Byte array that is <seealso cref="Volume.BytesPerSector"/> * <seealso cref="Volume.SectorsPerCluster"/> in length</returns>
         private byte[] DataOnDemand()
         {
             _volume.Driver.Move((long)(Lcn * _volume.BytesPerSector * _volume.SectorsPerCluster));
             return _volume.Driver.ReadFile(_volume.BytesPerSector * _volume.SectorsPerCluster);
         }
 
+        /// <summary>
+        /// Reads data as specified type
+        /// </summary>
+        /// <typeparam name="T">Type to read as</typeparam>
+        /// <param name="offset">Offset on cluster</param>
+        /// <returns>Instance of <typeparamref name="T"/> using data</returns>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="offset"/> + the size of <typeparamref name="T"/> is greater than the cluster size.</exception>
         public T ReadFile<T>(uint offset)
         {
             var bytesToRead = Marshal.SizeOf<T>();
