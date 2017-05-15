@@ -2,7 +2,7 @@
 
 namespace NtfsSharp.Tests.Driver
 {
-    class DataPart : BaseDriverPart
+    class DataCluster : BaseDriverCluster
     {
         public byte[] Data { get; } = new byte[DummyDriver.BytesPerSector * DummyDriver.SectorsPerCluster];
 
@@ -16,7 +16,7 @@ namespace NtfsSharp.Tests.Driver
             throw new NotImplementedException();
         }
 
-        public override byte[] BuildPart()
+        public override byte[] Build()
         {
             return Data;
         }

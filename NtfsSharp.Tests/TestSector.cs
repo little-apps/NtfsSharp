@@ -137,14 +137,14 @@ namespace NtfsSharp.Tests
             const int sectorOffset = 256;
             const uint lcn = 1;
 
-            var dataPart = new DataPart();
+            var dataCluster = new DataCluster();
 
-            Driver.Parts.Add(lcn, dataPart);
+            Driver.Clusters.Add(lcn, dataCluster);
 
             var expected = new Guid("b5e04385-6ceb-4a88-a98d-87b019b6c756");
             var expectedBytes = expected.ToByteArray();
 
-            Array.Copy(expectedBytes, 0, dataPart.Data, sectorOffset, expectedBytes.Length);
+            Array.Copy(expectedBytes, 0, dataCluster.Data, sectorOffset, expectedBytes.Length);
 
             var sector = new Sector(lcn * DummyDriver.BytesPerSector * DummyDriver.SectorsPerCluster, Volume);
             var actual = sector.ReadFile<Guid>(sectorOffset);

@@ -17,7 +17,7 @@ namespace NtfsSharp.Tests.Driver
         /// The parts of the NTFS Volume.
         /// </summary>
         /// <remarks>Each key represents the LCN on the volume.</remarks>
-        public Dictionary<long, BaseDriverPart> Parts { get; } = new Dictionary<long, BaseDriverPart>();
+        public Dictionary<long, BaseDriverCluster> Clusters { get; } = new Dictionary<long, BaseDriverCluster>();
 
         private long _currentOffset;
 
@@ -94,13 +94,13 @@ namespace NtfsSharp.Tests.Driver
             var lcn = _currentOffset / (BytesPerSector * SectorsPerCluster);
             var offsetInLcn = _currentOffset % (BytesPerSector * SectorsPerCluster);
 
-            if (!Parts.ContainsKey(lcn))
+            if (!Clusters.ContainsKey(lcn))
             {
                 bytesRead = (uint)(BytesPerSector * SectorsPerCluster - offsetInLcn);
                 return new byte[bytesRead];
             }
 
-            var clusterBytes = Parts[lcn].ReadAsCluster();
+            var clusterBytes = Clusters[lcn].ReadAsCluster();
 
             if (offsetInLcn == 0)
             {

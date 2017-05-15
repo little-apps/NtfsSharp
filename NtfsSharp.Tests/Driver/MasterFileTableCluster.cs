@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace NtfsSharp.Tests.Driver
 {
-    class MasterFileTablePart : BaseDriverPart
+    class MasterFileTableCluster : BaseDriverCluster
     {
         public readonly uint FilesPerPart;
         public readonly uint BytesPerFileRecord;
@@ -20,7 +20,7 @@ namespace NtfsSharp.Tests.Driver
             get { return FileRecords.Count == 0; }
         }
 
-        public MasterFileTablePart(uint filesPerPart, uint bytesPerFileRecord, uint lcn)
+        public MasterFileTableCluster(uint filesPerPart, uint bytesPerFileRecord, uint lcn)
         {
             FilesPerPart = filesPerPart;
             BytesPerFileRecord = bytesPerFileRecord;
@@ -37,7 +37,7 @@ namespace NtfsSharp.Tests.Driver
             }
         }
 
-        public override byte[] BuildPart()
+        public override byte[] Build()
         {
             var bytes = new byte[FilesPerPart * BytesPerFileRecord];
 

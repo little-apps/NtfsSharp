@@ -18,7 +18,7 @@ namespace NtfsSharp.Tests
         private DummyDriver Driver { get; set; }
         private Volume Volume { get; set; }
         private BootSector BootSector { get; set; }
-        private readonly List<MasterFileTablePart> MasterFileTableParts = new List<MasterFileTablePart>();
+        private readonly List<MasterFileTableCluster> MasterFileTableParts = new List<MasterFileTableCluster>();
 
         [SetUp]
         public void SetUpDummyDisk()
@@ -27,7 +27,7 @@ namespace NtfsSharp.Tests
             Volume = new Volume(Driver, false);
             BootSector = new BootSector();
 
-            Driver.Parts.Add(0, BootSector);
+            Driver.Clusters.Add(0, BootSector);
 
             Volume.ReadBootSector();
 
@@ -36,11 +36,11 @@ namespace NtfsSharp.Tests
 
             for (uint lcn = 1; lcn < _masterFileTableEntries * bytesPerCluster / bytesPerCluster+1; lcn++)
             {
-                var mftPart = new MasterFileTablePart((uint) (bytesPerCluster / bytesPerFileRecord),
+                var mftPart = new MasterFileTableCluster((uint) (bytesPerCluster / bytesPerFileRecord),
                     bytesPerFileRecord, lcn);
                 
                 MasterFileTableParts.Add(mftPart);
-                Driver.Parts.Add(lcn, mftPart);
+                Driver.Clusters.Add(lcn, mftPart);
             }
         }
 

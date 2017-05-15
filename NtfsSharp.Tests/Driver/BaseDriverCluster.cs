@@ -3,9 +3,9 @@ using System.Runtime.InteropServices;
 
 namespace NtfsSharp.Tests.Driver
 {
-    public abstract class BaseDriverPart
+    public abstract class BaseDriverCluster
     {
-        public BaseDriverPart()
+        public BaseDriverCluster()
         {
         }
 
@@ -17,14 +17,14 @@ namespace NtfsSharp.Tests.Driver
         protected abstract void GenerateDefaultDummy();
 
         /// <summary>
-        /// Builds the part of the NTFS volume
+        /// Builds the bytes for the cluster in the NTFS volume
         /// </summary>
         /// <returns>Part in bytes</returns>
         /// <remarks>The size of the part should be no greater than 4096 bytes</remarks>
-        public abstract byte[] BuildPart();
+        public abstract byte[] Build();
 
         /// <summary>
-        /// Reads the part as a cluster (8 sectors)
+        /// Reads the data as a cluster (8 sectors)
         /// </summary>
         /// <returns>The bytes in the cluster</returns>
         /// <remarks>The part will be resized to the size of cluster (4096 bytes) if it's not already</remarks>
@@ -33,7 +33,7 @@ namespace NtfsSharp.Tests.Driver
             if (ShouldGenerateDefault)
                 GenerateDefaultDummy();
 
-            var partBytes = BuildPart();
+            var partBytes = Build();
 
             if (partBytes.Length == DummyDriver.BytesPerSector * DummyDriver.SectorsPerCluster)
                 return partBytes;
