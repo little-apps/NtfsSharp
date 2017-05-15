@@ -2,7 +2,7 @@
 
 namespace NtfsSharp.Tests.Driver
 {
-    public class BootSector : BaseDriverPart
+    public class BootSector : BaseDriverCluster
     {
         public NtfsBootSector DummyBootSector;
 
@@ -41,7 +41,7 @@ namespace NtfsSharp.Tests.Driver
             };
         }
 
-        public override byte[] BuildPart()
+        public override byte[] Build()
         {
             return StructureToBytes(DummyBootSector, DummyDriver.BytesPerSector * DummyDriver.SectorsPerCluster);
         }

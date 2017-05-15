@@ -22,7 +22,7 @@ namespace NtfsSharp.Tests
             Volume = new Volume(Driver, false);
             BootSector = new BootSector();
 
-            Driver.Parts[0] = BootSector;
+            Driver.Clusters[0] = BootSector;
         }
 
         [TearDown]

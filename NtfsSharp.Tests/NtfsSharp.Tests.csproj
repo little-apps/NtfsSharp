@@ -37,11 +37,11 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Driver\BaseDriverPart.cs" />
+    <Compile Include="Driver\BaseDriverCluster.cs" />
     <Compile Include="Driver\BootSector.cs" />
-    <Compile Include="Driver\DataPart.cs" />
+    <Compile Include="Driver\DataCluster.cs" />
     <Compile Include="Driver\DummyDriver.cs" />
-    <Compile Include="Driver\MasterFileTablePart.cs" />
+    <Compile Include="Driver\MasterFileTableCluster.cs" />
     <Compile Include="Driver\DummyFileRecord.cs" />
     <Compile Include="TestBootSector.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
