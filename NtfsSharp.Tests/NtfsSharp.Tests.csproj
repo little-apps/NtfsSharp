@@ -39,6 +39,7 @@
   <ItemGroup>
     <Compile Include="Driver\BaseDriverPart.cs" />
     <Compile Include="Driver\BootSector.cs" />
+    <Compile Include="Driver\DataPart.cs" />
     <Compile Include="Driver\DummyDriver.cs" />
     <Compile Include="Driver\MasterFileTablePart.cs" />
     <Compile Include="Driver\DummyFileRecord.cs" />
