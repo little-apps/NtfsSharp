@@ -39,6 +39,7 @@
   <ItemGroup>
     <Compile Include="Attributes\TestAttributes.cs" />
     <Compile Include="Attributes\TestBitmap.cs" />
+    <Compile Include="Attributes\TestData.cs" />
     <Compile Include="Driver\BaseDriverCluster.cs" />
     <Compile Include="Driver\BootSector.cs" />
     <Compile Include="Driver\DataCluster.cs" />
