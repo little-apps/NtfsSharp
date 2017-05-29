@@ -5,6 +5,8 @@ namespace NtfsSharp.Tests.Driver
 {
     class MasterFileTableCluster : BaseDriverCluster
     {
+        private readonly DummyDriver _driver;
+
         public readonly uint FilesPerPart;
         public readonly uint BytesPerFileRecord;
         public readonly uint Lcn;
@@ -20,8 +22,9 @@ namespace NtfsSharp.Tests.Driver
             get { return FileRecords.Count == 0; }
         }
 
-        public MasterFileTableCluster(uint filesPerPart, uint bytesPerFileRecord, uint lcn)
+        public MasterFileTableCluster(DummyDriver driver, uint filesPerPart, uint bytesPerFileRecord, uint lcn)
         {
+            _driver = driver;
             FilesPerPart = filesPerPart;
             BytesPerFileRecord = bytesPerFileRecord;
             Lcn = lcn;
@@ -47,8 +50,8 @@ namespace NtfsSharp.Tests.Driver
 
                 Array.Copy(
                     UseUpdateSequenceArray
-                        ? fileRecord.BuildWithUsa(BytesPerFileRecord, EndTag, FixUps)
-                        : fileRecord.Build(BytesPerFileRecord), 0, bytes,
+                        ? fileRecord.BuildWithUsa(BytesPerFileRecord, _driver, EndTag, FixUps)
+                        : fileRecord.Build(BytesPerFileRecord, _driver), 0, bytes,
                     i * BytesPerFileRecord, BytesPerFileRecord);
             }
 

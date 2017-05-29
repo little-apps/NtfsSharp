@@ -36,7 +36,7 @@ namespace NtfsSharp.Tests
 
             for (uint lcn = 1; lcn < _masterFileTableEntries * bytesPerCluster / bytesPerCluster+1; lcn++)
             {
-                var mftPart = new MasterFileTableCluster((uint) (bytesPerCluster / bytesPerFileRecord),
+                var mftPart = new MasterFileTableCluster(Driver, (uint) (bytesPerCluster / bytesPerFileRecord),
                     bytesPerFileRecord, lcn);
                 
                 MasterFileTableParts.Add(mftPart);

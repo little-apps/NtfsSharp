@@ -28,9 +28,14 @@ namespace NtfsSharp.Tests.Driver
         /// Builds the file record in it's byte format (without update sequence array)
         /// </summary>
         /// <param name="fileRecordSize">Size of the file record in bytes</param>
+        /// <param name="dummyDriver">Dummy driver instance</param>
         /// <returns>File record in bytes</returns>
-        public byte[] Build(uint fileRecordSize)
+        /// <exception cref="ArgumentNullException">Thrown if <see cref="DummyDriver"/> is null.</exception>
+        public byte[] Build(uint fileRecordSize, DummyDriver dummyDriver)
         {
+            if (dummyDriver == null)
+                throw new ArgumentNullException(nameof(dummyDriver), "Dummy driver cannot be null.");
+
             var bytes = new byte[fileRecordSize];
             var ptr = Marshal.AllocHGlobal((int)fileRecordSize);
 
@@ -43,7 +48,7 @@ namespace NtfsSharp.Tests.Driver
 
             Marshal.Copy(ptr, bytes, 0, (int)fileRecordSize);
 
-            InsertAttributes(bytes);
+            InsertAttributes(bytes, fileRecordSize - Marshal.SizeOf<FILE_RECORD_HEADER_NTFS>(), dummyDriver);
 
             Marshal.FreeHGlobal(ptr);
 
@@ -54,15 +59,20 @@ namespace NtfsSharp.Tests.Driver
         /// Builds the file record in it's byte format and adds in the update sequence array
         /// </summary>
         /// <param name="fileRecordSize">Size of the file record in bytes</param>
+        /// <param name="dummyDriver">Dummy driver instance</param>
         /// <param name="endTag">End tag to be inserted at end of each sector in file record</param>
         /// <param name="fixups">
         ///     Fixup bytes that will be used to be replaced at end of each sector in file record. 
         ///     If null, uses existing 2 bytes at end of each sector for fixups.
         /// </param>
         /// <returns>File record with update sequence array added in</returns>
-        public byte[] BuildWithUsa(uint fileRecordSize, ushort endTag, ushort[] fixups = null)
+        /// <exception cref="ArgumentNullException">Thrown if <see cref="DummyDriver"/> is null.</exception>
+        public byte[] BuildWithUsa(uint fileRecordSize, DummyDriver dummyDriver, ushort endTag, ushort[] fixups = null)
         {
-            var bytes = Build(fileRecordSize);
+            if (dummyDriver == null)
+                throw new ArgumentNullException(nameof(dummyDriver), "Dummy driver cannot be null.");
+
+            var bytes = Build(fileRecordSize, dummyDriver);
 
             if (fixups == null)
             {
@@ -84,8 +94,12 @@ namespace NtfsSharp.Tests.Driver
         /// </summary>
         /// <param name="bytes">File record with attributes added</param>
         /// <remarks>If no attributes are specified, the first attribute offset is 0xffffffff</remarks>
-        private void InsertAttributes(byte[] bytes)
+        /// <exception cref="ArgumentNullException">Thrown if <see cref="DummyDriver"/> is null.</exception>
+        private void InsertAttributes(byte[] bytes, long bytesLeft, DummyDriver dummyDriver)
         {
+            if (dummyDriver == null)
+                throw new ArgumentNullException(nameof(dummyDriver), "Dummy driver cannot be null.");
+
             if (Attributes.Count == 0)
             {
                 var endAttributes = BitConverter.GetBytes(uint.MaxValue);
