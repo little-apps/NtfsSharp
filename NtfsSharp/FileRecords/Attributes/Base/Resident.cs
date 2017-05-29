@@ -31,7 +31,7 @@ namespace NtfsSharp.FileRecords.Attributes.Base
 
         public override byte[] ReadBody()
         {
-            var body = new byte[Bytes.Length - CurrentOffset];
+            var body = new byte[SubHeader.AttributeLength];
 
             Array.Copy(Bytes, CurrentOffset, body, 0, body.Length);
 
