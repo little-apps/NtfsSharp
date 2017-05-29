@@ -2,21 +2,21 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
-using NtfsSharp.FileRecords.Attributes.Base;
+using NtfsSharp.Tests.Driver.Attributes;
 
 namespace NtfsSharp.Tests.Driver
 {
-    public class DummyFileRecord
+    internal class DummyFileRecord
     {
         public FILE_RECORD_HEADER_NTFS FileRecord;
-        public readonly List<AttributeBase> Attributes = new List<AttributeBase>();
+        public readonly List<DummyAttributeBase> Attributes = new List<DummyAttributeBase>();
 
         /// <summary>
         /// Constructor for DummyFileRecord
         /// </summary>
         /// <param name="fileRecord">File record structure</param>
         /// <param name="attributes">Any attributes to use with file record. If null, the offset of the first attribute is 0xffffffff. (default: null)</param>
-        public DummyFileRecord(FILE_RECORD_HEADER_NTFS fileRecord, List<AttributeBase> attributes = null)
+        public DummyFileRecord(FILE_RECORD_HEADER_NTFS fileRecord, List<DummyAttributeBase> attributes = null)
         {
             FileRecord = fileRecord;
 
@@ -93,22 +93,55 @@ namespace NtfsSharp.Tests.Driver
         /// Inserts attributes into file record bytes
         /// </summary>
         /// <param name="bytes">File record with attributes added</param>
+        /// <param name="bytesLeft">Number of bytes left in file record</param>
+        /// <param name="dummyDriver">Dummy driver instance</param>
         /// <remarks>If no attributes are specified, the first attribute offset is 0xffffffff</remarks>
         /// <exception cref="ArgumentNullException">Thrown if <see cref="DummyDriver"/> is null.</exception>
+        /// <exception cref="IndexOutOfRangeException">Thrown if the size of the resident attribute data is larger than the file records size (subtract 4 bytes for the end marker)</exception>
         private void InsertAttributes(byte[] bytes, long bytesLeft, DummyDriver dummyDriver)
         {
             if (dummyDriver == null)
                 throw new ArgumentNullException(nameof(dummyDriver), "Dummy driver cannot be null.");
 
+            var endAttributeMarker = BitConverter.GetBytes(uint.MaxValue);
+
+            // Subtract 4 bytes to be used as end marker
+            bytesLeft -= endAttributeMarker.Length;
+
             if (Attributes.Count == 0)
             {
-                var endAttributes = BitConverter.GetBytes(uint.MaxValue);
-                Array.Copy(endAttributes, 0, bytes, FileRecord.FirstAttributeOffset, endAttributes.Length);
+                Array.Copy(endAttributeMarker, 0, bytes, FileRecord.FirstAttributeOffset, endAttributeMarker.Length);
 
                 return;
             }
-            
-            // TODO: Add in any attributes
+
+            // Add in any attributes
+            var currentOffset = FileRecord.FirstAttributeOffset;
+
+            foreach (var attribute in Attributes)
+            {
+                var attributeData = attribute.GetData();
+
+                bytesLeft -= attributeData.Length;
+
+                if (bytesLeft <= 0)
+                    throw new IndexOutOfRangeException(
+                        "The size of resident attributes is larger the file record size (subtract 4 bytes for the end marker)");
+
+                Array.Copy(attributeData, 0, bytes, currentOffset, attributeData.Length);
+
+                currentOffset += (ushort) attributeData.Length;
+
+                if (attribute.AdditionalClusters.Count > 0)
+                {
+                    foreach (var additionalCluster in attribute.AdditionalClusters)
+                    {
+                        dummyDriver.Clusters.Add((long) additionalCluster.Key, additionalCluster.Value);
+                    }
+                }
+            }
+
+            Array.Copy(endAttributeMarker, 0, bytes, currentOffset, endAttributeMarker.Length);
         }
 
         /// <summary>
