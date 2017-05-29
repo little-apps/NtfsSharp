@@ -91,30 +91,28 @@ namespace NtfsSharp.Tests.Driver
 
         private byte[] InternalReadFile(uint bytesToRead, out uint bytesRead)
         {
-            var lcn = _currentOffset / (BytesPerSector * SectorsPerCluster);
-            var offsetInLcn = _currentOffset % (BytesPerSector * SectorsPerCluster);
+            var bytes = new byte[bytesToRead];
+            var bytesIndex = (long) 0;
+            var bytesRemaining = (long) bytesToRead;
 
-            if (!Clusters.ContainsKey(lcn))
+            while (bytesRemaining > 0)
             {
-                bytesRead = (uint)(BytesPerSector * SectorsPerCluster - offsetInLcn);
-                return new byte[bytesRead];
+                var lcn = _currentOffset / (BytesPerSector * SectorsPerCluster);
+                var offsetInLcn = _currentOffset % (BytesPerSector * SectorsPerCluster);
+                var bytesRemainingInLcn = BytesPerSector * SectorsPerCluster - offsetInLcn;
+
+                // If cluster doesn't exist, don't stop here. Add blank byte array and continue on to next cluster.
+                var clusterData = !Clusters.ContainsKey(lcn) ? new byte[BytesPerSector * SectorsPerCluster] : Clusters[lcn].ReadAsCluster();
+
+                Array.Copy(clusterData, offsetInLcn, bytes, bytesIndex, bytesRemainingInLcn > bytesRemaining ? bytesRemaining : bytesRemainingInLcn);
+
+                bytesIndex += bytesRemainingInLcn;
+                _currentOffset += bytesRemainingInLcn;
+                bytesRemaining -= bytesRemainingInLcn;
             }
 
-            var clusterBytes = Clusters[lcn].ReadAsCluster();
-
-            if (offsetInLcn == 0)
-            {
-                bytesRead = (uint)clusterBytes.Length;
-                return clusterBytes;
-            }
-            
-            var retBytes = new byte[bytesToRead];
-
-            Array.Copy(clusterBytes, (int)offsetInLcn, retBytes, 0, bytesToRead);
-
-            bytesRead = (uint) retBytes.Length;
-
-            return retBytes;
+            bytesRead = (uint) bytesIndex;
+            return bytes;
         }
 
         public override void Dispose()
