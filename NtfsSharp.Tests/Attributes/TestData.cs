@@ -51,22 +51,22 @@ namespace NtfsSharp.Tests.Attributes
             var dataCluster1 = new DataCluster();
             dataCluster1.Data[0] = 1;
             dataCluster1.Data[4095] = 4;
-            nonResidentAttribute.AdditionalClusters.Add(4, dataCluster1);
+            nonResidentAttribute.AppendVirtualCluster(dataCluster1, 100, 4);
 
             var dataCluster2 = new DataCluster();
             dataCluster2.Data[0] = 2;
             dataCluster2.Data[4095] = 3;
-            nonResidentAttribute.AdditionalClusters.Add(5, dataCluster2);
+            nonResidentAttribute.AppendVirtualCluster(dataCluster2, 100, 5);
 
             var dataCluster3 = new DataCluster();
             dataCluster3.Data[0] = 3;
             dataCluster3.Data[4095] = 2;
-            nonResidentAttribute.AdditionalClusters.Add(10, dataCluster3);
+            nonResidentAttribute.AppendVirtualCluster(dataCluster3, 100, 10);
 
             var dataCluster4 = new DataCluster();
             dataCluster4.Data[0] = 4;
             dataCluster4.Data[4095] = 1;
-            nonResidentAttribute.AdditionalClusters.Add(13, dataCluster4);
+            nonResidentAttribute.AppendVirtualCluster(dataCluster4, 100, 13);
 
             DummyFileRecord.Attributes.Add(nonResidentAttribute);
 

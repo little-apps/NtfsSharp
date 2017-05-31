@@ -13,8 +13,9 @@ namespace NtfsSharp.Tests.Driver.Attributes
         protected uint HeaderLength => (uint) (Marshal.SizeOf(Header) + NameBytes.Length * 2);
 
         /// <summary>
-        /// Any additional clusters that are associated with this cluster. These are usually needed for non-resident attributes.
+        /// Any additional clusters that are associated with this cluster.
         /// </summary>
+        /// <remarks>If adding a cluster for non resident data run, use <seealso cref="NonResident.NonResidentAttributeBase.VirtualClusters"/></remarks>
         public readonly SortedDictionary<ulong, BaseDriverCluster> AdditionalClusters = new SortedDictionary<ulong, BaseDriverCluster>();
 
         protected DummyAttributeBase(string name = null)
