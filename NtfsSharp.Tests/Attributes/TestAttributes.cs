@@ -73,7 +73,7 @@ namespace NtfsSharp.Tests.Attributes
             var nonResidentAttr = new NonResidentDummy(attrType);
             var dataCluster = new DataCluster();
 
-            nonResidentAttr.AdditionalClusters.Add(100, dataCluster);
+            nonResidentAttr.AppendVirtualCluster(dataCluster);
 
             DummyFileRecord.Attributes.Add(nonResidentAttr);
 

@@ -2,34 +2,31 @@
 
 namespace NtfsSharp.Tests.Driver.Attributes.NonResident
 {
-    public class VirtualCluster : BaseDriverCluster
+    public class VirtualCluster
     {
-        public readonly uint Vcn;
-        public readonly byte[] Bytes;
+        public readonly ulong Lcn;
+        public readonly ulong Vcn;
+        public readonly BaseDriverCluster AbsoluteCluster;
+        public readonly NonResidentAttributeBase ParentNonResidentAttribute;
 
-        protected override bool ShouldGenerateDefault { get; } = false;
-
-        public VirtualCluster(uint vcn, byte[] bytes = null)
+        /// <summary>
+        /// Constructor for VirtualCluster
+        /// </summary>
+        /// <param name="absoluteCluster">Actual cluster</param>
+        /// <param name="lcn">Logical cluster number of cluster</param>
+        /// <param name="vcn">Virtual cluster number of cluster</param>
+        /// <param name="nonResidentAttribute">Non resident attribute containing virtual cluster</param>
+        /// <exception cref="ArgumentNullException">Thrown if absoluteCluster is null.</exception>
+        public VirtualCluster(BaseDriverCluster absoluteCluster, ulong lcn, ulong vcn, NonResidentAttributeBase nonResidentAttribute)
         {
-            if (bytes == null)
-                bytes = new byte[DummyDriver.BytesPerSector * DummyDriver.SectorsPerCluster];
-
-            if (bytes.Length > DummyDriver.BytesPerSector * DummyDriver.SectorsPerCluster)
-                throw new ArgumentOutOfRangeException(nameof(bytes),
-                    $"Bytes cannot be larger than {DummyDriver.BytesPerSector * DummyDriver.SectorsPerCluster} bytes");
-
+            Lcn = lcn;
             Vcn = vcn;
-            Bytes = bytes;
+            AbsoluteCluster = absoluteCluster ??
+                              throw new ArgumentNullException(nameof(absoluteCluster),
+                                  "Absolute cluster cannot be null.");
+            ParentNonResidentAttribute = nonResidentAttribute;
         }
 
-        protected override void GenerateDefaultDummy()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public override byte[] Build()
-        {
-            return Bytes;
-        }
+        
     }
 }

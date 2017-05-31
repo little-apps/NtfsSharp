@@ -81,7 +81,7 @@ namespace NtfsSharp.Tests.Attributes
             Header.Type = NTFS_ATTR_TYPE.BITMAP;
         }
 
-        public ulong[] AddBitArray(BitArray bitArray, ulong startLcn = 0)
+        public ulong[] AddBitArray(BitArray bitArray, ulong startLcn = 100)
         {
             var bytes = new byte[(bitArray.Length - 1) / 8 + 1];
             bitArray.CopyTo(bytes, 0);
