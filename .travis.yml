@@ -4,6 +4,9 @@ matrix:
   include:
     - dotnet: 1.0.4
       mono: none
+      os: linux
+      dist: trusty
+      sudo: required
     - mono: latest
 install:
   - nuget restore NtfsSharp.sln
