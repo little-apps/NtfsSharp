@@ -11,6 +11,7 @@ matrix:
     - mono: latest
       env: MONO=true
 install:
+  - chmod +x install.sh
   - ./install.sh
 script:
   - xbuild /p:Configuration=Mono NtfsSharp.sln
