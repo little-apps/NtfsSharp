@@ -1,18 +1,9 @@
 language: csharp
 solution: NtfsSharp.sln
-matrix:
-  include:
-    - dotnet: 1.0.4
-      mono: none
-      os: linux
-      dist: trusty
-      sudo: required
-      env: DOTNET=true
-    - mono: latest
-      env: MONO=true
+mono: latest
 install:
-  - chmod +x install.sh
-  - ./install.sh
+  - nuget restore NtfsSharp.sln
+  - nuget install NUnit.ConsoleRunner -Version 3.6.1 -OutputDirectory testrunner
 script:
   - xbuild /p:Configuration=Mono NtfsSharp.sln
   - mono ./testrunner/NUnit.ConsoleRunner.3.6.1/tools/nunit3-console.exe ./NtfsSharp.Tests/bin/Mono/NtfsSharp.Tests.dll
