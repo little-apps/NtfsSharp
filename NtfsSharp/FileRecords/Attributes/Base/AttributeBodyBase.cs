@@ -1,6 +1,4 @@
-﻿using NtfsSharp.Exceptions;
-using NtfsSharp.Helpers;
-using System;
+﻿using NtfsSharp.Helpers;
 
 namespace NtfsSharp.FileRecords.Attributes.Base
 {
