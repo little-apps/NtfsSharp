@@ -4,7 +4,7 @@ namespace NtfsSharp.Tests.Driver.Attributes.NonResident
 {
     public class DataRun
     {
-        public const uint NibbleMax = 0x0f;
+        public const uint NibbleMax = byte.MaxValue >> 4;
 
         private byte _lengthSize = 0;
         private byte _lcnOffsetSize = 0;
