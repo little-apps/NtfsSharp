@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using NtfsSharp.FileRecords.Attributes.Base;
+using NtfsSharp.FileRecords.Attributes.MetaData;
 using NtfsSharp.Helpers;
 
 namespace NtfsSharp.FileRecords.Attributes
@@ -8,6 +9,8 @@ namespace NtfsSharp.FileRecords.Attributes
     /// <summary>
     /// A reparse point acts like a miniature "redirector" inside an individual MFT record. The reparse point contains the name of a folder, volumes, or device such as a CD-ROM or DVD. When the MFT record containing the reparse point is opened, the target of the reparse point is opened instead. Using reparse points, it is possible to represent volumes and drives as folders, eliminating the need for additional drive letters and share points.
     /// </summary>
+    [Resident(AttributeHeaderBase.NTFS_ATTR_TYPE.REPARSE_POINT)]
+    [NonResident(AttributeHeaderBase.NTFS_ATTR_TYPE.REPARSE_POINT)]
     public class ReparsePoint : AttributeBodyBase
     {
         public readonly NTFS_REPARSE_POINT Data;

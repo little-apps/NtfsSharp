@@ -1,4 +1,5 @@
 ﻿using NtfsSharp.FileRecords.Attributes.Base;
+using NtfsSharp.FileRecords.Attributes.MetaData;
 
 namespace NtfsSharp.FileRecords.Attributes
 {
@@ -8,6 +9,8 @@ namespace NtfsSharp.FileRecords.Attributes
     /// <remarks>
     /// Used by the Encrypting File System (EFS). All encrypted files have this attribute with the name $EFS.
     /// </remarks>
+    [Resident(AttributeHeaderBase.NTFS_ATTR_TYPE.LOGGED_UTILITY_STREAM)]
+    [NonResident(AttributeHeaderBase.NTFS_ATTR_TYPE.LOGGED_UTILITY_STREAM)]
     public class LoggedUtilityStream : AttributeBodyBase
     {
         public LoggedUtilityStream(AttributeHeaderBase header) : base(header)

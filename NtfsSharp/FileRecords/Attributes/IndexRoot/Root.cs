@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using NtfsSharp.Helpers;
 using NtfsSharp.FileRecords.Attributes.Base;
+using NtfsSharp.FileRecords.Attributes.MetaData;
 using NtfsSharp.PInvoke;
 
 namespace NtfsSharp.FileRecords.Attributes.IndexRoot
 {
+    [Resident(AttributeHeaderBase.NTFS_ATTR_TYPE.INDEX_ROOT)]
+    [NonResident(AttributeHeaderBase.NTFS_ATTR_TYPE.INDEX_ROOT)]
     public class Root : AttributeBodyBase
     {
         public new static uint HeaderSize => (uint)Marshal.SizeOf<NTFS_ATTR_INDEX_ROOT>();

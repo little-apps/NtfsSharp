@@ -1,12 +1,15 @@
 ﻿using NtfsSharp.FileRecords.Attributes.Base;
 using NtfsSharp.Helpers;
 using System.Runtime.InteropServices;
+using NtfsSharp.FileRecords.Attributes.MetaData;
 
 namespace NtfsSharp.FileRecords.Attributes
 {
     /// <summary>
     /// Indicates the version and the state of the volume. 
     /// </summary>
+    [Resident(AttributeHeaderBase.NTFS_ATTR_TYPE.VOLUME_INFORMATION)]
+    [NonResident(AttributeHeaderBase.NTFS_ATTR_TYPE.VOLUME_INFORMATION)]
     public class VolumeInformation : AttributeBodyBase
     {
         public static uint HeaderSize => (uint)Marshal.SizeOf<NTFS_ATTR_VOLUME_INFO>();

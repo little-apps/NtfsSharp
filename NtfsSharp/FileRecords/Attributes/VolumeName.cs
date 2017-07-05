@@ -1,16 +1,18 @@
 ﻿using NtfsSharp.FileRecords.Attributes.Base;
 using System.Text;
+using NtfsSharp.FileRecords.Attributes.MetaData;
 
 namespace NtfsSharp.FileRecords.Attributes
 {
     /// <summary>
     /// This attribute simply contains the name of the volume. 
     /// </summary>
+    [Resident(AttributeHeaderBase.NTFS_ATTR_TYPE.VOLUME_NAME)]
     public class VolumeName : AttributeBodyBase
     {
         public readonly string Name;
 
-        public VolumeName(AttributeHeaderBase header) : base(header, MustBe.Resident)
+        public VolumeName(AttributeHeaderBase header) : base(header)
         {
             var residentHeader = header as Resident;
 

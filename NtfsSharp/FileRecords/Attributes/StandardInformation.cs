@@ -2,6 +2,7 @@
 using NtfsSharp.FileRecords.Attributes.Base;
 using NtfsSharp.Helpers;
 using System.Runtime.InteropServices;
+using NtfsSharp.FileRecords.Attributes.MetaData;
 using FILETIME = System.Runtime.InteropServices.ComTypes.FILETIME;
 
 namespace NtfsSharp.FileRecords.Attributes
@@ -9,12 +10,13 @@ namespace NtfsSharp.FileRecords.Attributes
     /// <summary>
     /// Includes information such as timestamp and link count.
     /// </summary>
+    [Resident(AttributeHeaderBase.NTFS_ATTR_TYPE.STANDARD_INFORMATION)]
     public class StandardInformation : AttributeBodyBase
     {
         public static uint HeaderSize => (uint)Marshal.SizeOf<NTFS_ATTR_STANDARD>();
         public NTFS_ATTR_STANDARD Data { get; private set; }
 
-        public StandardInformation(AttributeHeaderBase header) : base(header, MustBe.Resident)
+        public StandardInformation(AttributeHeaderBase header) : base(header)
         {
             Data = Body.ToStructure<NTFS_ATTR_STANDARD>(CurrentOffset);
             CurrentOffset += HeaderSize;

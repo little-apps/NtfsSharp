@@ -64,6 +64,9 @@
     <Compile Include="Exceptions\InvalidMasterFileTableException.cs" />
     <Compile Include="FileRecords\Attributes\AttributeList\AttributeListItem.cs" />
     <Compile Include="FileRecords\Attributes\AttributeList\AttributeList.cs" />
+    <Compile Include="FileRecords\Attributes\MetaData\MetaDataBase.cs" />
+    <Compile Include="FileRecords\Attributes\MetaData\NonResidentAttribute.cs" />
+    <Compile Include="FileRecords\Attributes\MetaData\ResidentAttribute.cs" />
     <Compile Include="FileRecords\Attributes\Base\AttributeBase.cs" />
     <Compile Include="FileRecords\Attributes\Base\AttributeBodyBase.cs" />
     <Compile Include="FileRecords\Attributes\Base\AttributeHeaderBase.cs" />

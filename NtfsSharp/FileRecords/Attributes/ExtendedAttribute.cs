@@ -1,7 +1,7 @@
-﻿using System;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 using System.Text;
 using NtfsSharp.FileRecords.Attributes.Base;
+using NtfsSharp.FileRecords.Attributes.MetaData;
 using NtfsSharp.Helpers;
 
 namespace NtfsSharp.FileRecords.Attributes
@@ -9,6 +9,8 @@ namespace NtfsSharp.FileRecords.Attributes
     /// <summary>
     /// Used to implement the HPFS extended attribute under NTFS. This file attribute may be non-resident because its stream is likely to grow. 
     /// </summary>
+    [Resident(AttributeHeaderBase.NTFS_ATTR_TYPE.EA)]
+    [NonResident(AttributeHeaderBase.NTFS_ATTR_TYPE.EA)]
     public class ExtendedAttribute : AttributeBodyBase
     {
         public readonly NTFS_EA Data;

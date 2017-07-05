@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using NtfsSharp.FileRecords.Attributes.IndexRoot;
+using System.Reflection;
+using NtfsSharp.Exceptions;
+using NtfsSharp.FileRecords.Attributes.MetaData;
 using NtfsSharp.Helpers;
 using static NtfsSharp.FileRecords.Attributes.Base.AttributeHeaderBase;
 
@@ -10,25 +12,10 @@ namespace NtfsSharp.FileRecords.Attributes.Base
     {
         public AttributeHeaderBase Header { get; }
         public AttributeBodyBase Body { get; private set; }
-        
-        private static readonly Dictionary<NTFS_ATTR_TYPE, Type> Attributes = new Dictionary<NTFS_ATTR_TYPE, Type>
-        {
-            {NTFS_ATTR_TYPE.STANDARD_INFORMATION, typeof(StandardInformation)},
-            {NTFS_ATTR_TYPE.FILE_NAME, typeof(FileNameAttribute)},
-            {NTFS_ATTR_TYPE.VOLUME_NAME, typeof(VolumeName)},
-            {NTFS_ATTR_TYPE.VOLUME_INFORMATION, typeof(VolumeInformation)},
-            {NTFS_ATTR_TYPE.INDEX_ROOT, typeof(Root)},
-            {NTFS_ATTR_TYPE.LOGGED_UTILITY_STREAM, typeof(LoggedUtilityStream)},
-            {NTFS_ATTR_TYPE.DATA, typeof(DataAttribute)},
-            {NTFS_ATTR_TYPE.OBJECT_ID, typeof(ObjectId)},
-            {NTFS_ATTR_TYPE.SECURITY_DESCRIPTOR, typeof(SecurityDescriptor)},
-            {NTFS_ATTR_TYPE.BITMAP, typeof(BitmapAttribute)},
-            {NTFS_ATTR_TYPE.INDEX_ALLOCATION, typeof(IndexAllocation.IndexAllocation)},
-            {NTFS_ATTR_TYPE.ATTRIBUTE_LIST, typeof(AttributeList.AttributeList)},
-            {NTFS_ATTR_TYPE.REPARSE_POINT, typeof(ReparsePoint)},
-            {NTFS_ATTR_TYPE.EA_INFORMATION,  typeof(ExtendedAttributeInformation)},
-            {NTFS_ATTR_TYPE.EA, typeof(ExtendedAttribute)}
-        };
+
+        private static bool _builtAttributeTypes;
+        private static Dictionary<NTFS_ATTR_TYPE, Type> _residentTypes = new Dictionary<NTFS_ATTR_TYPE, Type>();
+        private static Dictionary<NTFS_ATTR_TYPE, Type> _nonResidentTypes = new Dictionary<NTFS_ATTR_TYPE, Type>();
 
         /// <summary>
         /// Creates attribute from bytes
@@ -52,19 +39,57 @@ namespace NtfsSharp.FileRecords.Attributes.Base
 
         public AttributeBase ReadBody()
         {
-            var type = GetClassTypeFromType(Header.Header.Type);
+            if (!_builtAttributeTypes)
+            {
+                BuildAttributes();
+                _builtAttributeTypes = true;
+            }
+            
+            var type = !Header.Header.NonResident
+                ? GetResidentClassFromType(Header.Header.Type)
+                : GetNonResidentClassFromType(Header.Header.Type);
 
             Body = (AttributeBodyBase)Activator.CreateInstance(type, Header);
 
             return this;
         }
 
-        public static Type GetClassTypeFromType(NTFS_ATTR_TYPE type)
+        private static Type GetResidentClassFromType(NTFS_ATTR_TYPE ntfsAttrType)
         {
-            if (!Attributes.ContainsKey(type))
-                throw new Exceptions.InvalidAttributeException("Attribute type is invalid");
+            if (!_residentTypes.ContainsKey(ntfsAttrType))
+                throw new InvalidAttributeException(_nonResidentTypes.ContainsKey(ntfsAttrType)
+                    ? "Attribute can only resident."
+                    : "Attribute type is invalid.");
 
-            return Attributes[type];
+            return _residentTypes[ntfsAttrType];
+        }
+
+        private static Type GetNonResidentClassFromType(NTFS_ATTR_TYPE ntfsAttrType)
+        {
+            if (!_nonResidentTypes.ContainsKey(ntfsAttrType))
+                throw new InvalidAttributeException(_residentTypes.ContainsKey(ntfsAttrType)
+                    ? "Attribute can only resident."
+                    : "Attribute type is invalid.");
+
+            return _nonResidentTypes[ntfsAttrType];
+        }
+
+        private void BuildAttributes()
+        {
+            _residentTypes = new Dictionary<NTFS_ATTR_TYPE, Type>();
+            _nonResidentTypes = new Dictionary<NTFS_ATTR_TYPE, Type>();
+
+            foreach (var type in Assembly.GetAssembly(GetType()).GetTypes())
+            {
+                var residentAttribute = (ResidentAttribute) type.GetCustomAttribute(typeof(ResidentAttribute));
+                var nonResidentAttribute = (NonResidentAttribute) type.GetCustomAttribute(typeof(NonResidentAttribute));
+
+                if (residentAttribute != null)
+                    _residentTypes.Add(residentAttribute.AttributeType, type);
+
+                if (nonResidentAttribute != null)
+                    _nonResidentTypes.Add(nonResidentAttribute.AttributeType, type);
+            }
         }
     }
 }

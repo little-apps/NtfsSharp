@@ -1,11 +1,14 @@
 ﻿using NtfsSharp.FileRecords.Attributes.Base;
 using System.Collections;
+using NtfsSharp.FileRecords.Attributes.MetaData;
 
 namespace NtfsSharp.FileRecords.Attributes
 {
     /// <summary>
     /// This file attribute is a sequence of bits, each of which represents the status of an entity. 
     /// </summary>
+    [Resident(AttributeHeaderBase.NTFS_ATTR_TYPE.BITMAP)]
+    [NonResident(AttributeHeaderBase.NTFS_ATTR_TYPE.BITMAP)]
     public class BitmapAttribute : AttributeBodyBase
     {
         /// <summary>
