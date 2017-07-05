@@ -1,7 +1,4 @@
-﻿using NtfsSharp.Data;
-using System;
-using System.Collections.Generic;
-using static NtfsSharp.PInvoke.Structs;
+﻿using static NtfsSharp.PInvoke.Structs;
 
 namespace NtfsSharp.FileRecords.Attributes.Base.NonResident
 {

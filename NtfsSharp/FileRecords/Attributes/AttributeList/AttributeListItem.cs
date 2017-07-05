@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Text;
 using NtfsSharp.Exceptions;
 using NtfsSharp.FileRecords.Attributes.Base;
