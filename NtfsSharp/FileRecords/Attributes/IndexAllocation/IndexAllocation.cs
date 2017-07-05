@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using NtfsSharp.FileRecords.Attributes.Base;
 using NtfsSharp.FileRecords.Attributes.Base.NonResident;
+using NtfsSharp.FileRecords.Attributes.MetaData;
 
 namespace NtfsSharp.FileRecords.Attributes.IndexAllocation
 {
@@ -11,9 +12,10 @@ namespace NtfsSharp.FileRecords.Attributes.IndexAllocation
     /// <remarks>
     /// Must be located in non-resident data
     /// </remarks>
+    [NonResident(AttributeHeaderBase.NTFS_ATTR_TYPE.INDEX_ALLOCATION)]
     public class IndexAllocation : AttributeBodyBase
     {
-        public IndexAllocation(AttributeHeaderBase header) : base(header, MustBe.NonResident)
+        public IndexAllocation(AttributeHeaderBase header) : base(header)
         {
             
         }

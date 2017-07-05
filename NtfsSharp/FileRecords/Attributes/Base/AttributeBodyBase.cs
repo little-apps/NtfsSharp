@@ -26,15 +26,10 @@ namespace NtfsSharp.FileRecords.Attributes.Base
         /// <param name="header"><see cref="AttributeHeaderBase"/> that contains this body</param>
         /// <param name="mustBe">Whether body data must be resident and/or non-resident</param>
         /// <param name="readBody">If false, the data is not read in constructor. Useful for when dealing with large amounts of data.</param>
-        protected AttributeBodyBase(AttributeHeaderBase header, MustBe mustBe = MustBe.Resident | MustBe.NonResident, bool readBody = true)
+        protected AttributeBodyBase(AttributeHeaderBase header, bool readBody = true)
         {
             Header = header;
             CurrentOffset = 0;
-            
-            if (mustBe == MustBe.Resident && header.Header.NonResident)
-                throw new InvalidAttributeException("Attribute can only be resident");
-            if (mustBe == MustBe.NonResident && !header.Header.NonResident)
-                throw new InvalidAttributeException("Attribute can only be non-resident");
 
             if (readBody)
                 Body = header.ReadBody();
@@ -43,13 +38,6 @@ namespace NtfsSharp.FileRecords.Attributes.Base
         protected byte[] GetBytesFromCurrentOffset(uint length)
         {
             return Body.GetBytesAtOffset(CurrentOffset, length);
-        }
-
-        [Flags]
-        public enum MustBe
-        {
-            Resident = 1 << 0,
-            NonResident = 1 << 1
         }
     }
 }

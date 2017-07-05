@@ -1,10 +1,13 @@
 ﻿using NtfsSharp.FileRecords.Attributes.Base;
+using NtfsSharp.FileRecords.Attributes.MetaData;
 
 namespace NtfsSharp.FileRecords.Attributes
 {
     /// <summary>
     /// This attribute contains the file's data. A file's size is the size of its unnamed Data Stream. 
     /// </summary>
+    [Resident(AttributeHeaderBase.NTFS_ATTR_TYPE.DATA)]
+    [NonResident(AttributeHeaderBase.NTFS_ATTR_TYPE.DATA)]
     public class DataAttribute : AttributeBodyBase
     {
         /// <summary>
@@ -16,7 +19,7 @@ namespace NtfsSharp.FileRecords.Attributes
         /// </remarks>
         public byte[] Data => Body;
 
-        public DataAttribute(AttributeHeaderBase header) : base(header, MustBe.Resident | MustBe.NonResident, false)
+        public DataAttribute(AttributeHeaderBase header) : base(header, false)
         {
         }
 

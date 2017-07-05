@@ -2,6 +2,7 @@
 using NtfsSharp.FileRecords.Attributes.Base;
 using NtfsSharp.Helpers;
 using System.Runtime.InteropServices;
+using NtfsSharp.FileRecords.Attributes.MetaData;
 
 namespace NtfsSharp.FileRecords.Attributes
 {
@@ -12,6 +13,8 @@ namespace NtfsSharp.FileRecords.Attributes
     ///    Permissions the owner has granted to other users
     ///    What actions should be logged (auditing)
     /// </summary>
+    [Resident(AttributeHeaderBase.NTFS_ATTR_TYPE.SECURITY_DESCRIPTOR)]
+    [NonResident(AttributeHeaderBase.NTFS_ATTR_TYPE.SECURITY_DESCRIPTOR)]
     public class SecurityDescriptor : AttributeBodyBase
     {
         public static uint SubHeaderSize => (uint) Marshal.SizeOf<NTFS_SECURITY_DESCRIPTOR>();
