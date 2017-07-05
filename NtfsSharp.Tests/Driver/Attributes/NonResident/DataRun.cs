@@ -80,7 +80,7 @@ namespace NtfsSharp.Tests.Driver.Attributes.NonResident
             var dataRunBytes = new byte[1 + lengthBytes.Length + lcnOffsetBytes.Length];
 
             // The first is two nibbles (one byte)
-            dataRunBytes[0] = (byte) (((byte) lengthBytes.Length << 4) | (byte) lcnOffsetBytes.Length);
+            dataRunBytes[0] = (byte) (((byte) lcnOffsetBytes.Length << 4) | (byte) lengthBytes.Length);
 
             Array.Copy(lengthBytes, 0, dataRunBytes, 1, lengthBytes.Length);
             Array.Copy(lcnOffsetBytes, 0, dataRunBytes, 1 + lengthBytes.Length, lcnOffsetBytes.Length);
