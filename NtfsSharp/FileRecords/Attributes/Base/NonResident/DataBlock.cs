@@ -15,7 +15,7 @@ namespace NtfsSharp.FileRecords.Attributes.Base.NonResident
         /// <summary>
         /// LCN of run
         /// </summary>
-        public readonly uint LcnOffset;
+        public readonly ulong LcnOffset;
 
         public bool LcnOffsetNegative => LcnOffset >> ((OffsetFieldLength - 1) * 8) >= 0x80;
         public bool VirtualFragment => LcnOffset == 0;
@@ -23,7 +23,7 @@ namespace NtfsSharp.FileRecords.Attributes.Base.NonResident
         public readonly ulong StartVcn;
         public ulong LastVcn => StartVcn + RunLength - 1;
 
-        private DataBlock(ushort lengthFieldLength, ushort offsetFieldLength, uint runLength, uint lcnOffset, ulong startVcn)
+        private DataBlock(ushort lengthFieldLength, ushort offsetFieldLength, uint runLength, ulong lcnOffset, ulong startVcn)
         {
             LengthFieldLength = lengthFieldLength;
             OffsetFieldLength = offsetFieldLength;
@@ -50,13 +50,13 @@ namespace NtfsSharp.FileRecords.Attributes.Base.NonResident
 
             offset += lengthBytes;
 
-            uint runOffset = 0;
+            ulong runOffset = 0;
 
             if (offsetBytes > 0)
             {
                 for (var i = 0; i < offsetBytes; i++)
                 {
-                    runOffset |= (uint)data[offset + i] << (i * 8);
+                    runOffset |= (ulong)data[offset + i] << (i * 8);
                 }
 
                 offset += offsetBytes;
