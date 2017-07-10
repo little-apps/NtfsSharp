@@ -90,7 +90,7 @@ namespace NtfsSharp.Tests.Driver.Attributes.NonResident
         protected byte[] GenerateDataBlockData()
         {
             var bytes = new List<byte>();
-            ulong lastLcnOffset = 0, lastLcn = 0;
+            ulong lastLcn = 0;
             DataRun currentDataRun = null;
 
             if (VirtualClusters.Count == 0)
@@ -115,8 +115,7 @@ namespace NtfsSharp.Tests.Driver.Attributes.NonResident
                     }
 
                     // Cluster is not contigious, create another datablock
-                    currentDataRun = new DataRun(1, currentLcn - lastLcnOffset);
-                    lastLcnOffset = currentLcn;
+                    currentDataRun = new DataRun(1, currentLcn);
                 }
                 else
                 {
