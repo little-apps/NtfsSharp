@@ -107,6 +107,10 @@ namespace NtfsSharp.Tests.Driver.Attributes.NonResident
                 break;
             }
 
+            // Make sure last bit is not 1 (making the value negative when it's not)
+            if (lastByteUsed < 8 && (valueBytes[lastByteUsed - 1] & 0x80) == 0x80)
+                lastByteUsed++;
+
             var bytes = new byte[lastByteUsed];
 
             if (lastByteUsed > 0)
