@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using NtfsSharp.Exceptions;
 using NtfsSharp.FileRecords.Attributes.Base;
+using NtfsSharp.FileRecords.Attributes.Base.NonResident;
 using NtfsSharp.FileRecords.Attributes.MetaData;
 
 namespace NtfsSharp.FileRecords.Attributes.AttributeList
@@ -19,7 +21,9 @@ namespace NtfsSharp.FileRecords.Attributes.AttributeList
         /// <param name="header"></param>
         public AttributeList(AttributeHeaderBase header) : base(header)
         {
-            while (CurrentOffset <= header.Header.Length)
+            var bodyLength = GetBodyLength();
+
+            while (CurrentOffset < bodyLength)
             {
                 var attrItem = new AttributeListItem(this);
 
@@ -27,7 +31,23 @@ namespace NtfsSharp.FileRecords.Attributes.AttributeList
                 CurrentOffset += attrItem.Header.Length;
             }
         }
-        
-        
+
+        /// <summary>
+        /// Gets the length of the body of the attribute list
+        /// </summary>
+        /// <returns>Length (in bytes)</returns>
+        /// <exception cref="InvalidAttributeException">Thrown if header is neither resident nor non-resident</exception>
+        private ulong GetBodyLength()
+        {
+            var resident = Header as Resident;
+            if (resident != null)
+                return resident.SubHeader.AttributeLength;
+
+            var nonResident = Header as NonResident;
+            if (nonResident != null)
+                return nonResident.SubHeader.AttributeSize;
+
+            throw new InvalidAttributeException("Unable to determine if resident or non-resident attribute.");
+        }
     }
 }
