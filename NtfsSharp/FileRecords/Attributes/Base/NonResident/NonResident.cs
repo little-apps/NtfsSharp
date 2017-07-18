@@ -83,7 +83,8 @@ namespace NtfsSharp.FileRecords.Attributes.Base.NonResident
                 if (dataBlock.LcnOffsetNegative)
                 {
                     // Last bit in last byte is 1 (meaning it's negative)
-                    lcnOffset += dataBlock.LcnOffset + signExtends[dataBlock.OffsetFieldLength - 1];
+                    lcnOffset = (ulong) ((long) lcnOffset + (long) dataBlock.LcnOffset +
+                                         (long) signExtends[dataBlock.OffsetFieldLength - 1]);
                 }
                 else
                 {
