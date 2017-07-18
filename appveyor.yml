@@ -12,5 +12,5 @@ environment:
     secure: N0XNTb1xnn0yOFDTnjoKu1vRSIVQvcO9Pt9v0If0LtG6TjZ1iE1Rn8ur5h6sU1Yz
 after_test: 
   # generate report for NUnit testing framework:
-  - cmd: packages\OpenCover.4.6.519\tools\OpenCover.Console.exe -register:user -filter:"+[*]*" -target:"packages\NUnit.ConsoleRunner.3.6.1\tools\nunit3-console.exe" -targetargs:"/domain:single NtfsSharp.Tests\bin\Debug\NtfsSharp.Tests.dll" -output:coverage.xml
+  - cmd: packages\OpenCover.4.6.519\tools\OpenCover.Console.exe -register:user -filter:"+[*]*" -target:"packages\NUnit.ConsoleRunner.3.7.0\tools\nunit3-console.exe" -targetargs:"/domain:single NtfsSharp.Tests\bin\Debug\NtfsSharp.Tests.dll" -output:coverage.xml
   - cmd: packages\coveralls.io.1.3.4\tools\coveralls.net.exe --opencover coverage.xml
