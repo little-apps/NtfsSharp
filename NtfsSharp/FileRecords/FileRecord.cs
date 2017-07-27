@@ -226,7 +226,7 @@ namespace NtfsSharp.FileRecords
                     _currentOffset += attr.Header.Header.Length;
 
                     if (found)
-                        return attr.ReadBody();
+                        return attr;
                 }
             }
             else
