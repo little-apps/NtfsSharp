@@ -3,6 +3,7 @@ using NtfsSharp.Helpers;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using NtfsSharp.Data;
+using NtfsSharp.Exceptions;
 
 namespace NtfsSharp.FileRecords.Attributes.Base.NonResident
 {
@@ -64,6 +65,7 @@ namespace NtfsSharp.FileRecords.Attributes.Base.NonResident
         /// <returns>LCN or null if it wasn't found</returns>
         public ulong? VcnToLcn(ulong vcn)
         {
+            var isFirst = true;
             ulong lcnOffset = 0;
 
             var signExtends = new ulong[]
@@ -82,6 +84,9 @@ namespace NtfsSharp.FileRecords.Attributes.Base.NonResident
             {
                 if (dataBlock.LcnOffsetNegative)
                 {
+                    if (isFirst)
+                        throw new InvalidAttributeException("The first virtual cluster cannot have a negative LCN.");
+
                     // Last bit in last byte is 1 (meaning it's negative)
                     lcnOffset = (ulong) ((long) lcnOffset + (long) dataBlock.LcnOffset +
                                          (long) signExtends[dataBlock.OffsetFieldLength - 1]);
@@ -97,6 +102,7 @@ namespace NtfsSharp.FileRecords.Attributes.Base.NonResident
                     return vcn + lcnOffset;
 
                 vcn -= dataBlock.RunLength;
+                isFirst = false;
             }
 
             // Not found
