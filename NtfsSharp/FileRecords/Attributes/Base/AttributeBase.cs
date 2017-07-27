@@ -37,7 +37,11 @@ namespace NtfsSharp.FileRecords.Attributes.Base
             ReadBody();
         }
 
-        public AttributeBase ReadBody()
+        /// <summary>
+        /// Initializes the AttributeBodyBase for the attribute
+        /// </summary>
+        /// <remarks>This doesn't always read the actual body of the attribute from the disk. To force a read of the body, call <see cref="AttributeHeaderBase.ReadBody"/>.</remarks>
+        private void ReadBody()
         {
             if (!_builtAttributeTypes)
             {
@@ -50,8 +54,6 @@ namespace NtfsSharp.FileRecords.Attributes.Base
                 : GetNonResidentClassFromType(Header.Header.Type);
 
             Body = (AttributeBodyBase)Activator.CreateInstance(type, Header);
-
-            return this;
         }
 
         private static Type GetResidentClassFromType(NTFS_ATTR_TYPE ntfsAttrType)
