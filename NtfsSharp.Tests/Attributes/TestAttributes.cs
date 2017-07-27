@@ -1,5 +1,6 @@
 ﻿using System;
 using NtfsSharp.Exceptions;
+using NtfsSharp.FileRecords.Attributes.Base;
 using NtfsSharp.FileRecords.Attributes.Base.NonResident;
 using NtfsSharp.Tests.Driver;
 using NtfsSharp.Tests.Driver.Attributes;
@@ -138,6 +139,35 @@ namespace NtfsSharp.Tests.Attributes
             
         }
 
+        [Test]
+        public void TestNonResidentNegativeFirstLcn([ValueSource(nameof(NonResidentTypes))] DummyAttributeBase.NTFS_ATTR_TYPE attrType)
+        {
+            var nonResidentAttr = new NonResidentDummy(attrType);
+            var dataCluster = new DataCluster();
+
+            var rand = new Random();
+            var negativeLcnOffset = rand.Next(int.MinValue, -1);
+
+            nonResidentAttr.AppendVirtualCluster(dataCluster, (ulong) negativeLcnOffset);
+
+            DummyFileRecord.Attributes.Add(nonResidentAttr);
+            
+            var actualException = Assert.Catch(() =>
+            {
+                var actualFileRecord = ReadDummyFileRecord();
+
+                // If above didn't trigger exception, it's probably because the body wasn't read.
+                var actualAttribute = actualFileRecord.FindAttributeByType((AttributeHeaderBase.NTFS_ATTR_TYPE)attrType);
+
+                actualAttribute.Header.ReadBody();
+            });
+
+            // TargetInvocationException may have been thrown, causing the actual exception to be the inner exception.
+            if (actualException.InnerException != null)
+                actualException = actualException.InnerException;
+
+            Assert.IsInstanceOf<InvalidAttributeException>(actualException);
+        }
     }
 
     public class ResidentDummy : ResidentAttributeBase
