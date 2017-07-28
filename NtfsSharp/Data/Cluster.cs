@@ -48,7 +48,10 @@ namespace NtfsSharp.Data
                     var sectorData = new byte[_volume.BytesPerSector];
                     Array.Copy(data, i * _volume.BytesPerSector, sectorData, 0, _volume.BytesPerSector);
 
-                    Sectors[i] = new Sector((Lcn * _volume.BytesPerSector * _volume.SectorsPerCluster) + (ulong)(i * _volume.BytesPerSector), sectorData);
+                    Sectors[i] =
+                        new Sector(
+                            (Lcn * _volume.BytesPerSector * _volume.SectorsPerCluster) +
+                            (ulong) (i * _volume.BytesPerSector), sectorData);
                 }
 
                 return _sectors;
@@ -76,7 +79,7 @@ namespace NtfsSharp.Data
         /// <returns>Byte array that is <seealso cref="Volume.BytesPerSector"/> * <seealso cref="Volume.SectorsPerCluster"/> in length</returns>
         private byte[] DataOnDemand()
         {
-            _volume.Driver.Move((long)(Lcn * _volume.BytesPerSector * _volume.SectorsPerCluster));
+            _volume.Driver.Move((long) (Lcn * _volume.BytesPerSector * _volume.SectorsPerCluster));
             return _volume.Driver.ReadFile(_volume.BytesPerSector * _volume.SectorsPerCluster);
         }
 

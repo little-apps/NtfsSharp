@@ -46,7 +46,8 @@ namespace NtfsSharp.Data
                 throw new ArgumentNullException(nameof(vol), "Volume cannot be null.");
 
             if (offset % vol.BytesPerSector > 0)
-                throw new ArgumentOutOfRangeException(nameof(offset), $"Offset must be multiple of {vol.BytesPerSector}");
+                throw new ArgumentOutOfRangeException(nameof(offset),
+                    $"Offset must be multiple of {vol.BytesPerSector}");
 
             Offset = offset;
             _volume = vol;
@@ -87,7 +88,7 @@ namespace NtfsSharp.Data
 
             var gcHandle = GCHandle.Alloc(Data, GCHandleType.Pinned);
 
-            var ret = Marshal.PtrToStructure<T>(IntPtr.Add(gcHandle.AddrOfPinnedObject(), (int)offset));
+            var ret = Marshal.PtrToStructure<T>(IntPtr.Add(gcHandle.AddrOfPinnedObject(), (int) offset));
 
             gcHandle.Free();
 
