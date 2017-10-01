@@ -24,7 +24,7 @@ namespace NtfsSharp.FileRecords
 
         public FILE_RECORD_HEADER_NTFS Header { get; private set; }
         public readonly List<AttributeBase> Attributes = new List<AttributeBase>();
-        
+
         public string Filename
         {
             get
@@ -124,7 +124,7 @@ namespace NtfsSharp.FileRecords
             if (Header.UpdateSequenceSize - 1 > Volume.SectorsPerMFTRecord)
                 throw new InvalidFileRecordException(nameof(Header.UpdateSequenceSize), "Update sequence size exceeds number of sectors in file record", this);
         }
-        
+
         /// <summary>
         /// Reads attributes from file record
         /// </summary>
@@ -245,7 +245,7 @@ namespace NtfsSharp.FileRecords
                         return attr;
                 }
             }
-            
+
             return null;
         }
 
@@ -278,14 +278,13 @@ namespace NtfsSharp.FileRecords
             return (int)(Header.MFTRecordNumber - other.Header.MFTRecordNumber);
         }
         #endregion
-        
+
         #region IEquatable Implementation
         public bool Equals(FileRecord other)
         {
             return CompareTo(other) == 0;
         }
         #endregion
-
 
         [StructLayout(LayoutKind.Sequential)]
         public struct FILE_RECORD_HEADER_NTFS

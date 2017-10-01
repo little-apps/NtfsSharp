@@ -9,7 +9,7 @@ namespace NtfsSharp.Data
         private Sector[] _sectors;
 
         private readonly Volume _volume;
-        
+
         public readonly ulong Lcn;
 
         /// <summary>
@@ -105,7 +105,7 @@ namespace NtfsSharp.Data
 
             return ret;
         }
-        
+
         public int CompareTo(object obj)
         {
             var other = obj as Cluster;

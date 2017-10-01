@@ -201,7 +201,6 @@ namespace NtfsSharp.FileRecords.Attributes.Base.NonResident
 
             return totalBytesRead;
 
-
             //Array.Copy(currentCluster.Data, offsetInCluster, buffer, offset, ClusterSize - offsetInCluster);
 
             //Position += ClusterSize + offsetInCluster;
@@ -241,6 +240,5 @@ namespace NtfsSharp.FileRecords.Attributes.Base.NonResident
             throw new NotSupportedException("This stream does not support writing.");
         }
 
-        
     }
 }

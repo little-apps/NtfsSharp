@@ -77,7 +77,7 @@ namespace NtfsSharp.Drivers.Physical
                 throw new InvalidMasterBootRecord("End of sector marker does not match 0xAA55",
                     nameof(_masterBootRecord.EndOfSectorMarker));
         }
-        
+
         /// <summary>
         /// If a Guid Partition Table exists in the MBR, it is read
         /// </summary>

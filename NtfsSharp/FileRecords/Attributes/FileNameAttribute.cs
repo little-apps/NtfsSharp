@@ -5,7 +5,7 @@ using NtfsSharp.FileRecords.Attributes.Shared;
 namespace NtfsSharp.FileRecords.Attributes
 {
     /// <summary>
-    /// This Attribute stores the name of the file attribute and is always resident. 
+    /// This Attribute stores the name of the file attribute and is always resident.
     /// </summary>
     [Resident(AttributeHeaderBase.NTFS_ATTR_TYPE.FILE_NAME)]
     public class FileNameAttribute : AttributeBodyBase

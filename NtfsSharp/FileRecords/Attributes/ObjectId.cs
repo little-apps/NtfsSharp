@@ -5,7 +5,7 @@ using NtfsSharp.FileRecords.Attributes.MetaData;
 namespace NtfsSharp.FileRecords.Attributes
 {
     /// <summary>
-    /// The Object Id was introduced in Windows 2000. Every MFT Record is assigned a unique GUID. Additionally, a record may have a Birth Volume Id, a Birth Object Id and a Domain Id, all of which are GUIDs. 
+    /// The Object Id was introduced in Windows 2000. Every MFT Record is assigned a unique GUID. Additionally, a record may have a Birth Volume Id, a Birth Object Id and a Domain Id, all of which are GUIDs.
     /// </summary>
     [Resident(AttributeHeaderBase.NTFS_ATTR_TYPE.OBJECT_ID)]
     [NonResident(AttributeHeaderBase.NTFS_ATTR_TYPE.OBJECT_ID)]
@@ -17,7 +17,7 @@ namespace NtfsSharp.FileRecords.Attributes
         public readonly Guid BirthVolumeId;
         public readonly Guid BirthObjectId;
         public readonly Guid DomainId;
-        
+
         public ObjectId(AttributeHeaderBase header) : base(header)
         {
             if (OffsetWithHeader == header.Header.Length)

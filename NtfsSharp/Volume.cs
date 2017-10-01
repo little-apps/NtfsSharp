@@ -36,8 +36,6 @@ namespace NtfsSharp
                 Read();
         }
 
-        
-
         ~Volume()
         {
             Dispose(false);
@@ -92,7 +90,6 @@ namespace NtfsSharp
         }
         #endregion
 
-
         public void Read()
         {
             ReadBootSector();
@@ -130,10 +127,10 @@ namespace NtfsSharp
                 // Anything between 0x80 and 0xE0 will result in an integer overflow (since it's a 32 bit integer)
                 if (BootSector.ClustersPerMFTRecord >= 0x80 && BootSector.ClustersPerMFTRecord <= 0xE0)
                     throw new InvalidBootSectorException(nameof(BootSector.ClustersPerMFTRecord), "ClustersPerMFTRecord cannot be between 0xE0 and 0x80");
-                
+
                 BytesPerFileRecord = (uint)(1 << 256 - BootSector.ClustersPerMFTRecord);
             }
-            
+
         }
 
         public void ReadMft()
@@ -155,7 +152,7 @@ namespace NtfsSharp
 
                 return (uint)mftBitmap.Cast<bool>().Count(bit => bit);
             }
-            
+
         }
 
         /// <summary>
@@ -167,7 +164,7 @@ namespace NtfsSharp
         {
             // MFT record #5 is root directory
             FileRecords[5] = MFT[5];
-            
+
             var currentOffset = LcnToOffset(BootSector.MFTLCN) + (ulong) (MFT.Count * BytesPerFileRecord);
 
             var mftRecord = MFT[0];
@@ -177,15 +174,15 @@ namespace NtfsSharp
 
             if (mftBitmapAttr == null)
                 throw new Exception("Unable to locate MFT $Bitmap");
-            
+
             var mftBitmap = mftBitmapAttr.Bitmap;
-            
+
             var bytesPerFileRecord = SectorsPerMFTRecord * BytesPerSector;
 
             for (var currentInode = MFT.Count; currentInode < mftBitmap.Length; currentInode++)
             {
                 FileRecord fileRecord = null;
-                
+
                 if (!mftBitmap.Get(currentInode))
                 {
                     // Skip to next LCN
@@ -259,7 +256,7 @@ namespace NtfsSharp
 
         private void ReleaseUnmanagedResources()
         {
-            
+
         }
 
         private void Dispose(bool disposing)

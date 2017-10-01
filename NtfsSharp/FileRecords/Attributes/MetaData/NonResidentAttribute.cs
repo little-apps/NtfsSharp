@@ -9,7 +9,7 @@ namespace NtfsSharp.FileRecords.Attributes.MetaData
     {
         internal NonResidentAttribute(AttributeHeaderBase.NTFS_ATTR_TYPE attrType) : base(attrType, true)
         {
-            
+
         }
     }
 }

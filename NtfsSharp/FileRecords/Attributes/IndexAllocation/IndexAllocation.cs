@@ -17,7 +17,7 @@ namespace NtfsSharp.FileRecords.Attributes.IndexAllocation
     {
         public IndexAllocation(AttributeHeaderBase header) : base(header)
         {
-            
+
         }
 
         /// <summary>

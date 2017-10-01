@@ -61,7 +61,7 @@ namespace NtfsSharp.FileRecords.Attributes.Base
         /// </summary>
         /// <returns>Data in resident or non-resident part of disk</returns>
         public abstract byte[] ReadBody();
-        
+
         public enum NTFS_ATTR_TYPE : uint
         {
             STANDARD_INFORMATION = 0x10,

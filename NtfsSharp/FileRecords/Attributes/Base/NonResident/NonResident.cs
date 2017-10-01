@@ -142,19 +142,18 @@ namespace NtfsSharp.FileRecords.Attributes.Base.NonResident
                     vcn += dataBlock.RunLength;
                     continue;
                 }
-                    
+
                 var dataBlockLcn = VcnToLcn(vcn);
 
                 if (!dataBlockLcn.HasValue)
                     break;
-                
+
                 vcn += dataBlock.RunLength;
-                
+
                 var blockSize = dataBlock.RunLength * FileRecord.Volume.BytesPerSector * FileRecord.Volume.SectorsPerCluster;
 
                 FileRecord.Volume.Driver.Move((long) (dataBlockLcn.Value * FileRecord.Volume.BytesPerSector *
                                                       FileRecord.Volume.SectorsPerCluster));
-                
 
                 var blockData = FileRecord.Volume.Driver.SafeReadFile((uint) (lengthLeft >= blockSize ? blockSize : lengthLeft));
                 bytes.AddRange(blockData);
@@ -194,7 +193,7 @@ namespace NtfsSharp.FileRecords.Attributes.Base.NonResident
 
             var bytes = new byte[bytesToRead];
             long bytesOffset = 0;
-            
+
             uint length;
 
             if (startBytes != FileRecord.Volume.BytesPerSector * FileRecord.Volume.SectorsPerCluster)
@@ -240,7 +239,7 @@ namespace NtfsSharp.FileRecords.Attributes.Base.NonResident
                 }
                 else
                     return new byte[0];
-                
+
             }
 
             var unalignedBuffer2 = ReadVirtualClusters(startVcn, 1, clusterSize, out length);

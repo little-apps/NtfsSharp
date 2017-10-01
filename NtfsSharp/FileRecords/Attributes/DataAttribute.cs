@@ -4,7 +4,7 @@ using NtfsSharp.FileRecords.Attributes.MetaData;
 namespace NtfsSharp.FileRecords.Attributes
 {
     /// <summary>
-    /// This attribute contains the file's data. A file's size is the size of its unnamed Data Stream. 
+    /// This attribute contains the file's data. A file's size is the size of its unnamed Data Stream.
     /// </summary>
     [Resident(AttributeHeaderBase.NTFS_ATTR_TYPE.DATA)]
     [NonResident(AttributeHeaderBase.NTFS_ATTR_TYPE.DATA)]
