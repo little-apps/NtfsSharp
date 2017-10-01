@@ -24,7 +24,7 @@ namespace NtfsSharp.FileRecords
 
             _sectorsPerMftRecord = volume.BytesPerFileRecord / volume.BytesPerSector;
         }
-        
+
         /// <summary>
         /// Reads master file table records from the specified LCN
         /// </summary>
@@ -37,7 +37,7 @@ namespace NtfsSharp.FileRecords
         {
             var currentCluster = _volume.ReadLcn(mftLcn);
             var bytesPerFileRecord = _sectorsPerMftRecord * _volume.BytesPerSector;
-            
+
             for (uint i = 0; i < RecordsToRead * _sectorsPerMftRecord; i += _sectorsPerMftRecord)
             {
                 var sectorOffsetInLcn = i % _volume.SectorsPerCluster;

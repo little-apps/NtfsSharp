@@ -6,7 +6,7 @@ using NtfsSharp.Helpers;
 namespace NtfsSharp.FileRecords.Attributes
 {
     /// <summary>
-    /// Used to implement under NTFS the HPFS extended attributes used by the information subsystem of OS/2 and OS/2 clients of Windows NT servers. This file attribute may be non-resident because its stream is likely to grow. 
+    /// Used to implement under NTFS the HPFS extended attributes used by the information subsystem of OS/2 and OS/2 clients of Windows NT servers. This file attribute may be non-resident because its stream is likely to grow.
     /// </summary>
     [Resident(AttributeHeaderBase.NTFS_ATTR_TYPE.EA_INFORMATION)]
     [NonResident(AttributeHeaderBase.NTFS_ATTR_TYPE.EA_INFORMATION)]

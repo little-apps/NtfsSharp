@@ -6,7 +6,7 @@ using NtfsSharp.FileRecords.Attributes.MetaData;
 namespace NtfsSharp.FileRecords.Attributes
 {
     /// <summary>
-    /// Indicates the version and the state of the volume. 
+    /// Indicates the version and the state of the volume.
     /// </summary>
     [Resident(AttributeHeaderBase.NTFS_ATTR_TYPE.VOLUME_INFORMATION)]
     [NonResident(AttributeHeaderBase.NTFS_ATTR_TYPE.VOLUME_INFORMATION)]

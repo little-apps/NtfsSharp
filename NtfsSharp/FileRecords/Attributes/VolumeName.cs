@@ -5,7 +5,7 @@ using NtfsSharp.FileRecords.Attributes.MetaData;
 namespace NtfsSharp.FileRecords.Attributes
 {
     /// <summary>
-    /// This attribute simply contains the name of the volume. 
+    /// This attribute simply contains the name of the volume.
     /// </summary>
     [Resident(AttributeHeaderBase.NTFS_ATTR_TYPE.VOLUME_NAME)]
     public class VolumeName : AttributeBodyBase

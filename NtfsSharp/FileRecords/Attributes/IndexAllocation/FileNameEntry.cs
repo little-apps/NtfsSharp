@@ -32,6 +32,6 @@ namespace NtfsSharp.FileRecords.Attributes.IndexAllocation
 
             CurrentOffset = startOffset + Header.IndexEntryLength;
         }
-        
+
     }
 }

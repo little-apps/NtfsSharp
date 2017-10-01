@@ -56,7 +56,7 @@ namespace NtfsSharp.FileRecords.Attributes.IndexAllocation
                                      fileNameEntry.Header.IndexEntryLength > 0 &&
                                      CurrentOffset < Header.IndexEntriesSize + Header.IndexEntriesOffset;
                 }
-                
+
             }
         }
 

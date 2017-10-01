@@ -48,7 +48,7 @@ namespace NtfsSharp.FileRecords.Attributes.Base
                 BuildAttributes();
                 _builtAttributeTypes = true;
             }
-            
+
             var type = !Header.Header.NonResident
                 ? GetResidentClassFromType(Header.Header.Type)
                 : GetNonResidentClassFromType(Header.Header.Type);

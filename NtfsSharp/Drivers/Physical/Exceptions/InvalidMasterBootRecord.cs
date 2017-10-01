@@ -8,7 +8,7 @@ namespace NtfsSharp.Drivers.Physical.Exceptions
 
         public InvalidMasterBootRecord(string message) : base(message)
         {
-            
+
         }
 
         public InvalidMasterBootRecord(string message, string fieldName) : base(message)

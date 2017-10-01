@@ -14,7 +14,7 @@ namespace NtfsSharp.FileRecords.Attributes.IndexRoot
         public readonly byte[] Stream;
         public readonly ulong SubNode;
         public readonly FileName FileName;
-        
+
         public FileNameIndex(byte[] data, uint currentOffset)
         {
             Header = data.ToStructure<NTFS_ATTR_INDEX_ENTRY_HEADER>(currentOffset);
@@ -30,6 +30,5 @@ namespace NtfsSharp.FileRecords.Attributes.IndexRoot
                 SubNode = BitConverter.ToUInt64(data, (int) (currentOffset + Header.IndexEntryLength - 8));
         }
 
-        
     }
 }

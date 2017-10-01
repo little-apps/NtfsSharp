@@ -17,7 +17,7 @@ namespace NtfsSharp.Drivers
         {
             Path = path;
             Handle = CreateFile(path, FileAccess.Read, FileShare.ReadWrite, IntPtr.Zero, FileMode.Open, 0, IntPtr.Zero);
-            
+
             if (Handle.IsClosed || Handle.IsInvalid)
                 throw new Win32Exception(Marshal.GetHRForLastWin32Error());
         }
@@ -47,7 +47,7 @@ namespace NtfsSharp.Drivers
                 throw new Win32Exception(Marshal.GetLastWin32Error());
 
             Array.Resize(ref buffer, (int) bytesToRead);
-            
+
             return buffer;
         }
 
@@ -96,7 +96,7 @@ namespace NtfsSharp.Drivers
             [MarshalAs(UnmanagedType.U4)] FileMode dwCreationDisposition,
             [MarshalAs(UnmanagedType.U4)] FileAttributes dwFlagsAndAttributes,
             IntPtr hTemplateFile);
-        
+
         [DllImport("kernel32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool SetFilePointerEx(SafeFileHandle hFile, long liDistanceToMove,

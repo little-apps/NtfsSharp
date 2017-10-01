@@ -9,7 +9,7 @@ namespace NtfsSharp.PInvoke
         {
             [FieldOffset(0)]
             public ulong Data;
-            
+
             public ulong FileRecordNumber => Data & 0xFFFFFFFFFFFF;
             public ushort SequenceNumber => (ushort) (Data & 0xFFFF000000000000);
         }
