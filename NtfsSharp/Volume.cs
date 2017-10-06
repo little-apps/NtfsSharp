@@ -163,7 +163,7 @@ namespace NtfsSharp
         public IEnumerable<FileRecord> ReadFileRecords(bool readAttributes)
         {
             // MFT record #5 is root directory
-            FileRecords[5] = MFT[5];
+            FileRecords[(uint) MasterFileTable.Files.RootDir] = MFT[(uint) MasterFileTable.Files.RootDir];
 
             var currentOffset = LcnToOffset(BootSector.MFTLCN) + (ulong) (MFT.Count * BytesPerFileRecord);
 
