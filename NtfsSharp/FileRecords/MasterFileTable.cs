@@ -98,7 +98,7 @@ namespace NtfsSharp.FileRecords
         /// <summary>
         /// Represents the index of each NTFS file in the MFT
         /// </summary>
-        public enum Files : uint
+        public enum Files
         {
             /// <summary>
             /// Contains one base file record for each file and folder on an NTFS volume. If the allocation information for a file or folder is too large to fit within a single record, other file records are allocated as well.
