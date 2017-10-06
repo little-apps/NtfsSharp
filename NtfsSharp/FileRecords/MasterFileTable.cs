@@ -94,5 +94,60 @@ namespace NtfsSharp.FileRecords
         public IEnumerable<uint> Keys => _table.Keys;
         public IEnumerable<FileRecord> Values => _table.Values;
         #endregion
+
+        /// <summary>
+        /// Represents the index of each NTFS file in the MFT
+        /// </summary>
+        public enum Files : uint
+        {
+            /// <summary>
+            /// Contains one base file record for each file and folder on an NTFS volume. If the allocation information for a file or folder is too large to fit within a single record, other file records are allocated as well.
+            /// </summary>
+            Mft = 0,
+            /// <summary>
+            /// Guarantees access to the MFT in case of a single-sector failure. It is a duplicate image of the first four records of the MFT.
+            /// </summary>
+            MftMirr = 1,
+            /// <summary>
+            /// Contains information used by NTFS for faster recoverability. The log file is used by Windows Server 2003 to restore metadata consistency to NTFS after a system failure. The size of the log file depends on the size of the volume, but you can increase the size of the log file by using the Chkdsk command.
+            /// </summary>
+            LogFile = 2,
+            /// <summary>
+            /// Contains information about the volume, such as the volume label and the volume version.
+            /// </summary>
+            Volume = 3,
+            /// <summary>
+            /// Lists attribute names, numbers, and descriptions.
+            /// </summary>
+            AttrDef = 4,
+            /// <summary>
+            /// The root folder.
+            /// </summary>
+            RootDir = 5,
+            /// <summary>
+            /// Represents the volume by showing free and unused clusters.
+            /// </summary>
+            Bitmap = 6,
+            /// <summary>
+            /// Includes the BPB used to mount the volume and additional bootstrap loader code used if the volume is bootable.
+            /// </summary>
+            Boot = 7,
+            /// <summary>
+            /// Contains bad clusters for a volume.
+            /// </summary>
+            BadClus = 8,
+            /// <summary>
+            /// Contains unique security descriptors for all files within a volume.
+            /// </summary>
+            Secure = 9,
+            /// <summary>
+            /// Converts lowercase characters to matching Unicode uppercase characters.
+            /// </summary>
+            Upcase = 10,
+            /// <summary>
+            /// Used for various optional extensions such as quotas, reparse point data, and object identifiers.
+            /// </summary>
+            Extend = 11
+        }
     }
 }
