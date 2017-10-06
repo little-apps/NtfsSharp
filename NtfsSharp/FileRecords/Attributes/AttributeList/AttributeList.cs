@@ -39,13 +39,13 @@ namespace NtfsSharp.FileRecords.Attributes.AttributeList
         /// <exception cref="InvalidAttributeException">Thrown if header is neither resident nor non-resident</exception>
         private ulong GetBodyLength()
         {
-            var resident = Header as Resident;
-            if (resident != null)
-                return resident.SubHeader.AttributeLength;
-
-            var nonResident = Header as NonResident;
-            if (nonResident != null)
-                return nonResident.SubHeader.AttributeSize;
+            switch (Header)
+            {
+                case Resident resident:
+                    return resident.SubHeader.AttributeLength;
+                case NonResident nonResident:
+                    return nonResident.SubHeader.AttributeSize;
+            }
 
             throw new InvalidAttributeException("Unable to determine if resident or non-resident attribute.");
         }
