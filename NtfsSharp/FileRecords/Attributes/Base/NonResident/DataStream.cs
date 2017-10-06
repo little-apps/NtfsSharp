@@ -4,6 +4,7 @@ using NtfsSharp.Data;
 
 namespace NtfsSharp.FileRecords.Attributes.Base.NonResident
 {
+    /// <inheritdoc />
     /// <summary>
     /// Used to read file contents directly from hard disk
     /// </summary>
