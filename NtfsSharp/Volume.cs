@@ -68,6 +68,14 @@ namespace NtfsSharp
         #endregion
 
         #region IEquatable<Volume> Implementation
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+
+            return obj.GetType() == GetType() && Equals((Volume) obj);
+        }
+
         public bool Equals(Volume other)
         {
             return CompareTo(other) == 0;
@@ -87,6 +95,18 @@ namespace NtfsSharp
         public static bool operator !=(Volume left, Volume right)
         {
             return !(left == right);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = (int) SectorsPerCluster;
+                hashCode = (hashCode * 397) ^ BytesPerSector.GetHashCode();
+                hashCode = (hashCode * 397) ^ (int) BytesPerFileRecord;
+                hashCode = (hashCode * 397) ^ BootSector.GetHashCode();
+                return hashCode;
+            }
         }
         #endregion
 
