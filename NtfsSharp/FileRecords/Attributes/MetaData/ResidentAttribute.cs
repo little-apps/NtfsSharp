@@ -1,5 +1,4 @@
-﻿using System;
-using NtfsSharp.FileRecords.Attributes.Base;
+﻿using NtfsSharp.FileRecords.Attributes.Base;
 
 namespace NtfsSharp.FileRecords.Attributes.MetaData
 {
