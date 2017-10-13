@@ -3,7 +3,7 @@ using NtfsSharp.FileRecords;
 
 namespace NtfsSharp.Exceptions
 {
-    public class InvalidMasterFileTableException : Exception
+    public class InvalidMasterFileTableException : NtfsSharpException
     {
         public readonly string ParamName;
         public readonly FileRecord FileRecord;

@@ -2,7 +2,7 @@
 
 namespace NtfsSharp.Exceptions
 {
-    public class InvalidAttributeException : Exception
+    public class InvalidAttributeException : NtfsSharpException
     {
         public InvalidAttributeException(string message) : base(message)
         {

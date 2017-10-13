@@ -2,7 +2,7 @@
 
 namespace NtfsSharp.Exceptions
 {
-    public class InvalidBootSectorException : Exception
+    public class InvalidBootSectorException : NtfsSharpException
     {
         public readonly string FieldName;
         public readonly string Message;
