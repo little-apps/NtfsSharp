@@ -50,19 +50,27 @@ namespace NtfsSharp.FileRecords
                 Array.Copy(currentCluster.Data, sectorOffsetInLcn * _volume.BytesPerSector, fileRecordBytes, 0,
                     bytesPerFileRecord);
 
-                var fileRecord = new FileRecord(fileRecordBytes, _volume);
-                fileRecord.ReadAttributes();
+                try
+                {
+                    var fileRecord = new FileRecord(fileRecordBytes, _volume);
+                    fileRecord.ReadAttributes();
 
-                var index = i / _sectorsPerMftRecord;
-                var recordNum = fileRecord.Header.MFTRecordNumber;
-                if (recordNum == 0)
-                    recordNum = index;
+                    var index = i / _sectorsPerMftRecord;
+                    var recordNum = fileRecord.Header.MFTRecordNumber;
+                    if (recordNum == 0)
+                        recordNum = index;
 
-                if (recordNum != index)
-                    throw new InvalidMasterFileTableException(nameof(fileRecord.Header.MFTRecordNumber),
-                        "MFT Record Number must be 0 or match it's index in the MFT.", fileRecord);
+                    if (recordNum != index)
+                        throw new InvalidMasterFileTableException(nameof(fileRecord.Header.MFTRecordNumber),
+                            "MFT Record Number must be 0 or match it's index in the MFT.", fileRecord);
 
-                _table.Add(recordNum, fileRecord);
+                    _table.Add(recordNum, fileRecord);
+                }
+                catch (InvalidFileRecordException)
+                {
+                    // Some MFT system files may be empty
+                }
+                
             }
         }
 
