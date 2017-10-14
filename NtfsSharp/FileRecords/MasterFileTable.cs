@@ -66,6 +66,16 @@ namespace NtfsSharp.FileRecords
             }
         }
 
+        /// <summary>
+        /// Reads file record 
+        /// </summary>
+        /// <param name="file">File specified in <see cref="Files"/></param>
+        /// <returns><seealso cref="FileRecord"/> is returned or null if it doesn't exist.</returns>
+        public FileRecord ReadFile(Files file)
+        {
+            return ContainsKey((uint) file) ? this[(uint) file] : null;
+        }
+
         #region IReadOnlyDictionary Implementation
         IEnumerator IEnumerable.GetEnumerator()
         {
