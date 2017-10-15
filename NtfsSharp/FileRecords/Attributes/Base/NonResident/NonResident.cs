@@ -19,7 +19,7 @@ namespace NtfsSharp.FileRecords.Attributes.Base.NonResident
         /// <summary>
         /// A list of the data blocks or data runs to locate the data on the disk
         /// </summary>
-        public List<DataBlock> DataBlocks = new List<DataBlock>();
+        public readonly List<DataBlock> DataBlocks = new List<DataBlock>();
 
         public NonResident(NTFS_ATTRIBUTE_HEADER header, byte[] data, FileRecord fileRecord) : base(header, data, fileRecord)
         {
