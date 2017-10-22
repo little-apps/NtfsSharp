@@ -19,7 +19,7 @@ namespace NtfsSharp.FileRecords.Attributes.IndexRoot
         {
             Header = data.ToStructure<NTFS_ATTR_INDEX_ENTRY_HEADER>(currentOffset);
 
-            if (!Header.Flags.HasFlag(Enums.IndexEntryFlags.IsLastEntry) && Header.StreamLength > 0)
+            if (!Header.Flags.HasFlag(Enums.IndexEntryFlags.IsLastEntry) && Header.StreamLength > Marshal.SizeOf<FileName.NTFS_ATTR_FILE_NAME>())
             {
                 Stream = new byte[Header.StreamLength];
                 Array.Copy(data, currentOffset + HeaderSize, Stream, 0, Stream.Length);
