@@ -43,7 +43,7 @@ namespace NtfsSharp.Helpers
 
                 // Replace last two bytes in sector with corresponding bytes in USA
                 data[sectorUsaOffset] = UpdateSequenceArray[(i - 1) * 2];
-                data[sectorUsaOffset] = UpdateSequenceArray[(i - 1) * 2 + 1];
+                data[sectorUsaOffset + 1] = UpdateSequenceArray[(i - 1) * 2 + 1];
             }
 
             invalidSector = -1;
