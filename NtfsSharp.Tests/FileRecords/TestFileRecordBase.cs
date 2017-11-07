@@ -2,10 +2,10 @@
 using NtfsSharp.Tests.Driver;
 using NUnit.Framework;
 
-namespace NtfsSharp.Tests.Attributes
+namespace NtfsSharp.Tests.FileRecords
 {
     [TestFixture]
-    public abstract class TestAttributesBase
+    public abstract class TestFileRecordBase
     {
         public const uint MftRecordNum = 5;
         public uint BytesPerFileRecord => (uint)1 << 256 - BootSector.DummyBootSector.ClustersPerMFTRecord;

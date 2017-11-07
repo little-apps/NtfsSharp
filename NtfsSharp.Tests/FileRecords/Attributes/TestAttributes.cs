@@ -7,10 +7,10 @@ using NtfsSharp.Tests.Driver.Attributes;
 using NtfsSharp.Tests.Driver.Attributes.NonResident;
 using NUnit.Framework;
 
-namespace NtfsSharp.Tests.Attributes
+namespace NtfsSharp.Tests.FileRecords.Attributes
 {
     [TestFixture]
-    public class TestAttributes : TestAttributesBase
+    public class TestAttributes : TestFileRecordBase
     {
         public static DummyAttributeBase.NTFS_ATTR_TYPE[] ResidentTypes =
         {
@@ -167,6 +167,18 @@ namespace NtfsSharp.Tests.Attributes
                 actualException = actualException.InnerException;
 
             Assert.IsInstanceOf<InvalidAttributeException>(actualException);
+        }
+
+        [Test]
+        public void TestNonResidentDataRunLengthSize()
+        {
+            
+        }
+
+        [Test]
+        public void TestNonResidentDataRunOffsetSize()
+        {
+            
         }
     }
 

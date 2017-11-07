@@ -4,12 +4,13 @@ using NtfsSharp.FileRecords.Attributes.Base;
 using NtfsSharp.Tests.Driver;
 using NtfsSharp.Tests.Driver.Attributes;
 using NtfsSharp.Tests.Driver.Attributes.NonResident;
+using DataAttribute = NtfsSharp.FileRecords.Attributes.DataAttribute;
 using NUnit.Framework;
 
-namespace NtfsSharp.Tests.Attributes
+namespace NtfsSharp.Tests.FileRecords.Attributes
 {
     [TestFixture]
-    public class TestData : TestAttributesBase
+    public class TestData : TestFileRecordBase
     {
         // Test the file record FileStream
         [Test]
@@ -72,8 +73,8 @@ namespace NtfsSharp.Tests.Attributes
 
             var actualFileRecord = ReadDummyFileRecord();
             var actualDataAttribute =
-                (FileRecords.Attributes.DataAttribute) actualFileRecord.FindAttributeBodyByType(AttributeHeaderBase
-                    .NTFS_ATTR_TYPE.DATA);
+                (NtfsSharp.FileRecords.Attributes.DataAttribute) actualFileRecord.FindAttributeBodyByType(
+                    AttributeHeaderBase.NTFS_ATTR_TYPE.DATA);
 
             var actualBytes = actualDataAttribute.Header.ReadBody();
 
@@ -104,8 +105,7 @@ namespace NtfsSharp.Tests.Attributes
 
             var actualFileRecord = ReadDummyFileRecord();
             var actualDataAttribute =
-                (FileRecords.Attributes.DataAttribute)actualFileRecord.FindAttributeBodyByType(AttributeHeaderBase
-                    .NTFS_ATTR_TYPE.DATA);
+                (DataAttribute) actualFileRecord.FindAttributeBodyByType(AttributeHeaderBase.NTFS_ATTR_TYPE.DATA);
 
             var actualBytes = actualDataAttribute.Header.ReadBody();
 

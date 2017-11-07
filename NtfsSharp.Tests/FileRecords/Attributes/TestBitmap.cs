@@ -6,10 +6,10 @@ using NtfsSharp.Tests.Driver;
 using NtfsSharp.Tests.Driver.Attributes.NonResident;
 using NUnit.Framework;
 
-namespace NtfsSharp.Tests.Attributes
+namespace NtfsSharp.Tests.FileRecords.Attributes
 {
     [TestFixture]
-    public class TestBitmap : TestAttributesBase
+    public class TestBitmap : TestFileRecordBase
     {
         [Test]
         public void TestReadBitmap()
