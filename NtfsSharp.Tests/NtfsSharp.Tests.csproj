@@ -65,6 +65,7 @@
     <Compile Include="TestBootSector.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestCluster.cs" />
+    <Compile Include="FileRecords\TestFixupable.cs" />
     <Compile Include="TestMasterFileTable.cs" />
     <Compile Include="TestSector.cs" />
   </ItemGroup>
