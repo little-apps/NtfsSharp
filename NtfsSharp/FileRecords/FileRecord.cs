@@ -25,6 +25,12 @@ namespace NtfsSharp.FileRecords
         public FILE_RECORD_HEADER_NTFS Header { get; private set; }
         public readonly List<AttributeBase> Attributes = new List<AttributeBase>();
 
+        /// <summary>
+        /// Gets the (a clone of) all the bytes in the file record.
+        /// </summary>
+        /// <remarks>A clone of the array is returned so the integrity of the <see cref="FileRecord"/> object isn't ruined.</remarks>
+        public byte[] Data => (byte[]) _data.Clone();
+
         public string Filename
         {
             get
