@@ -163,10 +163,22 @@ namespace NtfsSharp
         /// <summary>
         /// Reads the master file table located at the logical cluster number specified in the boot sector.
         /// </summary>
+        /// <param name="readMftMirrorOnFailure">If true and an exception occurs reading the MFT specified in the bootsector, the MFT mirror is attempted to be read. (default: true)</param>
         /// <exception cref="InvalidMasterFileTableException">See <seealso cref="MasterFileTable.ReadRecords"/> for conditions causing exception to be thrown.</exception>
-        public void ReadMft()
+        public void ReadMft(bool readMftMirrorOnFailure = true)
         {
+            try
+            {
                 MFT = ReadMftAtLcn(BootSector.MFTLCN);
+            }
+            catch
+            {
+                // If readMftMirrorOnFailure and an exception occurred, read from the MFT mirror LCN which is specified in the boot sector.
+                if (readMftMirrorOnFailure)
+                    MFT = ReadMftAtLcn(BootSector.MFTMirrLCN);
+            }
+        }
+
         /// <summary>
         /// Reads the master file table located at the specified logical cluster number.
         /// </summary>
