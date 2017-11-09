@@ -166,8 +166,7 @@ namespace NtfsSharp
         /// <exception cref="InvalidMasterFileTableException">See <seealso cref="MasterFileTable.ReadRecords"/> for conditions causing exception to be thrown.</exception>
         public void ReadMft()
         {
-            MFT = new MasterFileTable(this);
-            MFT.ReadRecords(BootSector.MFTLCN);
+                MFT = ReadMftAtLcn(BootSector.MFTLCN);
         /// <summary>
         /// Reads the master file table located at the specified logical cluster number.
         /// </summary>
