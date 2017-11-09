@@ -110,7 +110,9 @@ namespace NtfsSharp.Tests
                 }
             }
 
-            var ex = Assert.Throws(typeof(InvalidMasterFileTableException), Volume.ReadMft) as InvalidMasterFileTableException;
+            var ex =
+                Assert.Throws(typeof(InvalidMasterFileTableException), () => Volume.ReadMft()) as
+                    InvalidMasterFileTableException;
             Assert.AreEqual(nameof(DummyFileRecord.FILE_RECORD_HEADER_NTFS.MFTRecordNumber), ex.ParamName);
         }
     }
