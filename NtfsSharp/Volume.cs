@@ -158,7 +158,10 @@ namespace NtfsSharp
             MFT = new MasterFileTable(this);
             MFT.ReadRecords(BootSector.MFTLCN);
         }
-
+        
+        /// <summary>
+        /// Gets the total number of inodes aka number of clusters used by the Master File Table.
+        /// </summary>
         public uint TotalInodes
         {
             get
