@@ -110,6 +110,9 @@ namespace NtfsSharp
         }
         #endregion
 
+        /// <summary>
+        /// Reads the boot sector and then the master file table.
+        /// </summary>
         public void Read()
         {
             ReadBootSector();
