@@ -160,6 +160,10 @@ namespace NtfsSharp
 
         }
 
+        /// <summary>
+        /// Reads the master file table located at the logical cluster number specified in the boot sector.
+        /// </summary>
+        /// <exception cref="InvalidMasterFileTableException">See <seealso cref="MasterFileTable.ReadRecords"/> for conditions causing exception to be thrown.</exception>
         public void ReadMft()
         {
             MFT = new MasterFileTable(this);
