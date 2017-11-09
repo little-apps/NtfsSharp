@@ -168,6 +168,21 @@ namespace NtfsSharp
         {
             MFT = new MasterFileTable(this);
             MFT.ReadRecords(BootSector.MFTLCN);
+        /// <summary>
+        /// Reads the master file table located at the specified logical cluster number.
+        /// </summary>
+        /// <param name="lcn">Logical cluster number to get MFT from.</param>
+        /// <returns><seealso cref="MasterFileTable"/> instance.</returns>
+        public MasterFileTable ReadMftAtLcn(ulong lcn)
+        {
+            if (lcn == 0)
+                throw new ArgumentOutOfRangeException(nameof(lcn), "Logical cluster number must be greater than 0.");
+
+            var mft = new MasterFileTable(this);
+
+            mft.ReadRecords(lcn);
+
+            return mft;
         }
         
         /// <summary>
