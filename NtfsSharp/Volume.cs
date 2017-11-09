@@ -116,6 +116,10 @@ namespace NtfsSharp
             ReadMft();
         }
 
+        /// <summary>
+        /// Reads the boot sector (located at offset in the disk)
+        /// </summary>
+        /// <exception cref="InvalidBootSectorException">Thrown if the bytes per sector, sectors per cluster, or clusters per MFT record is invalid.</exception>
         public void ReadBootSector()
         {
             BootSector = ReadLcn(0).ReadFile<NtfsBootSector>(0);
