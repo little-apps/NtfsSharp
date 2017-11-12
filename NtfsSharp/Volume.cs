@@ -169,13 +169,13 @@ namespace NtfsSharp
         {
             try
             {
-                MFT = ReadMftAtLcn(BootSector.MFTLCN);
+                ReadMftAtLcn(BootSector.MFTLCN);
             }
             catch
             {
                 // If readMftMirrorOnFailure and an exception occurred, read from the MFT mirror LCN which is specified in the boot sector.
                 if (readMftMirrorOnFailure)
-                    MFT = ReadMftAtLcn(BootSector.MFTMirrLCN);
+                    ReadMftAtLcn(BootSector.MFTMirrLCN);
             }
         }
 
@@ -183,17 +183,15 @@ namespace NtfsSharp
         /// Reads the master file table located at the specified logical cluster number.
         /// </summary>
         /// <param name="lcn">Logical cluster number to get MFT from.</param>
-        /// <returns><seealso cref="MasterFileTable"/> instance.</returns>
-        public MasterFileTable ReadMftAtLcn(ulong lcn)
+        /// <remarks>The MFT cannot be returned because <seealso cref="NtfsSharp.FileRecords.Attributes.AttributeList.AttributeListItem"/> relies on the MFT property to get child attributes.</remarks>
+        private void ReadMftAtLcn(ulong lcn)
         {
             if (lcn == 0)
                 throw new ArgumentOutOfRangeException(nameof(lcn), "Logical cluster number must be greater than 0.");
+            
+            MFT = new MasterFileTable(this);
 
-            var mft = new MasterFileTable(this);
-
-            mft.ReadRecords(lcn);
-
-            return mft;
+            MFT.ReadRecords(lcn);
         }
         
         /// <summary>
