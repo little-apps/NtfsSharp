@@ -53,7 +53,7 @@ namespace NtfsSharp.FileRecords
 
                 try
                 {
-                    var fileRecord = new FileRecord(fileRecordBytes, Volume);
+                    var fileRecord = new FileRecord(fileRecordBytes, this);
                     fileRecord.ReadAttributes();
 
                     var index = i / _sectorsPerMftRecord;
