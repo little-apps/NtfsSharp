@@ -60,7 +60,7 @@ namespace NtfsSharp.FileRecords.Attributes.Base
         {
             if (!_residentTypes.ContainsKey(ntfsAttrType))
                 throw new InvalidAttributeException(_nonResidentTypes.ContainsKey(ntfsAttrType)
-                    ? "Attribute can only resident."
+                    ? "Attribute can only be non-resident."
                     : "Attribute type is invalid.");
 
             return _residentTypes[ntfsAttrType];
@@ -70,7 +70,7 @@ namespace NtfsSharp.FileRecords.Attributes.Base
         {
             if (!_nonResidentTypes.ContainsKey(ntfsAttrType))
                 throw new InvalidAttributeException(_residentTypes.ContainsKey(ntfsAttrType)
-                    ? "Attribute can only resident."
+                    ? "Attribute can only be resident."
                     : "Attribute type is invalid.");
 
             return _nonResidentTypes[ntfsAttrType];
