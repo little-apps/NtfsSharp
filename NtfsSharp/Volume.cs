@@ -28,6 +28,12 @@ namespace NtfsSharp
         public uint SectorsPerMFTRecord => BytesPerFileRecord / BytesPerSector;
         #endregion
 
+        /// <summary>
+        /// Constructor for opening a volume and (optionally) reading it.
+        /// </summary>
+        /// <param name="diskDriver">Disk driver to use to read the Volume.</param>
+        /// <param name="doRead">If true, calls the <seealso cref="Read"/> method in the constructor (default: true)</param>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="diskDriver"/> is null.</exception>
         public Volume(BaseDiskDriver diskDriver, bool doRead = true)
         {
             Driver = diskDriver ?? throw new ArgumentNullException(nameof(diskDriver));
