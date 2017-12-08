@@ -21,6 +21,7 @@ namespace NtfsSharp.FileRecords
         private bool _hasReadAttributes = false;
 
         public readonly Volume Volume;
+        public readonly MasterFileTable MasterFileTable;
 
         public FILE_RECORD_HEADER_NTFS Header { get; private set; }
         public readonly List<AttributeBase> Attributes = new List<AttributeBase>();
@@ -82,6 +83,31 @@ namespace NtfsSharp.FileRecords
             Volume = vol ?? throw new ArgumentNullException(nameof(vol), "Volume cannot be null");
             _data = data ?? throw new ArgumentNullException(nameof(data), "Data cannot be null");
 
+            if (data.Length == 0)
+                throw new ArgumentOutOfRangeException(nameof(data), "Data cannot be empty");
+
+            ParseHeader();
+            if (!Fixup(_data, Header.UpdateSequenceOffset, Header.UpdateSequenceSize, Volume.BytesPerSector,
+                out short invalidSector))
+                throw new InvalidFileRecordException(nameof(EndTag),
+                    $"Last 2 bytes of sector {invalidSector} don't match update sequence array end tag.", this);
+        }
+
+        /// <summary>
+        /// Reads file record from bytes
+        /// </summary>
+        /// <param name="data">Bytes with data for file record and attributes. Cannot be empty or null.</param>
+        /// <param name="masterFileTable"><seealso cref="MasterFileTable"/> containing the file record. Cannot be null.</param>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="data"/> or <paramref name="masterFileTable"/> is null</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="data"/> is empty</exception>
+        /// <exception cref="InvalidFileRecordException">Thrown if unable to read file record</exception>
+        public FileRecord(byte[] data, MasterFileTable masterFileTable)
+        {
+            _data = data ?? throw new ArgumentNullException(nameof(data), "Data cannot be null");
+
+            MasterFileTable = masterFileTable ?? throw new ArgumentNullException(nameof(masterFileTable));
+            Volume = masterFileTable.Volume;
+            
             if (data.Length == 0)
                 throw new ArgumentOutOfRangeException(nameof(data), "Data cannot be empty");
 
