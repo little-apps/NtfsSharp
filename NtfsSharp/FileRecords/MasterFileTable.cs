@@ -10,7 +10,7 @@ namespace NtfsSharp.FileRecords
         private const uint RecordsToRead = 26;
 
         private readonly uint _sectorsPerMftRecord;
-        private readonly Volume _volume;
+        public readonly Volume Volume;
         private readonly SortedList<uint, FileRecord> _table = new SortedList<uint, FileRecord>();
 
         /// <summary>
@@ -21,7 +21,7 @@ namespace NtfsSharp.FileRecords
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="volume"/> is null.</exception>
         public MasterFileTable(Volume volume)
         {
-            _volume = volume ?? throw new ArgumentNullException(nameof(volume));
+            Volume = volume ?? throw new ArgumentNullException(nameof(volume));
 
             _sectorsPerMftRecord = volume.BytesPerFileRecord / volume.BytesPerSector;
         }
@@ -36,24 +36,24 @@ namespace NtfsSharp.FileRecords
         /// </remarks>
         public void ReadRecords(ulong mftLcn)
         {
-            var currentCluster = _volume.ReadLcn(mftLcn);
-            var bytesPerFileRecord = _sectorsPerMftRecord * _volume.BytesPerSector;
+            var currentCluster = Volume.ReadLcn(mftLcn);
+            var bytesPerFileRecord = _sectorsPerMftRecord * Volume.BytesPerSector;
 
             for (uint i = 0; i < RecordsToRead * _sectorsPerMftRecord; i += _sectorsPerMftRecord)
             {
-                var sectorOffsetInLcn = i % _volume.SectorsPerCluster;
+                var sectorOffsetInLcn = i % Volume.SectorsPerCluster;
 
                 if (sectorOffsetInLcn == 0 && i > 0)
-                    currentCluster = _volume.ReadLcn(currentCluster.Lcn + 1);
+                    currentCluster = Volume.ReadLcn(currentCluster.Lcn + 1);
 
                 var fileRecordBytes = new byte[bytesPerFileRecord];
 
-                Array.Copy(currentCluster.Data, sectorOffsetInLcn * _volume.BytesPerSector, fileRecordBytes, 0,
+                Array.Copy(currentCluster.Data, sectorOffsetInLcn * Volume.BytesPerSector, fileRecordBytes, 0,
                     bytesPerFileRecord);
 
                 try
                 {
-                    var fileRecord = new FileRecord(fileRecordBytes, _volume);
+                    var fileRecord = new FileRecord(fileRecordBytes, Volume);
                     fileRecord.ReadAttributes();
 
                     var index = i / _sectorsPerMftRecord;
