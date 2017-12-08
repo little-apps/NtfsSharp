@@ -18,9 +18,10 @@ namespace NtfsSharp.FileRecords
         /// </summary>
         /// <param name="volume">Volume instance</param>
         /// <remarks>This object will have 0 elements until <seealso cref="ReadRecords"/> is called.</remarks>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="volume"/> is null.</exception>
         public MasterFileTable(Volume volume)
         {
-            _volume = volume;
+            _volume = volume ?? throw new ArgumentNullException(nameof(volume));
 
             _sectorsPerMftRecord = volume.BytesPerFileRecord / volume.BytesPerSector;
         }
