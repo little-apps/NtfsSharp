@@ -30,7 +30,7 @@ namespace NtfsSharp
 
         public Volume(BaseDiskDriver diskDriver, bool doRead = true)
         {
-            Driver = diskDriver;
+            Driver = diskDriver ?? throw new ArgumentNullException(nameof(diskDriver));
 
             if (doRead)
                 Read();
