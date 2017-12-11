@@ -64,7 +64,7 @@ namespace NtfsSharp.FileRecords.Attributes.AttributeList
             else
             {
                 var volume = attributeList.Header.FileRecord.Volume;
-                var mftRecord = volume.MFT[0];
+                var mftRecord = FindMasterFileTableRecord(attributeList);
 
                 var mftRecordDataAttr = mftRecord.FindAttributeByType(AttributeHeaderBase.NTFS_ATTR_TYPE.DATA);
 
@@ -102,6 +102,17 @@ namespace NtfsSharp.FileRecords.Attributes.AttributeList
                 ChildAttribute = fileRecord.FindAttribute(Header.AttributeId, Header.Type, Name);
             }
 
+        }
+
+        /// <summary>
+        /// Finds the $MFT file record to locate attributes from
+        /// </summary>
+        /// <returns>Returns the <seealso cref="FileRecord"/> representing $MFT or null if not found.</returns>
+        private FileRecord FindMasterFileTableRecord(AttributeList parentAttributeList)
+        {
+            var parentFileRecord = parentAttributeList.Header.FileRecord;
+
+            return parentFileRecord.MasterFileTable?[0] ?? parentFileRecord.Volume?.MFT?[0];
         }
 
         public struct NTFS_ATTRIBUTE_LIST_HEADER
