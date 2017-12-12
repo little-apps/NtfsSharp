@@ -73,8 +73,7 @@ namespace NtfsSharp.Tests.FileRecords.Attributes
 
             var actualFileRecord = ReadDummyFileRecord();
             var actualDataAttribute =
-                (NtfsSharp.FileRecords.Attributes.DataAttribute) actualFileRecord.FindAttributeBodyByType(
-                    AttributeHeaderBase.NTFS_ATTR_TYPE.DATA);
+                (DataAttribute) actualFileRecord.FindAttributeBodyByType(AttributeHeaderBase.NTFS_ATTR_TYPE.DATA);
 
             var actualBytes = actualDataAttribute.Header.ReadBody();
 
