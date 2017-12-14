@@ -50,6 +50,7 @@
     <Compile Include="FileRecords\TestFileRecordBase.cs" />
     <Compile Include="FileRecords\Attributes\TestBitmap.cs" />
     <Compile Include="FileRecords\Attributes\TestData.cs" />
+    <Compile Include="FileRecords\Attributes\TestNonResident.cs" />
     <Compile Include="Driver\Attributes\DummyAttributeBase.cs" />
     <Compile Include="Driver\Attributes\NonResident\DataRun.cs" />
     <Compile Include="Driver\Attributes\NonResident\NonResidentAttributeBase.cs" />
