@@ -97,19 +97,46 @@ namespace NtfsSharp.Tests.Driver.Attributes.NonResident
         {
             var valueBytes = BitConverter.GetBytes(value);
             var lastByteUsed = 0;
-
-            for (var i = valueBytes.Length - 1; i >= 0; i--)
+            
+            if ((value & 0x8000000000000000) != 0x8000000000000000)
             {
-                if (valueBytes[i] == 0)
-                    continue;
+                // If value is positive (or last bit is 0) -> loop through to find last byte used
 
-                lastByteUsed = i + 1;
-                break;
+                for (var i = valueBytes.Length - 1; i >= 0; i--)
+                {
+                    if (valueBytes[i] == 0)
+                        continue;
+
+                    lastByteUsed = i + 1;
+                    break;
+                }
+
+                // Make sure last bit is not 1 (making the value negative when it's not)
+                if (lastByteUsed < 8 && (valueBytes[lastByteUsed - 1] & 0x80) == 0x80)
+                    lastByteUsed++;
             }
+            else
+            {
+                // If value is negative (or last bit is 1) -> determine the least amount of bytes needed
 
-            // Make sure last bit is not 1 (making the value negative when it's not)
-            if (lastByteUsed < 8 && (valueBytes[lastByteUsed - 1] & 0x80) == 0x80)
-                lastByteUsed++;
+                for (var i = valueBytes.Length - 1; i >= 0; i--)
+                {
+                    // If value bits are all 1 and i isn't 0 -> not the last byte used
+                    if (valueBytes[i] == 0xff && i > 0)
+                        continue;
+
+                    // Set last byte used to i + 1
+                    lastByteUsed = i + 1;
+
+                    // Check if the last bit is 1 and if it isn't, the byte before is needed (in order to make it negative)
+                    // ie: If the bit sequence is 1111 1111 0111 1111 and we use the second byte, it won't be negative.
+                    if ((valueBytes[i] & 0x80) != 0x80)
+                        lastByteUsed++;
+
+                    break;
+                }
+            }
+            
 
             var bytes = new byte[lastByteUsed];
 
