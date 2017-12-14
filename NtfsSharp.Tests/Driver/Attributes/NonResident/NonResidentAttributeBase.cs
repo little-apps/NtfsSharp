@@ -114,8 +114,17 @@ namespace NtfsSharp.Tests.Driver.Attributes.NonResident
                         bytes.AddRange(dataRunBytes);
                     }
 
-                    // Cluster is not contigious, create another datablock
-                    currentDataRun = new DataRun(1, currentLcn);
+                    // Cluster is not contigious or it's the first one
+                    var dataRunLcn = currentLcn;
+
+                    // If another datarun exists -> calculate LCN so it's relative to the previous one
+                    if (currentDataRun != null)
+                    {
+                        dataRunLcn = dataRunLcn - currentDataRun.LcnOffset;
+                    }
+
+                    // Create another datablock
+                    currentDataRun = new DataRun(1, dataRunLcn);
                 }
                 else
                 {
