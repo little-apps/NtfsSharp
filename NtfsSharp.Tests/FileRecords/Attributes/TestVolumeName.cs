@@ -36,9 +36,9 @@ namespace NtfsSharp.Tests.FileRecords.Attributes
         /// Tests the length of the volume name is the same as the size of the body of the resident attribute.
         /// </summary>
         /// <param name="expectedVolumeNameLength">The expected volume name length.</param>
-        /// <remarks>This is a resident attribute so the length cannot be more than the size of the file record minus 48 bytes for the file record structure.</remarks>
+        /// <remarks>The length cannot be more than 940 cause 1024 (size of the file record) minus 56 bytes for file record structure and where the attributes start, 16 + 8 for the attribute header and 4 for the end marker.</remarks>
         [Test]
-        public void TestValidVolumeNameValidSize([Random(1, 1024 - 48, 10)] int expectedVolumeNameLength)
+        public void TestValidVolumeNameValidSize([Random(1, 940, 10)] int expectedVolumeNameLength)
         {
             var volumeNameAttr = new VolumeNameDummy {Body = new byte[expectedVolumeNameLength] };
 
@@ -62,7 +62,7 @@ namespace NtfsSharp.Tests.FileRecords.Attributes
         /// </summary>
         /// <param name="expectedVolumeNameLength">The expected volume name length.</param>
         [Test]
-        public void TestValidVolumeNameInvalidSize([Random(1024 - 48, int.MaxValue, 10)] int expectedVolumeNameLength)
+        public void TestValidVolumeNameInvalidSize([Random(940, int.MaxValue, 10)] int expectedVolumeNameLength)
         {
             var volumeNameAttr = new VolumeNameDummy { Body = new byte[expectedVolumeNameLength] };
 
