@@ -32,7 +32,7 @@ namespace NtfsSharp.Tests.Driver
                 TotalSectors = DummyDriver.DriveSize / DummyDriver.BytesPerSector,
                 MFTLCN = DummyDriver.MasterFileTableLcn,
                 MFTMirrLCN = DummyDriver.MasterFileTableLcn,
-                ClustersPerMFTRecord = 246,
+                ClustersPerMFTRecord = 0xF6, // Translates to 246, which is read as 1024 bytes (2^(256-246)) and it's bytes if it's negative
                 ClustersPerIndexBuffer = 1,
                 VolumeSerialNumber = 0x1234567890abcdef,
                 NTFSChecksum = 0,
