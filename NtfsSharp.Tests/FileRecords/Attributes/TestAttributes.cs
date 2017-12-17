@@ -115,12 +115,10 @@ namespace NtfsSharp.Tests.FileRecords.Attributes
             var rand = new Random();
 
             var firstLcnOffset = rand.Next(1, (int) ((int) DummyDriver.DriveSize / DummyDriver.BytesPerSector / DummyDriver.SectorsPerCluster));
-            var negativeLcnOffset = rand.Next(firstLcnOffset * -1, -1);
-
-            var expectedLcn = firstLcnOffset + negativeLcnOffset;
+            var secondLcnOffset = rand.Next(1, firstLcnOffset);
 
             nonResidentAttr.AppendVirtualCluster(dataClusters[0], (ulong) firstLcnOffset);
-            nonResidentAttr.AppendVirtualCluster(dataClusters[1], (ulong) negativeLcnOffset);
+            nonResidentAttr.AppendVirtualCluster(dataClusters[1], (ulong) secondLcnOffset);
 
             DummyFileRecord.Attributes.Add(nonResidentAttr);
 
@@ -135,7 +133,7 @@ namespace NtfsSharp.Tests.FileRecords.Attributes
             Assert.False(actualNonResidentAttr.DataBlocks[0].LcnOffsetNegative);
             Assert.True(actualNonResidentAttr.DataBlocks[1].LcnOffsetNegative);
 
-            Assert.AreEqual(expectedLcn, actualNonResidentAttr.VcnToLcn(1));
+            Assert.AreEqual(secondLcnOffset, actualNonResidentAttr.VcnToLcn(1));
             
         }
 
