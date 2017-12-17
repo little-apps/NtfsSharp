@@ -1,4 +1,5 @@
-﻿using NtfsSharp.FileRecords.Attributes.Base;
+﻿using System;
+using NtfsSharp.FileRecords.Attributes.Base;
 using NtfsSharp.Helpers;
 using System.Runtime.InteropServices;
 using NtfsSharp.FileRecords.Attributes.MetaData;
@@ -22,12 +23,24 @@ namespace NtfsSharp.FileRecords.Attributes
             CurrentOffset += HeaderSize;
         }
 
+        [Flags]
+        public enum VolumeInfoFlags : ushort
+        {
+            IsDirty = 1 << 0,
+            ResizeLogFile = 1 << 1,
+            UpgradeOnMount = 1 << 2,
+            MountedOnNt4 = 1 << 3,
+            DeletingUsn = 1 << 4,
+            RepairObjectIds = 1 << 5,
+            ModifiedByChkdsk = 1 << 15
+        }
+
         public struct NTFS_ATTR_VOLUME_INFO
         {
             public readonly ulong Empty1;
             public readonly byte MajorVersion;
             public readonly byte MinorVersion;
-            public readonly ushort Flags;
+            public readonly VolumeInfoFlags Flags;
             public readonly uint Empty2;
         }
 
