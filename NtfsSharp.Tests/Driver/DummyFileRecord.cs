@@ -124,7 +124,7 @@ namespace NtfsSharp.Tests.Driver
 
                 bytesLeft -= attributeData.Length;
 
-                if (bytesLeft <= 0)
+                if (bytesLeft <= 0 || attributeData.Length > bytes.Length - currentOffset)
                     throw new IndexOutOfRangeException(
                         "The size of resident attributes is larger the file record size (subtract 4 bytes for the end marker)");
 
@@ -139,6 +139,9 @@ namespace NtfsSharp.Tests.Driver
                         dummyDriver.Clusters.Add((long) additionalCluster.Key, additionalCluster.Value);
                     }
                 }
+
+                if (currentOffset + endAttributeMarker.Length > bytes.Length)
+                    throw new IndexOutOfRangeException("The length of the attributes exceeds the length of the file record (minus 4 bytes for the end marker)");
             }
 
             Array.Copy(endAttributeMarker, 0, bytes, currentOffset, endAttributeMarker.Length);
