@@ -12,7 +12,7 @@ namespace NtfsSharp.FileRecords.Attributes
     [NonResident(AttributeHeaderBase.NTFS_ATTR_TYPE.VOLUME_INFORMATION)]
     public class VolumeInformation : AttributeBodyBase
     {
-        public static uint HeaderSize => (uint)Marshal.SizeOf<NTFS_ATTR_VOLUME_INFO>();
+        public static uint HeaderSize => (uint) Marshal.SizeOf<NTFS_ATTR_VOLUME_INFO>();
 
         public NTFS_ATTR_VOLUME_INFO Data { get; private set; }
 
