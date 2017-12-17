@@ -10,6 +10,9 @@ namespace NtfsSharp.Tests.FileRecords.Attributes
     [TestFixture]
     public class TestVolumeName : TestFileRecordBase
     {
+        /// <summary>
+        /// Tests a simple volume name is read correctly.
+        /// </summary>
         [Test]
         public void TestValidVolumeName()
         {
