@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FileRecords\Attributes\TestAttributes.cs" />
+    <Compile Include="FileRecords\Attributes\TestVolumeName.cs" />
     <Compile Include="FileRecords\TestFileRecordBase.cs" />
     <Compile Include="FileRecords\Attributes\TestBitmap.cs" />
     <Compile Include="FileRecords\Attributes\TestData.cs" />
