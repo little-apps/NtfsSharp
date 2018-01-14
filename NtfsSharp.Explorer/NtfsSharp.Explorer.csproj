@@ -122,6 +122,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\NtfsSharp.Drivers\NtfsSharp.Drivers.csproj">
+      <Project>{56747700-d2b0-4d48-a3fe-fe77f34ddd75}</Project>
+      <Name>NtfsSharp.Drivers</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NtfsSharp\NtfsSharp.csproj">
       <Project>{d9848cd4-008e-4270-b2ad-3dce2af21e41}</Project>
       <Name>NtfsSharp</Name>

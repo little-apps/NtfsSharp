@@ -20,6 +20,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NtfsSharp.Explorer", "NtfsS
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NtfsSharp.Tests", "NtfsSharp.Tests\NtfsSharp.Tests.csproj", "{8EDF4429-251A-416D-BB68-93F227191BCF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NtfsSharp.Drivers", "NtfsSharp.Drivers\NtfsSharp.Drivers.csproj", "{56747700-D2B0-4D48-A3FE-FE77F34DDD75}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -60,8 +62,17 @@ Global
 		{8EDF4429-251A-416D-BB68-93F227191BCF}.Mono|Any CPU.Build.0 = Mono|Any CPU
 		{8EDF4429-251A-416D-BB68-93F227191BCF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8EDF4429-251A-416D-BB68-93F227191BCF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56747700-D2B0-4D48-A3FE-FE77F34DDD75}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56747700-D2B0-4D48-A3FE-FE77F34DDD75}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56747700-D2B0-4D48-A3FE-FE77F34DDD75}.Mono|Any CPU.ActiveCfg = Release|Any CPU
+		{56747700-D2B0-4D48-A3FE-FE77F34DDD75}.Mono|Any CPU.Build.0 = Release|Any CPU
+		{56747700-D2B0-4D48-A3FE-FE77F34DDD75}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56747700-D2B0-4D48-A3FE-FE77F34DDD75}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {38FCA484-5C6A-4AD9-9BFD-256D8C71FF03}
 	EndGlobalSection
 EndGlobal

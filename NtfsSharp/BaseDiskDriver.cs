@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
 
-namespace NtfsSharp.Drivers
+namespace NtfsSharp
 {
     public abstract class BaseDiskDriver : IDisposable
     {
