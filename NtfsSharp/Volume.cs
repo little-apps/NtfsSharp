@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using NtfsSharp.Data;
-using NtfsSharp.Drivers;
 using NtfsSharp.Exceptions;
 using NtfsSharp.FileRecords;
 using NtfsSharp.FileRecords.Attributes;
