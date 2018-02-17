@@ -8,7 +8,7 @@ namespace NtfsSharp.FileRecords.Attributes
     /// </summary>
     [Resident(AttributeHeaderBase.NTFS_ATTR_TYPE.DATA)]
     [NonResident(AttributeHeaderBase.NTFS_ATTR_TYPE.DATA)]
-    public class DataAttribute : AttributeBodyBase
+    public sealed class DataAttribute : AttributeBodyBase
     {
         /// <summary>
         /// Represents file contents

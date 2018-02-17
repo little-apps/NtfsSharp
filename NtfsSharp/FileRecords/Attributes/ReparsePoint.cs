@@ -11,7 +11,7 @@ namespace NtfsSharp.FileRecords.Attributes
     /// </summary>
     [Resident(AttributeHeaderBase.NTFS_ATTR_TYPE.REPARSE_POINT)]
     [NonResident(AttributeHeaderBase.NTFS_ATTR_TYPE.REPARSE_POINT)]
-    public class ReparsePoint : AttributeBodyBase
+    public sealed class ReparsePoint : AttributeBodyBase
     {
         public readonly NTFS_REPARSE_POINT Data;
 

@@ -9,7 +9,7 @@ namespace NtfsSharp.FileRecords.Attributes
     /// </summary>
     [Resident(AttributeHeaderBase.NTFS_ATTR_TYPE.OBJECT_ID)]
     [NonResident(AttributeHeaderBase.NTFS_ATTR_TYPE.OBJECT_ID)]
-    public class ObjectId : AttributeBodyBase
+    public sealed class ObjectId : AttributeBodyBase
     {
         private const uint GuidSizeBytes = 16;
 

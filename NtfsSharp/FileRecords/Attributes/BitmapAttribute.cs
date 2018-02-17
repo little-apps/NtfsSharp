@@ -9,7 +9,7 @@ namespace NtfsSharp.FileRecords.Attributes
     /// </summary>
     [Resident(AttributeHeaderBase.NTFS_ATTR_TYPE.BITMAP)]
     [NonResident(AttributeHeaderBase.NTFS_ATTR_TYPE.BITMAP)]
-    public class BitmapAttribute : AttributeBodyBase
+    public sealed class BitmapAttribute : AttributeBodyBase
     {
         /// <summary>
         /// In an index, the bit field shows which index entries are in use. Each bit represents one VCN of the index allocation.

@@ -15,7 +15,7 @@ namespace NtfsSharp.FileRecords.Attributes
     /// </summary>
     [Resident(AttributeHeaderBase.NTFS_ATTR_TYPE.SECURITY_DESCRIPTOR)]
     [NonResident(AttributeHeaderBase.NTFS_ATTR_TYPE.SECURITY_DESCRIPTOR)]
-    public class SecurityDescriptor : AttributeBodyBase
+    public sealed class SecurityDescriptor : AttributeBodyBase
     {
         public static uint SubHeaderSize => (uint) Marshal.SizeOf<NTFS_SECURITY_DESCRIPTOR>();
         public NTFS_SECURITY_DESCRIPTOR SubHeader { get; private set; }

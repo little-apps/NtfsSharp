@@ -11,7 +11,7 @@ namespace NtfsSharp.FileRecords.Attributes
     /// Includes information such as timestamp and link count.
     /// </summary>
     [Resident(AttributeHeaderBase.NTFS_ATTR_TYPE.STANDARD_INFORMATION)]
-    public class StandardInformation : AttributeBodyBase
+    public sealed class StandardInformation : AttributeBodyBase
     {
         public static uint HeaderSize => (uint)Marshal.SizeOf<NTFS_ATTR_STANDARD>();
         public NTFS_ATTR_STANDARD Data { get; private set; }
