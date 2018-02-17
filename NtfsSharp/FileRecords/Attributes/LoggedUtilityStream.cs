@@ -11,7 +11,7 @@ namespace NtfsSharp.FileRecords.Attributes
     /// </remarks>
     [Resident(AttributeHeaderBase.NTFS_ATTR_TYPE.LOGGED_UTILITY_STREAM)]
     [NonResident(AttributeHeaderBase.NTFS_ATTR_TYPE.LOGGED_UTILITY_STREAM)]
-    public class LoggedUtilityStream : AttributeBodyBase
+    public sealed class LoggedUtilityStream : AttributeBodyBase
     {
         public LoggedUtilityStream(AttributeHeaderBase header) : base(header)
         {

@@ -8,7 +8,7 @@ namespace NtfsSharp.FileRecords.Attributes
     /// This attribute simply contains the name of the volume.
     /// </summary>
     [Resident(AttributeHeaderBase.NTFS_ATTR_TYPE.VOLUME_NAME)]
-    public class VolumeName : AttributeBodyBase
+    public sealed class VolumeName : AttributeBodyBase
     {
         public readonly string Name;
 
