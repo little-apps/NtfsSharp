@@ -49,6 +49,13 @@
     <Compile Include="Physical\Partition.cs" />
     <Compile Include="Physical\PhysicalDiskDriver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="VhdDriver.cs" />
+    <Compile Include="Vhd\Data\BlockAllocation.cs" />
+    <Compile Include="Vhd\Data\DataBlock.cs" />
+    <Compile Include="Vhd\Data\Sector.cs" />
+    <Compile Include="Vhd\ImageTypes\BaseImage.cs" />
+    <Compile Include="Vhd\ImageTypes\DynamicImage.cs" />
+    <Compile Include="Vhd\Vhd.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NtfsSharp\NtfsSharp.csproj">
