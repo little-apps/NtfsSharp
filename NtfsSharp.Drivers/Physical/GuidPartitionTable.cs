@@ -12,7 +12,8 @@ namespace NtfsSharp.Drivers.Physical
     {
         private const uint HeaderLba = 1;
 
-        private PhysicalDiskDriver DiskManager { get; }
+        private MasterBootRecord Mbr { get; }
+        private BaseDiskDriver DiskDriver { get; }
 
         public PartitionTableHeader Header { get; }
 
@@ -28,15 +29,17 @@ namespace NtfsSharp.Drivers.Physical
         /// <summary>
         /// Constructor for GuidPartitionTable
         /// </summary>
-        /// <param name="diskManager">Instance of <see cref="InvalidGuidPartitionTable"/> containing the GPT</param>
-        /// <exception cref="PhysicalDiskDriver">Thrown if the GPT signature is not 'EFI PART'</exception>
-        public GuidPartitionTable(PhysicalDiskDriver diskManager)
+        /// <param name="masterBootRecord">Instance of <see cref="MasterBootRecord"/> containing the GPT</param>
+        /// <param name="baseDiskDriver">Disk driver to access the GPT</param>
+        /// <exception cref="InvalidGuidPartitionTable">Thrown if the GPT signature is not 'EFI PART'</exception>
+        public GuidPartitionTable(MasterBootRecord masterBootRecord, BaseDiskDriver baseDiskDriver)
         {
-            DiskManager = diskManager;
+            Mbr = masterBootRecord ?? throw new ArgumentNullException(nameof(masterBootRecord));
+            DiskDriver = baseDiskDriver ?? throw new ArgumentNullException(nameof(baseDiskDriver));
 
-            DiskManager.MoveToLba(HeaderLba);
+            Mbr.MoveToLba(HeaderLba);
 
-            var partitionTableHeaderBytes = DiskManager.ReadFile(PhysicalDiskDriver.LogicalBlockAddressSize);
+            var partitionTableHeaderBytes = DiskDriver.ReadFile(MasterBootRecord.LogicalBlockAddressSize);
             Header = partitionTableHeaderBytes.ToStructure<PartitionTableHeader>();
 
             if (Header.Signature != 0x5452415020494645) // 'EFI PART'
@@ -55,14 +58,14 @@ namespace NtfsSharp.Drivers.Physical
 
             for (var offset = 0; offset < Header.PartitionEntries * Header.PartitionEntrySize; offset += (int)Header.PartitionEntrySize)
             {
-                if (offset % PhysicalDiskDriver.LogicalBlockAddressSize == 0)
+                if (offset % MasterBootRecord.LogicalBlockAddressSize == 0)
                 {
                     // If offset is a multiple of 512, we're reading a new sector
                     var currentLba = Header.PartitionEntriesStartLba +
-                                     (ulong)(offset / PhysicalDiskDriver.LogicalBlockAddressSize);
-                    DiskManager.MoveToLba(currentLba);
+                                     (ulong) (offset / MasterBootRecord.LogicalBlockAddressSize);
+                    Mbr.MoveToLba(currentLba);
 
-                    sectorBytes = DiskManager.ReadFile(PhysicalDiskDriver.LogicalBlockAddressSize);
+                    sectorBytes = DiskDriver.ReadFile(MasterBootRecord.LogicalBlockAddressSize);
                 }
 
                 var partitionEntryBytes = new byte[Header.PartitionEntrySize];
