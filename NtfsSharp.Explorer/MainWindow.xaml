@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:Tree="clr-namespace:Aga.Controls.Tree;assembly=Aga.Controls" x:Class="NtfsSharp.Explorer.MainWindow"
         mc:Ignorable="d"
-        Title="MainWindow" Height="582" Width="1086" DataContext="{Binding RelativeSource={RelativeSource Self}}">
+        Title="NtfsSharp Explorer" Height="582" Width="1086" DataContext="{Binding RelativeSource={RelativeSource Self}}">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="25"/>
