@@ -45,6 +45,8 @@
     <Compile Include="Physical\Exceptions\InvalidGuidPartitionTable.cs" />
     <Compile Include="Physical\Exceptions\InvalidMasterBootRecord.cs" />
     <Compile Include="Physical\GuidPartitionTable.cs" />
+    <Compile Include="Physical\MasterBootRecord.cs" />
+    <Compile Include="Physical\Partition.cs" />
     <Compile Include="Physical\PhysicalDiskDriver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
