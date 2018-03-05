@@ -80,6 +80,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Attributes.cs" />
+    <Compile Include="FileModelEntry\BaseFileModel.cs" />
     <Compile Include="FileModelEntry\DeepScan\FileModel.cs" />
     <Compile Include="FileModelEntry\DeepScan\FileModelEntry.cs" />
     <Compile Include="FileModelEntry\BaseFileModelEntry.cs" />

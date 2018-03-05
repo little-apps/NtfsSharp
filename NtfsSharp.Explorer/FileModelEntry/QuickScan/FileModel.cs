@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using Aga.Controls.Tree;
 using NtfsSharp.FileRecords;
 using NtfsSharp.FileRecords.Attributes.Base;
 using NtfsSharp.FileRecords.Attributes.IndexAllocation;
@@ -9,15 +8,12 @@ using NtfsSharp.PInvoke;
 
 namespace NtfsSharp.Explorer.FileModelEntry.QuickScan
 {
-    class FileModel : ITreeModel
+    class FileModel : BaseFileModel
     {
         private const uint RootRecordNum = 5;
-
-        private readonly Volume _volume;
-
-        public FileModel(Volume volume)
+        
+        public FileModel(Volume volume) : base(volume)
         {
-            _volume = volume;
         }
 
         /// <summary>
@@ -29,11 +25,11 @@ namespace NtfsSharp.Explorer.FileModelEntry.QuickScan
         /// This does not utilize the B+ tree structure of the NTFS properly.
         /// It will use the index allocation. If it doesn't exist, it will attempt to use the index root.
         /// </remarks>
-        public IEnumerable GetChildren(object parent)
+        public override IEnumerable GetChildren(object parent)
         {
             var parentFileModelEntry = parent as FileModelEntry;
             var parentFileRecord = parentFileModelEntry == null
-                ? _volume.ReadFileRecord(RootRecordNum, true)
+                ? Volume.ReadFileRecord(RootRecordNum, true)
                 : parentFileModelEntry.FileRecord;
 
             var sortedList = new SortedList<string, FileModelEntry>();
@@ -53,7 +49,7 @@ namespace NtfsSharp.Explorer.FileModelEntry.QuickScan
 
                         var fileName = fileNameEntry.FileName.Filename;
                         var fileRecord =
-                            _volume.ReadFileRecord(fileNameEntry.Header.FileReference.FileRecordNumber, true);
+                            Volume.ReadFileRecord(fileNameEntry.Header.FileReference.FileRecordNumber, true);
                         var fileEntry = new FileModelEntry(fileRecord, parentFileModelEntry);
 
                         if (!sortedList.ContainsValue(fileEntry))
@@ -72,7 +68,7 @@ namespace NtfsSharp.Explorer.FileModelEntry.QuickScan
                         break;
 
                     var fileName = fileNameIndex.FileName.Filename;
-                    var fileRecord = _volume.ReadFileRecord(fileNameIndex.Header.FileReference.FileRecordNumber, true);
+                    var fileRecord = Volume.ReadFileRecord(fileNameIndex.Header.FileReference.FileRecordNumber, true);
                     var fileEntry = new global::NtfsSharp.Explorer.FileModelEntry.QuickScan.FileModelEntry(fileRecord, parentFileModelEntry);
 
                     if (!sortedList.ContainsValue(fileEntry))
@@ -88,12 +84,17 @@ namespace NtfsSharp.Explorer.FileModelEntry.QuickScan
         /// </summary>
         /// <param name="parent"><see cref="FileModelEntry"/> or null if it's the root</param>
         /// <returns>True if the <see cref="FileRecord"/> has the IsDirectory flag</returns>
-        public bool HasChildren(object parent)
+        public override bool HasChildren(object parent)
         {
             var parentFileRecord = parent as FileModelEntry;
 
             return parentFileRecord == null ||
                    parentFileRecord.FileRecord.Header.Flags.HasFlag(FileRecord.Flags.IsDirectory);
+        }
+
+        public override void Dispose()
+        {
+            Volume.Dispose();
         }
 
 
