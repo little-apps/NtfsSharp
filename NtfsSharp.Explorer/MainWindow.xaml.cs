@@ -4,13 +4,14 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices.ComTypes;
+using System.Runtime.InteropServices;
 using System.Windows;
 using Microsoft.Win32;
 using NtfsSharp.Drivers;
 using NtfsSharp.Explorer.FileModelEntry;
 using NtfsSharp.Explorer.FileModelEntry.DeepScan;
 using NtfsSharp.Explorer.Properties;
+using FILETIME = System.Runtime.InteropServices.ComTypes.FILETIME;
 
 namespace NtfsSharp.Explorer
 {
@@ -21,38 +22,69 @@ namespace NtfsSharp.Explorer
     {
         public BaseFileModelEntry SelectedFileModelEntry => Tree.SelectedNode?.Tag as BaseFileModelEntry;
 
+        private readonly Options _options = new Options();
+
         public MainWindow()
         {
             InitializeComponent();
+        }
 
-            foreach (var drive in DriveInfo.GetDrives())
+        private bool CheckCanScan()
+        {
+            try
             {
-                Drives.Items.Add(drive.Name);
-            }
+                _options.IsValid();
 
-            Drives.SelectedIndex = 0;
+                return true;
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(this, e.Message, "NtfsSharp Explorer", MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+
+                return false;
+            }
+        }
+
+        private BaseDiskDriver CreateDiskDriver()
+        {
+            switch (_options.MediaType)
+            {
+                case Options.MediaTypes.Drive:
+                    return new PartitionDriver($@"\\.\{_options.SelectedDriveLetter}:");
+
+                case Options.MediaTypes.VhdFile: 
+                    return new VhdDriver(_options.VhdFile);
+
+                default:
+                    throw new Exception("Unknown media type selected.");
+            }
         }
 
         private void QuickScanButton_OnClick(object sender, RoutedEventArgs e)
         {
-            var selectedDrive = Drives.Text[0];
+            if (!CheckCanScan())
+                return;
+
             ((BaseFileModel) Tree.Model)?.Dispose();
             
             Tree.Model =
                 new FileModelEntry.QuickScan.FileModel(
-                    new Volume(new PartitionDriver($@"\\.\{selectedDrive}:")));
+                    new Volume(CreateDiskDriver()));
         }
 
         private async void DeepScanButton_OnClick(object sender, RoutedEventArgs e)
         {
-            var selectedDrive = Drives.Text[0];
+            if (!CheckCanScan())
+                return;
+            
             var scanning = new Scanning {Owner = this};
 
             scanning.Show();
 
-            Tree.Model = await scanning.Scan(new Volume(new PartitionDriver($@"\\.\{selectedDrive}:")));
             ((BaseFileModel) Tree.Model)?.Dispose();
 
+            Tree.Model = await scanning.Scan(new Volume(CreateDiskDriver()));
 
             scanning.Close();
         }
@@ -140,6 +172,13 @@ namespace NtfsSharp.Explorer
 
         private void OpenExplorer_OnClick(object sender, RoutedEventArgs e)
         {
+            if (_options.MediaType != Options.MediaTypes.Drive)
+            {
+                MessageBox.Show(this, "Open in explorer is only available with drive media.", "NtfsSharp Explorer",
+                    MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
             if (SelectedFileModelEntry == null)
             {
                 MessageBox.Show(this, "No file selected", "NtfsSharp Explorer", MessageBoxButton.OK,
@@ -156,7 +195,8 @@ namespace NtfsSharp.Explorer
                 return;
             }
             
-            var filePath = $"{Drives.Text.Substring(0, 2)}{SelectedFileModelEntry.FilePath}";
+            var drive = $"{_options.SelectedDriveLetter}:\\";
+            var filePath = $"{drive}{SelectedFileModelEntry.FilePath}";
 
             if (!filePath.EndsWith("\\"))
             {
@@ -182,6 +222,13 @@ namespace NtfsSharp.Explorer
             }
             
             Process.Start(explorerPath, $"/select, \"{filePath}\"");
+        }
+
+        private void Open_OnClick(object sender, RoutedEventArgs e)
+        {
+            var openWindow = new OpenMedia(_options) {Owner = this};
+            
+            openWindow.ShowDialog();
         }
     }
 }
