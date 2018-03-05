@@ -1,26 +1,23 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using Aga.Controls.Tree;
 using NtfsSharp.FileRecords;
 using NtfsSharp.FileRecords.Attributes;
 using NtfsSharp.FileRecords.Attributes.Base;
 
 namespace NtfsSharp.Explorer.FileModelEntry.DeepScan
 {
-    public class FileModel : ITreeModel
+    public class FileModel : BaseFileModel
     {
         public const uint RootRecordNum = 5;
 
         private readonly SortedList<FileModelEntry, List<FileModelEntry>> _fileRecordNums;
-        private readonly Volume _volume;
-        
-        public FileModel(SortedList<FileModelEntry, List<FileModelEntry>> fileRecordNums, Volume vol)
+
+        public FileModel(SortedList<FileModelEntry, List<FileModelEntry>> fileRecordNums, Volume vol) : base(vol)
         {
             _fileRecordNums = fileRecordNums;
-            _volume = vol;
         }
 
-        public IEnumerable GetChildren(object parent)
+        public override IEnumerable GetChildren(object parent)
         {
             FileModelEntry parentFileModelEntry;
 
@@ -46,7 +43,7 @@ namespace NtfsSharp.Explorer.FileModelEntry.DeepScan
                 if (childFileRecord == parentFileModelEntry)
                     continue;
 
-                childFileRecord.ReadFileRecord(_volume);
+                childFileRecord.ReadFileRecord(Volume);
                 childFileRecord.SetFilePath(parentFileModelEntry.FilePath);
 
                 sortedFileModelEntries.Add(childFileRecord);
@@ -55,7 +52,7 @@ namespace NtfsSharp.Explorer.FileModelEntry.DeepScan
             return sortedFileModelEntries;
         }
 
-        public bool HasChildren(object parent)
+        public override bool HasChildren(object parent)
         {
             if (parent == null)
                 return true;
@@ -63,6 +60,11 @@ namespace NtfsSharp.Explorer.FileModelEntry.DeepScan
             var parentFileModelEntry = parent as FileModelEntry;
 
             return parentFileModelEntry != null && _fileRecordNums.ContainsKey(parentFileModelEntry);
+        }
+
+        public override void Dispose()
+        {
+            Volume.Dispose();
         }
 
         public static FileModel CreateFileModel(Volume vol)
