@@ -15,6 +15,8 @@
         
         <Menu Grid.Row="0">
             <MenuItem Header="File">
+                <MenuItem Header="Open..." Click="Open_OnClick" />
+                <Separator/>
                 <MenuItem Header="Quick Scan" Click="QuickScanButton_OnClick" />
                 <MenuItem Header="Deep Scan" Click="DeepScanButton_OnClick" />
                 <Separator/>
@@ -56,7 +58,7 @@
         
 
         <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Center">
-            <ComboBox x:Name="Drives" Margin="5" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="50"></ComboBox>
+            <Button Content="Open..." Width="80" Margin="0,0,10,0" Click="Open_OnClick"/>
             <Button Content="Quick Scan" HorizontalAlignment="Left" Width="75"  VerticalContentAlignment="Center" Click="QuickScanButton_OnClick" />
             <Button Content="Deep Scan" HorizontalAlignment="Left" Width="75" Margin="10,0,0,0"  VerticalContentAlignment="Center" Click="DeepScanButton_OnClick" />
         </StackPanel>
