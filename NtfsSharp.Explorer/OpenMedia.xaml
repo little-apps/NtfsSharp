@@ -1,0 +1,27 @@
+﻿<Window x:Class="NtfsSharp.Explorer.OpenMedia"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:NtfsSharp.Explorer"
+        mc:Ignorable="d"
+        Title="Open" Width="304" ShowInTaskbar="False" ResizeMode="NoResize" DataContext="{Binding Mode=OneWay, RelativeSource={RelativeSource Self}}" SizeToContent="Height">
+    <StackPanel Margin="0,0,0,10">
+        <GroupBox Header="Type" Height="49.199" Margin="10,10,10,10" >
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" >
+                <RadioButton x:Name="RadioButtonDrive" Content="Drive" IsChecked="True" GroupName="Type" Checked="RadioButtonTypeClicked" />
+                <RadioButton x:Name="RadioButtonVhd" Content="VHD File" Margin="5,0,0,0" GroupName="Type" Checked="RadioButtonTypeClicked"/>
+            </StackPanel>
+        </GroupBox>
+        <GroupBox x:Name="GroupBoxDrive" Header="Drive" Margin="10,10,10,10" Visibility="{Binding DriveVisibility}">
+            <ComboBox x:Name="ComboBoxDrive" Width="75" />
+        </GroupBox>
+        <GroupBox x:Name="GroupBoxFile" Header="File" Margin="10,10,10,10" Visibility="{Binding FileVisibility}">
+            <StackPanel Margin="0,5">
+                <TextBox x:Name="TextBoxFile" IsReadOnly="True" Margin="0"/>
+                <Button x:Name="ButtonChooseFile" Width="85" Margin="0,5,0,0" Click="ButtonChooseFile_OnClick">Choose File...</Button>
+            </StackPanel>
+        </GroupBox>
+        <Button x:Name="ButtonOpen" Width="40" HorizontalAlignment="Right" Margin="0,0,10,0" Click="ButtonOpen_OnClick">Open</Button>
+    </StackPanel>
+</Window>
