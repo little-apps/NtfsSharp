@@ -36,6 +36,8 @@ namespace NtfsSharp.Explorer
         private void QuickScanButton_OnClick(object sender, RoutedEventArgs e)
         {
             var selectedDrive = Drives.Text[0];
+            ((BaseFileModel) Tree.Model)?.Dispose();
+            
             Tree.Model =
                 new FileModelEntry.QuickScan.FileModel(
                     new Volume(new PartitionDriver($@"\\.\{selectedDrive}:")));
@@ -49,6 +51,8 @@ namespace NtfsSharp.Explorer
             scanning.Show();
 
             Tree.Model = await scanning.Scan(new Volume(new PartitionDriver($@"\\.\{selectedDrive}:")));
+            ((BaseFileModel) Tree.Model)?.Dispose();
+
 
             scanning.Close();
         }
