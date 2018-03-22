@@ -69,7 +69,7 @@ namespace NtfsSharp.Explorer.FileModelEntry.QuickScan
 
                     var fileName = fileNameIndex.FileName.Filename;
                     var fileRecord = Volume.ReadFileRecord(fileNameIndex.Header.FileReference.FileRecordNumber, true);
-                    var fileEntry = new global::NtfsSharp.Explorer.FileModelEntry.QuickScan.FileModelEntry(fileRecord, parentFileModelEntry);
+                    var fileEntry = new FileModelEntry(fileRecord, parentFileModelEntry);
 
                     if (!sortedList.ContainsValue(fileEntry))
                         sortedList.Add(fileName, fileEntry);
