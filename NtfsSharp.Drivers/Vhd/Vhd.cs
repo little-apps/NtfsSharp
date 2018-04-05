@@ -43,6 +43,7 @@ namespace NtfsSharp.Drivers.Vhd
         {
             switch (Footer.DiskType)
             {
+                case DiskTypes.Differencing:
                 case DiskTypes.Fixed:
                     throw new NotImplementedException();
                 case DiskTypes.Dynamic:
