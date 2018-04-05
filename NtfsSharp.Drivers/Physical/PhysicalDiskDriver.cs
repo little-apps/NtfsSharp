@@ -6,8 +6,6 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using Microsoft.Win32.SafeHandles;
-using NtfsSharp.Drivers.Physical.Exceptions;
-using NtfsSharp.Helpers;
 
 namespace NtfsSharp.Drivers.Physical
 {
@@ -65,9 +63,9 @@ namespace NtfsSharp.Drivers.Physical
 
         public override byte[] ReadInsideSectorBytes(uint bytesToRead)
         {
-            var buffer = AllocateByteArray(bytesToRead, out uint leftOverBytes);
+            var buffer = AllocateByteArray(bytesToRead, out var _);
 
-            if (!ReadFile(Handle, buffer, (uint)buffer.Length, out uint bytesRead, IntPtr.Zero))
+            if (!ReadFile(Handle, buffer, (uint)buffer.Length, out uint _, IntPtr.Zero))
                 throw new Win32Exception(Marshal.GetLastWin32Error());
 
             Array.Resize(ref buffer, (int)bytesToRead);
@@ -79,7 +77,7 @@ namespace NtfsSharp.Drivers.Physical
         {
             var buffer = new byte[bytesToRead];
 
-            if (!ReadFile(Handle, buffer, bytesToRead, out uint bytesRead, IntPtr.Zero))
+            if (!ReadFile(Handle, buffer, bytesToRead, out var _, IntPtr.Zero))
                 throw new Win32Exception(Marshal.GetLastWin32Error());
 
             return buffer;

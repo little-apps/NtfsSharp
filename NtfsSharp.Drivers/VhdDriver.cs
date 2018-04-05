@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading;
 using System.IO;
 using System.Runtime.InteropServices;
 using NtfsSharp.Drivers.Physical;
