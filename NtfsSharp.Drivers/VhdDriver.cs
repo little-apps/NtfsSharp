@@ -63,17 +63,12 @@ namespace NtfsSharp.Drivers
             return _currentOffset;
         }
 
-        public override byte[] ReadFile(uint bytesToRead)
-        {
-            return ReadFile(bytesToRead, out uint _);
-        }
-
-        public override byte[] ReadFile(uint bytesToRead, out uint bytesRead)
+        public override byte[] ReadSectorBytes(uint bytesToRead)
         {
             var dest = new byte[bytesToRead];
             uint currentOffset = 0;
 
-            bytesRead = 0;
+            uint bytesRead = 0;
 
             while (bytesRead < bytesToRead)
             {
@@ -83,25 +78,15 @@ namespace NtfsSharp.Drivers
 
                 Array.Copy(sector.Data, 0, dest, currentOffset, sector.Data.Length);
 
-                currentOffset += (uint) sector.Data.Length;
-                bytesRead += (uint) sector.Data.Length;
+                currentOffset += (uint)sector.Data.Length;
+                bytesRead += (uint)sector.Data.Length;
                 _currentOffset += sector.Data.Length;
             }
-            
+
             return dest;
         }
 
-        public override byte[] ReadFile(uint bytesToRead, out uint bytesRead, ref NativeOverlapped overlapped)
-        {
-            var newOffset = Move(overlapped.OffsetLow + (overlapped.OffsetHigh << 32));
-
-            overlapped.OffsetLow = (int) (newOffset & 0xFFFFFFFF);
-            overlapped.OffsetHigh = (int) ((newOffset >> 32) & 0xFFFFFFFF);
-
-            return ReadFile(bytesToRead, out bytesRead);
-        }
-
-        public override byte[] SafeReadFile(uint bytesToRead)
+        public override byte[] ReadInsideSectorBytes(uint bytesToRead)
         {
             var startSectorOffset = _currentOffset % Sector.BytesPerSector;
 

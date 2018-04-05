@@ -63,7 +63,7 @@ namespace NtfsSharp.Drivers.Physical
             return new byte[bytesToRead + leftOverBytes];
         }
 
-        public override byte[] SafeReadFile(uint bytesToRead)
+        public override byte[] ReadInsideSectorBytes(uint bytesToRead)
         {
             var buffer = AllocateByteArray(bytesToRead, out uint leftOverBytes);
 
@@ -75,31 +75,11 @@ namespace NtfsSharp.Drivers.Physical
             return buffer;
         }
 
-        public override byte[] ReadFile(uint bytesToRead)
+        public override byte[] ReadSectorBytes(uint bytesToRead)
         {
             var buffer = new byte[bytesToRead];
 
             if (!ReadFile(Handle, buffer, bytesToRead, out uint bytesRead, IntPtr.Zero))
-                throw new Win32Exception(Marshal.GetLastWin32Error());
-
-            return buffer;
-        }
-
-        public override byte[] ReadFile(uint bytesToRead, out uint bytesRead)
-        {
-            var buffer = new byte[bytesToRead];
-
-            if (!ReadFile(Handle, buffer, bytesToRead, out bytesRead, IntPtr.Zero))
-                throw new Win32Exception(Marshal.GetLastWin32Error());
-
-            return buffer;
-        }
-
-        public override byte[] ReadFile(uint bytesToRead, out uint bytesRead, ref NativeOverlapped overlapped)
-        {
-            var buffer = new byte[bytesToRead];
-
-            if (!ReadFile(Handle, buffer, bytesToRead, out bytesRead, ref overlapped))
                 throw new Win32Exception(Marshal.GetLastWin32Error());
 
             return buffer;

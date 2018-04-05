@@ -80,7 +80,7 @@ namespace NtfsSharp.Data
         private byte[] DataOnDemand()
         {
             _volume.Driver.Move((long) (Lcn * _volume.BytesPerSector * _volume.SectorsPerCluster));
-            return _volume.Driver.ReadFile(_volume.BytesPerSector * _volume.SectorsPerCluster);
+            return _volume.Driver.ReadSectorBytes(_volume.BytesPerSector * _volume.SectorsPerCluster);
         }
 
         /// <summary>

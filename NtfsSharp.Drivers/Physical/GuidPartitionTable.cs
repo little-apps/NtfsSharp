@@ -39,7 +39,7 @@ namespace NtfsSharp.Drivers.Physical
 
             Mbr.MoveToLba(HeaderLba);
 
-            var partitionTableHeaderBytes = DiskDriver.ReadFile(MasterBootRecord.LogicalBlockAddressSize);
+            var partitionTableHeaderBytes = DiskDriver.ReadSectorBytes(MasterBootRecord.LogicalBlockAddressSize);
             Header = partitionTableHeaderBytes.ToStructure<PartitionTableHeader>();
 
             if (Header.Signature != 0x5452415020494645) // 'EFI PART'
@@ -65,7 +65,7 @@ namespace NtfsSharp.Drivers.Physical
                                      (ulong) (offset / MasterBootRecord.LogicalBlockAddressSize);
                     Mbr.MoveToLba(currentLba);
 
-                    sectorBytes = DiskDriver.ReadFile(MasterBootRecord.LogicalBlockAddressSize);
+                    sectorBytes = DiskDriver.ReadSectorBytes(MasterBootRecord.LogicalBlockAddressSize);
                 }
 
                 var partitionEntryBytes = new byte[Header.PartitionEntrySize];

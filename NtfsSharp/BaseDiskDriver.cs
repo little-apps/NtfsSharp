@@ -1,15 +1,37 @@
 ﻿using System;
-using System.Threading;
 
 namespace NtfsSharp
 {
     public abstract class BaseDiskDriver : IDisposable
     {
+        /// <summary>
+        /// Moves to a position inside the NTFS file system
+        /// </summary>
+        /// <param name="offset">Offset in the NTFS to move to</param>
+        /// <param name="moveMethod">Whether the <paramref name="offset"/> is from the beginning, current position or end of the NTFS</param>
+        /// <returns></returns>
         public abstract long Move(long offset, MoveMethod moveMethod = MoveMethod.Begin);
-        public abstract byte[] ReadFile(uint bytesToRead);
-        public abstract byte[] ReadFile(uint bytesToRead, out uint bytesRead);
-        public abstract byte[] ReadFile(uint bytesToRead, out uint bytesRead, ref NativeOverlapped overlapped);
-        public abstract byte[] SafeReadFile(uint bytesToRead);
+
+        /// <summary>
+        /// Reads the number of bytes from inside the NTFS
+        /// </summary>
+        /// <param name="bytesToRead">Number of bytes to read</param>
+        /// <remarks>
+        /// Expect the <paramref name="bytesToRead"/> to be a multiple of the NTFS sector size (usually 512 bytes).
+        /// The position the read (set by <seealso cref="Move"/>) occurs at the start of a sector in the NTFS
+        /// </remarks>
+        /// <returns>Bytes read as array</returns>
+        public abstract byte[] ReadSectorBytes(uint bytesToRead);
+
+        /// <summary>
+        /// Allows for bytes to be read outside of the bounds of the sector size
+        /// </summary>
+        /// <param name="bytesToRead">Number of bytes to read</param>
+        /// <remarks>
+        /// Unlike <seealso cref="ReadSectorBytes"/>, the position and <paramref name="bytesToRead"/> may not be a multiple of the sector size. 
+        /// </remarks>
+        /// <returns>Bytes read as array</returns>
+        public abstract byte[] ReadInsideSectorBytes(uint bytesToRead);
 
         public enum MoveMethod : uint
         {
