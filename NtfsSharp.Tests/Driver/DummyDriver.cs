@@ -50,7 +50,7 @@ namespace NtfsSharp.Tests.Driver
             return _currentOffset;
         }
 
-        public override byte[] ReadFile(uint bytesToRead)
+        public override byte[] ReadSectorBytes(uint bytesToRead)
         {
             if (bytesToRead % 512 != 0)
                 throw new ArgumentException("Bytes to read must be multiple of 512", nameof(bytesToRead));
@@ -58,28 +58,7 @@ namespace NtfsSharp.Tests.Driver
             return InternalReadFile(bytesToRead, out uint _);
         }
 
-        public override byte[] ReadFile(uint bytesToRead, out uint bytesRead)
-        {
-            if (bytesToRead % 512 != 0)
-                throw new ArgumentException("Bytes to read must be multiple of 512", nameof(bytesToRead));
-
-            return InternalReadFile(bytesToRead, out bytesRead);
-        }
-
-        public override byte[] ReadFile(uint bytesToRead, out uint bytesRead, ref NativeOverlapped overlapped)
-        {
-            if (bytesToRead % 512 != 0)
-                throw new ArgumentException("Bytes to read must be multiple of 512", nameof(bytesToRead));
-
-            var newOffset = Move((overlapped.OffsetHigh << 32) + overlapped.OffsetLow);
-
-            overlapped.OffsetHigh = (int) (newOffset >> 32);
-            overlapped.OffsetLow = (int) (newOffset & 0xFFFFFFFF);
-
-            return InternalReadFile(bytesToRead, out bytesRead);
-        }
-
-        public override byte[] SafeReadFile(uint bytesToRead)
+        public override byte[] ReadInsideSectorBytes(uint bytesToRead)
         {
             var buffer = InternalReadFile(bytesToRead, out uint bytesRead);
 

@@ -27,7 +27,7 @@ namespace NtfsSharp.Data
                     return _data;
 
                 _volume.Driver.Move((long) Offset);
-                _data = _volume.Driver.ReadFile(BytesPerSector);
+                _data = _volume.Driver.ReadSectorBytes(BytesPerSector);
 
                 return _data;
             }

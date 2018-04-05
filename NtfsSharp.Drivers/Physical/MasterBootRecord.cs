@@ -44,7 +44,7 @@ namespace NtfsSharp.Drivers.Physical
         {
             _diskDriver.Move(0);
 
-            var mbrBytes = _diskDriver.ReadFile(LogicalBlockAddressSize);
+            var mbrBytes = _diskDriver.ReadSectorBytes(LogicalBlockAddressSize);
             MbrStruct = mbrBytes.ToStructure<MasterBootRecordStruct>();
 
             if (MbrStruct.EndOfSectorMarker != 0xAA55)
