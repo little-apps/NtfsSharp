@@ -65,7 +65,7 @@ namespace NtfsSharp.Tests.FileRecords.Attributes
         /// </summary>
         /// <param name="expectedVolumeNameLength">The expected volume name length.</param>
         [Test]
-        public void TestValidVolumeNameInvalidSize([Random(940, int.MaxValue, 10)] int expectedVolumeNameLength)
+        public void TestValidVolumeNameInvalidSize([Random(940, 0xFFFF, 10)] ushort expectedVolumeNameLength)
         {
             var volumeNameAttr = new VolumeNameDummy { Body = new byte[expectedVolumeNameLength] };
 
