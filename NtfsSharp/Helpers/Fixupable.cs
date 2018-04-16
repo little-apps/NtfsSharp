@@ -1,4 +1,5 @@
 ﻿using System;
+using NtfsSharp.Exceptions;
 
 namespace NtfsSharp.Helpers
 {
@@ -15,9 +16,9 @@ namespace NtfsSharp.Helpers
         /// <param name="usaOffset">Offset of update sequeunce array in <see cref="data"/></param>
         /// <param name="usaSize">Size of update sequeunce array in <see cref="data"/></param>
         /// <param name="bytesPerSector">Bytes per sector (usually 512)</param>
-        /// <param name="invalidSector">If this fails, this is the sector # in <see cref="data"/> that's invalid</param>
         /// <returns>True if end tags match and fixup was performed</returns>
-        protected bool Fixup(byte[] data, ushort usaOffset, ushort usaSize, ushort bytesPerSector, out short invalidSector)
+        /// <exception cref="InvalidEndTagsException">Thrown if end tags do not match</exception>
+        protected void Fixup(byte[] data, ushort usaOffset, ushort usaSize, ushort bytesPerSector)
         {
             // Get end tag + USA
             EndTag = new byte[2];
@@ -36,18 +37,12 @@ namespace NtfsSharp.Helpers
 
                 // Do last two bytes in sector match end tag?
                 if (data[sectorUsaOffset] != EndTag[0] || data[sectorUsaOffset + 1] != EndTag[1])
-                {
-                    invalidSector = (short) (i - 1);
-                    return false;
-                }
+                    throw new InvalidEndTagsException(i - 1);
 
                 // Replace last two bytes in sector with corresponding bytes in USA
                 data[sectorUsaOffset] = UpdateSequenceArray[(i - 1) * 2];
                 data[sectorUsaOffset + 1] = UpdateSequenceArray[(i - 1) * 2 + 1];
             }
-
-            invalidSector = -1;
-            return true;
         }
     }
 }

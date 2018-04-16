@@ -87,10 +87,8 @@ namespace NtfsSharp.FileRecords
                 throw new ArgumentOutOfRangeException(nameof(data), "Data cannot be empty");
 
             ParseHeader();
-            if (!Fixup(_data, Header.UpdateSequenceOffset, Header.UpdateSequenceSize, Volume.BytesPerSector,
-                out short invalidSector))
-                throw new InvalidFileRecordException(nameof(EndTag),
-                    $"Last 2 bytes of sector {invalidSector} don't match update sequence array end tag.", this);
+
+            PerformFixup();
         }
 
         /// <summary>
@@ -112,10 +110,8 @@ namespace NtfsSharp.FileRecords
                 throw new ArgumentOutOfRangeException(nameof(data), "Data cannot be empty");
 
             ParseHeader();
-            if (!Fixup(_data, Header.UpdateSequenceOffset, Header.UpdateSequenceSize, Volume.BytesPerSector,
-                out short invalidSector))
-                throw new InvalidFileRecordException(nameof(EndTag),
-                    $"Last 2 bytes of sector {invalidSector} don't match update sequence array end tag.", this);
+
+            PerformFixup();
         }
 
         /// <summary>
@@ -137,8 +133,8 @@ namespace NtfsSharp.FileRecords
             _data = data;
 
             ParseHeader();
-            if (!Fixup(_data, Header.UpdateSequenceOffset, Header.UpdateSequenceSize, Volume.BytesPerSector, out short invalidSector))
-                throw new InvalidFileRecordException(nameof(EndTag), $"Last 2 bytes of sector {invalidSector} don't match update sequence array end tag.", this);
+
+            PerformFixup();
         }
 
         /// <summary>
@@ -155,6 +151,23 @@ namespace NtfsSharp.FileRecords
 
             if (Header.UpdateSequenceSize - 1 > Volume.SectorsPerMFTRecord)
                 throw new InvalidFileRecordException(nameof(Header.UpdateSequenceSize), "Update sequence size exceeds number of sectors in file record", this);
+        }
+
+        /// <summary>
+        /// Performs fixup on data
+        /// </summary>
+        /// <exception cref="InvalidFileRecordException">Thrown when last 2 bytes do not match update sequence array end tag.</exception>
+        private void PerformFixup()
+        {
+            try
+            {
+                Fixup(_data, Header.UpdateSequenceOffset, Header.UpdateSequenceSize, Volume.BytesPerSector);
+            }
+            catch (InvalidEndTagsException ex)
+            {
+                throw new InvalidFileRecordException(nameof(EndTag),
+                    $"Last 2 bytes of sector {ex.InvalidSector} don't match update sequence array end tag.", this);
+            }
         }
 
         /// <summary>

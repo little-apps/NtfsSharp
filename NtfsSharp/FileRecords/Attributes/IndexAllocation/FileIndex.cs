@@ -31,10 +31,15 @@ namespace NtfsSharp.FileRecords.Attributes.IndexAllocation
 
             if (Header.UpdateSequenceSize > 0)
             {
-                if (!Fixup(data, Header.UpdateSequenceOffset, Header.UpdateSequenceSize,
-                    indexAllocation.Header.FileRecord.Volume.BytesPerSector, out short invalidSector))
-                    throw new InvalidIndexAllocationException(this,
-                        $"Fixup could not be performed on sector {invalidSector} in FileIndex");
+                try
+                {
+                    Fixup(data, Header.UpdateSequenceOffset, Header.UpdateSequenceSize,
+                        indexAllocation.Header.FileRecord.Volume.BytesPerSector);
+                }
+                catch (InvalidEndTagsException ex)
+                {
+                    throw new InvalidIndexAllocationException(this, $"Fixup could not be performed on sector {ex.InvalidSector} in FileIndex");
+                }
             }
 
             if (Header.Magic.SequenceEqual(new byte[] {0x49, 0x4E, 0x44, 0x58}))
