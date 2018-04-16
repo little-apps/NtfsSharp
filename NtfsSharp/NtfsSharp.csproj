@@ -52,6 +52,7 @@
     <Compile Include="Data\Cluster.cs" />
     <Compile Include="Data\Sector.cs" />
     <Compile Include="BaseDiskDriver.cs" />
+    <Compile Include="Exceptions\InvalidEndTagsException.cs" />
     <Compile Include="Exceptions\InvalidAttributeException.cs" />
     <Compile Include="Exceptions\InvalidBootSectorException.cs" />
     <Compile Include="Exceptions\InvalidFileRecordException.cs" />
