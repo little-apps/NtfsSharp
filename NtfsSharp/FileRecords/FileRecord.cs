@@ -310,7 +310,7 @@ namespace NtfsSharp.FileRecords
             if (y == null)
                 return 1;
 
-            return (int)(x.Header.MFTRecordNumber - y.Header.MFTRecordNumber);
+            return x.Volume.CompareTo(y.Volume) + (int)(x.Header.MFTRecordNumber - y.Header.MFTRecordNumber);
         }
         #endregion
 
@@ -320,7 +320,7 @@ namespace NtfsSharp.FileRecords
             if (other == null)
                 return -1;
 
-            return (int)(Header.MFTRecordNumber - other.Header.MFTRecordNumber);
+            return Compare(this, other);
         }
         #endregion
 
