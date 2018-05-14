@@ -30,12 +30,12 @@ namespace NtfsSharp.Explorer.FileModelEntry.QuickScan
             }
         }
 
-        private AttributeBase StandardInfoAttribute
+        private FileRecords.Attributes.Attribute StandardInfoAttribute
         {
             get { return FileRecord.FindAttributeByType(AttributeHeaderBase.NTFS_ATTR_TYPE.STANDARD_INFORMATION); }
         }
 
-        private AttributeBase DataAttribute
+        private FileRecords.Attributes.Attribute DataAttribute
         {
             get { return FileRecord.FindAttributeByType(AttributeHeaderBase.NTFS_ATTR_TYPE.DATA); }
         }
