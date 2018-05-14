@@ -22,7 +22,7 @@ namespace NtfsSharp.FileRecords.Attributes.AttributeList
         /// Attribute located in child file record
         /// </summary>
         /// <remarks>Can be null if there is attribute is located in this file record or it wasn't found</remarks>
-        public readonly AttributeBase ChildAttribute;
+        public readonly Attribute ChildAttribute;
 
         /// <summary>
         /// Constructor for AttributeListItem

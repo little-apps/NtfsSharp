@@ -8,6 +8,7 @@ using NtfsSharp.FileRecords.Attributes;
 using NtfsSharp.FileRecords.Attributes.Base;
 using NtfsSharp.FileRecords.Attributes.Base.NonResident;
 using NtfsSharp.FileRecords.Attributes.Shared;
+using NtfsSharp.Factories;
 
 namespace NtfsSharp.FileRecords
 {
@@ -24,7 +25,7 @@ namespace NtfsSharp.FileRecords
         public readonly MasterFileTable MasterFileTable;
 
         public FILE_RECORD_HEADER_NTFS Header { get; private set; }
-        public readonly List<AttributeBase> Attributes = new List<AttributeBase>();
+        public readonly List<Attributes.Attribute> Attributes = new List<Attributes.Attribute>();
 
         /// <summary>
         /// Gets the (a clone of) all the bytes in the file record.
@@ -176,6 +177,8 @@ namespace NtfsSharp.FileRecords
         /// <remarks>Current offset must be set back if calling this more than once</remarks>
         public void ReadAttributes()
         {
+            var attributeFactory = new AttributeFactory();
+
             _currentOffset = Header.FirstAttributeOffset;
 
             while (_currentOffset < _data.Length && BitConverter.ToUInt32(_data, (int) _currentOffset) != 0xffffffff)
@@ -183,10 +186,10 @@ namespace NtfsSharp.FileRecords
                 var newData = new byte[_data.Length - _currentOffset];
                 Array.Copy(_data, _currentOffset, newData, 0, newData.Length);
 
-                var attr = new AttributeBase(newData, this);
-                Attributes.Add(attr);
+                var attribute = attributeFactory.Build(newData, this);
+                Attributes.Add(attribute);
 
-                _currentOffset += attr.Header.Header.Length;
+                _currentOffset += attribute.Header.Header.Length;
 
             }
 
@@ -208,7 +211,7 @@ namespace NtfsSharp.FileRecords
         /// </summary>
         /// <param name="attrType">Attribute type</param>
         /// <returns>Matching attributes or empty list if none found</returns>
-        public IEnumerable<AttributeBase> FindAttributesByType(AttributeHeaderBase.NTFS_ATTR_TYPE attrType)
+        public IEnumerable<Attributes.Attribute> FindAttributesByType(AttributeHeaderBase.NTFS_ATTR_TYPE attrType)
         {
             return Attributes.Where(attr => attr.Header.Header.Type == attrType);
         }
@@ -218,7 +221,7 @@ namespace NtfsSharp.FileRecords
         /// </summary>
         /// <param name="attrType">Attribute type</param>
         /// <returns>First matching attribute or null none found</returns>
-        public AttributeBase FindAttributeByType(AttributeHeaderBase.NTFS_ATTR_TYPE attrType)
+        public Attributes.Attribute FindAttributeByType(AttributeHeaderBase.NTFS_ATTR_TYPE attrType)
         {
             return Attributes.FirstOrDefault(attr => attr.Header.Header.Type == attrType);
         }
@@ -242,18 +245,20 @@ namespace NtfsSharp.FileRecords
         /// <param name="attrType">Attribute type</param>
         /// <param name="name">Name to match in attribute</param>
         /// <returns>Matching AttributeBase or null if it wasn't found</returns>
-        public AttributeBase FindAttribute(ushort attrNum, AttributeHeaderBase.NTFS_ATTR_TYPE attrType, string name)
+        public Attributes.Attribute FindAttribute(ushort attrNum, AttributeHeaderBase.NTFS_ATTR_TYPE attrType, string name)
         {
             if (!_hasReadAttributes)
             {
                 var found = false;
+
+                var attributeFactory = new AttributeFactory();
 
                 while (_currentOffset < _data.Length && BitConverter.ToUInt32(_data, (int) _currentOffset) != 0xffffffff)
                 {
                     var newData = new byte[_data.Length - _currentOffset];
                     Array.Copy(_data, _currentOffset, newData, 0, newData.Length);
 
-                    var attr = new AttributeBase(newData, this);
+                    var attr = attributeFactory.Build(newData, this);
 
                     if (attr.Header.Header.Type == attrType)
                     {

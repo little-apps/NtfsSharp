@@ -40,7 +40,7 @@ namespace NtfsSharp.FileRecords.Attributes.Base.NonResident
 
         private uint MaxVcn { get; set; }
 
-        public DataStream(AttributeBase attribute)
+        public DataStream(Attribute attribute)
         {
             if (!attribute.Header.Header.NonResident)
                 ReadResidentData(attribute.Header as Resident);
