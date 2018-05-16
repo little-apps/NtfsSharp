@@ -1,4 +1,5 @@
-﻿using NtfsSharp.Exceptions;
+﻿using System;
+using NtfsSharp.Exceptions;
 using NtfsSharp.Factories.FileRecords;
 using NtfsSharp.FileRecords;
 using NtfsSharp.Helpers;
@@ -33,8 +34,11 @@ namespace NtfsSharp.Facades
                 throw new InvalidFileRecordException(nameof(Fixupable.EndTag),
                     $"Last 2 bytes of sector {ex.InvalidSector} don't match update sequence array end tag.", null);
             }
+
+            var fileRecord = BytesFactory.Build(data, reader);
+            fileRecord.Fixupable = Fixupable;
             
-            return BytesFactory.Build(data, reader);
+            return fileRecord;
         }
     }
 }
