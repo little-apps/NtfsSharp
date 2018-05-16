@@ -1,6 +1,7 @@
 ﻿using System;
 using NtfsSharp.Data;
 using NtfsSharp.Tests.Driver;
+using NtfsSharp.Volumes;
 using NUnit.Framework;
 
 namespace NtfsSharp.Tests

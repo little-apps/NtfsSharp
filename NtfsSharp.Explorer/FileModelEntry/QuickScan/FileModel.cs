@@ -5,6 +5,7 @@ using NtfsSharp.FileRecords.Attributes.Base;
 using NtfsSharp.FileRecords.Attributes.IndexAllocation;
 using NtfsSharp.FileRecords.Attributes.IndexRoot;
 using NtfsSharp.PInvoke;
+using NtfsSharp.Volumes;
 
 namespace NtfsSharp.Explorer.FileModelEntry.QuickScan
 {

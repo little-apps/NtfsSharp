@@ -2,6 +2,7 @@
 using System;
 using NtfsSharp.Exceptions;
 using NtfsSharp.Tests.Driver;
+using NtfsSharp.Volumes;
 
 namespace NtfsSharp.Tests
 {
@@ -92,7 +93,7 @@ namespace NtfsSharp.Tests
             Volume.ReadBootSector();
 
             Assert.AreEqual(bytesPerSector, Volume.BytesPerSector);
-            Assert.AreEqual(Volume.BytesPerFileRecord / Volume.BytesPerSector, Volume.SectorsPerMFTRecord);
+            Assert.AreEqual(Volume.BytesPerFileRecord / Volume.BytesPerSector, Volume.SectorsPerMftRecord);
         }
 
         /// <summary>

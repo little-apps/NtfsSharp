@@ -1,4 +1,5 @@
 ﻿using System.Runtime.InteropServices;
+using NtfsSharp.Volumes;
 
 namespace NtfsSharp.Tests.Driver
 {
