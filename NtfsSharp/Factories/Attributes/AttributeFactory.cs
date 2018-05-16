@@ -1,7 +1,7 @@
-﻿using NtfsSharp.Factories.Attributes;
-using NtfsSharp.FileRecords;
+﻿using NtfsSharp.FileRecords;
+using NtfsSharp.FileRecords.Attributes;
 
-namespace NtfsSharp.Factories
+namespace NtfsSharp.Factories.Attributes
 {
     public class AttributeFactory
     {
@@ -11,7 +11,7 @@ namespace NtfsSharp.Factories
         /// <param name="data">Data containg attribute</param>
         /// <param name="fileRecord">File record containing attribute</param>
         /// <returns>Attribute</returns>
-        public FileRecords.Attributes.Attribute Build(byte[] data, FileRecord fileRecord)
+        public static Attribute Build(byte[] data, FileRecord fileRecord)
         {
             var headerFactory = new HeaderFactory();
             var header = headerFactory.Build(data, fileRecord);
@@ -19,7 +19,7 @@ namespace NtfsSharp.Factories
             var bodyFactory = new BodyFactory();
             var body = bodyFactory.Build(header);
 
-            return new FileRecords.Attributes.Attribute(header, body);
+            return new Attribute(header, body);
         }
     }
 }

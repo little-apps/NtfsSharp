@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using NtfsSharp.Data;
+using NtfsSharp.Volumes;
 
 namespace NtfsSharp.FileRecords.Attributes.Base.NonResident
 {
@@ -15,7 +16,7 @@ namespace NtfsSharp.FileRecords.Attributes.Base.NonResident
     {
         public byte[] ResidentData { get; private set; }
         public NonResident NonResidentAttribute { get; private set; }
-        public Volume Volume => NonResidentAttribute.FileRecord.Volume;
+        public IVolume Owner => NonResidentAttribute.FileRecord.Volume;
 
         public override bool CanRead { get; } = true;
         public override bool CanSeek { get; } = true;
@@ -31,7 +32,7 @@ namespace NtfsSharp.FileRecords.Attributes.Base.NonResident
         private ulong CurrentLcn { get; set; }
         private uint OffsetInLcn { get; set; }
 
-        private Cluster Cluster => Volume.ReadLcn(CurrentLcn);
+        private Cluster Cluster => Owner.ReadLcn(CurrentLcn);
 
         private uint ClusterSize
             =>
@@ -186,7 +187,7 @@ namespace NtfsSharp.FileRecords.Attributes.Base.NonResident
                     break;
 
                 var currentLcn = PositionToLcn(out long offsetInCluster);
-                var currentCluster = Volume.ReadLcn(currentLcn);
+                var currentCluster = Owner.ReadLcn(currentLcn);
 
                 var bytesRead = ClusterSize - offsetInCluster;
 

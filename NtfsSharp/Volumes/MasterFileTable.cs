@@ -1,42 +1,53 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using NtfsSharp.Data;
 using NtfsSharp.Exceptions;
+using NtfsSharp.Facades;
+using NtfsSharp.FileRecords;
 
-namespace NtfsSharp.FileRecords
+namespace NtfsSharp.Volumes
 {
-    public class MasterFileTable : IReadOnlyDictionary<uint, FileRecord>
+    public class MasterFileTable : IReadOnlyDictionary<uint, FileRecord>, IVolume
     {
         private const uint RecordsToRead = 26;
 
         private readonly uint _sectorsPerMftRecord;
+        public ulong MftLcn { get; }
         public readonly Volume Volume;
         private readonly SortedList<uint, FileRecord> _table = new SortedList<uint, FileRecord>();
+
+        public BaseDiskDriver Driver => Volume.Driver;
+        public uint SectorsPerCluster => Volume.SectorsPerCluster;
+        public ushort BytesPerSector => Volume.BytesPerSector;
+        public uint SectorsPerMftRecord => Volume.SectorsPerMftRecord;
+        public IReadOnlyDictionary<uint, FileRecord> MFT => this;
 
         /// <summary>
         /// Constructor of MasterFileTable
         /// </summary>
+        /// <param name="mftLcn">Logical cluster number MFT starts at</param>
         /// <param name="volume">Volume instance</param>
-        /// <remarks>This object will have 0 elements until <seealso cref="ReadRecords"/> is called.</remarks>
+        /// <remarks>This object will have 0 elements until <seealso cref="Read"/> is called.</remarks>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="volume"/> is null.</exception>
-        public MasterFileTable(Volume volume)
+        public MasterFileTable(ulong mftLcn, Volume volume)
         {
+            MftLcn = mftLcn;
             Volume = volume ?? throw new ArgumentNullException(nameof(volume));
 
             _sectorsPerMftRecord = volume.BytesPerFileRecord / volume.BytesPerSector;
         }
 
         /// <summary>
-        /// Reads master file table records from the specified LCN
+        /// Reads master file table records from the LCN specified in <seealso cref="MftLcn"/>
         /// </summary>
-        /// <param name="mftLcn">Logical cluster number to look for master file table records</param>
         /// <exception cref="InvalidMasterFileTableException">Thrown when the MFT record number does not match the index of it</exception>
         /// <remarks>
         ///     The attributes of each MFT record are parsed as well.
         /// </remarks>
-        public void ReadRecords(ulong mftLcn)
+        public void Read()
         {
-            var currentCluster = Volume.ReadLcn(mftLcn);
+            var currentCluster = Volume.ReadLcn(MftLcn);
             var bytesPerFileRecord = _sectorsPerMftRecord * Volume.BytesPerSector;
 
             for (uint i = 0; i < RecordsToRead * _sectorsPerMftRecord; i += _sectorsPerMftRecord)
@@ -53,8 +64,7 @@ namespace NtfsSharp.FileRecords
 
                 try
                 {
-                    var fileRecord = new FileRecord(fileRecordBytes, this);
-                    fileRecord.ReadAttributes();
+                    var fileRecord = FileRecordAttributesFacade.Build(fileRecordBytes, this);
 
                     var index = i / _sectorsPerMftRecord;
                     var recordNum = fileRecord.Header.MFTRecordNumber;
@@ -73,6 +83,16 @@ namespace NtfsSharp.FileRecords
                 }
                 
             }
+        }
+
+        /// <summary>
+        /// Reads logical cluster number
+        /// </summary>
+        /// <param name="lcn">Logical cluster number</param>
+        /// <returns>Cluster</returns>
+        public Cluster ReadLcn(ulong lcn)
+        {
+            return Volume.ReadLcn(lcn);
         }
 
         /// <summary>
@@ -113,6 +133,19 @@ namespace NtfsSharp.FileRecords
         public IEnumerable<uint> Keys => _table.Keys;
         public IEnumerable<FileRecord> Values => _table.Values;
         #endregion
+
+        public int CompareTo(IVolume other)
+        {
+            switch (other)
+            {
+                case Volume volume:
+                    return Volume.CompareTo(volume);
+                case MasterFileTable mft:
+                    return Volume.CompareTo(mft.Volume);
+                default:
+                    return -1;
+            }
+        }
 
         /// <summary>
         /// Represents the index of each NTFS file in the MFT

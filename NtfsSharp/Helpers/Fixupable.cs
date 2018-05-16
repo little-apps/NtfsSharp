@@ -3,7 +3,7 @@ using NtfsSharp.Exceptions;
 
 namespace NtfsSharp.Helpers
 {
-    public abstract class Fixupable
+    public class Fixupable
     {
         public byte[] EndTag { get; private set; }
         public byte[] UpdateSequenceArray { get; private set; }
@@ -18,7 +18,7 @@ namespace NtfsSharp.Helpers
         /// <param name="bytesPerSector">Bytes per sector (usually 512)</param>
         /// <returns>True if end tags match and fixup was performed</returns>
         /// <exception cref="InvalidEndTagsException">Thrown if end tags do not match</exception>
-        protected void Fixup(byte[] data, ushort usaOffset, ushort usaSize, ushort bytesPerSector)
+        public void Fixup(byte[] data, ushort usaOffset, ushort  usaSize, ushort bytesPerSector)
         {
             // Get end tag + USA
             EndTag = new byte[2];
@@ -44,5 +44,7 @@ namespace NtfsSharp.Helpers
                 data[sectorUsaOffset + 1] = UpdateSequenceArray[(i - 1) * 2 + 1];
             }
         }
+
+        
     }
 }

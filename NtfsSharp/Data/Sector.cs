@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using NtfsSharp.Volumes;
 
 namespace NtfsSharp.Data
 {
@@ -8,10 +9,10 @@ namespace NtfsSharp.Data
         /// <summary>
         /// Specifys the BytesPerSector. The value from <seealso cref="Volume"/> is used if it is not null, otherwise, 512 is used.
         /// </summary>
-        private ushort BytesPerSector => (ushort) (_volume != null ? _volume.BytesPerSector : 512);
+        private ushort BytesPerSector => _volume?.BytesPerSector ?? 512;
 
         private byte[] _data;
-        private readonly Volume _volume;
+        private readonly IVolume _volume;
 
         public readonly ulong Offset;
 
@@ -40,7 +41,7 @@ namespace NtfsSharp.Data
         /// <param name="vol">Volume containing sector</param>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="vol"/> is null.</exception>
         /// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="offset"/> is not a multiple of <seealso cref="Volume.BytesPerSector"/></exception>
-        public Sector(ulong offset, Volume vol)
+        public Sector(ulong offset, IVolume vol)
         {
             if (ReferenceEquals(null, vol))
                 throw new ArgumentNullException(nameof(vol), "Volume cannot be null.");

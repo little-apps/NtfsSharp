@@ -59,6 +59,10 @@
     <Compile Include="Exceptions\InvalidIndexAllocationException.cs" />
     <Compile Include="Exceptions\InvalidMasterFileTableException.cs" />
     <Compile Include="Exceptions\NtfsSharpException.cs" />
+    <Compile Include="Facades\FileRecordAttributesFacade.cs" />
+    <Compile Include="Factories\FileRecords\RecordNumberFactory.cs" />
+    <Compile Include="Factories\FileRecords\BytesFactory.cs" />
+    <Compile Include="Facades\FileRecordFacade.cs" />
     <Compile Include="FileRecords\Attributes\Attribute.cs" />
     <Compile Include="Factories\Attributes\AttributeFactory.cs" />
     <Compile Include="Factories\Attributes\BodyFactory.cs" />
@@ -93,13 +97,14 @@
     <Compile Include="FileRecords\Attributes\VolumeInformation.cs" />
     <Compile Include="FileRecords\Attributes\VolumeName.cs" />
     <Compile Include="FileRecords\FileRecord.cs" />
-    <Compile Include="FileRecords\MasterFileTable.cs" />
+    <Compile Include="Volumes\MasterFileTable.cs" />
     <Compile Include="Helpers\Fixupable.cs" />
     <Compile Include="Helpers\MarshalHelper.cs" />
     <Compile Include="Helpers\ReadableHelper.cs" />
+    <Compile Include="Volumes\IVolume.cs" />
     <Compile Include="PInvoke\Enums.cs" />
     <Compile Include="PInvoke\Structs.cs" />
-    <Compile Include="Volume.cs" />
+    <Compile Include="Volumes\Volume.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

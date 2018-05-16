@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Text;
 using NtfsSharp.Exceptions;
+using NtfsSharp.Facades;
+using NtfsSharp.Factories.FileRecords;
 using NtfsSharp.FileRecords.Attributes.Base;
 using NtfsSharp.FileRecords.Attributes.Base.NonResident;
 using NtfsSharp.Helpers;
@@ -46,10 +48,11 @@ namespace NtfsSharp.FileRecords.Attributes.AttributeList
             if (parentFileRecord.Header.MFTRecordNumber == Header.BaseFileReference.FileRecordNumber)
                 return;
 
+            var owner = attributeList.Header.FileRecord.Volume;
+
             if (Header.BaseFileReference.FileRecordNumber < 16)
             {
-                var fileRecord = new FileRecord(Header.BaseFileReference.FileRecordNumber,
-                    attributeList.Header.FileRecord.Volume);
+                var fileRecord = RecordNumberFactory.Build(Header.BaseFileReference.FileRecordNumber, owner);
 
                 if (!fileRecord.Header.Flags.HasFlag(FileRecord.Flags.InUse))
                     throw new InvalidFileRecordException(nameof(FileRecord.Flags), "File record is marked as free",
@@ -63,7 +66,6 @@ namespace NtfsSharp.FileRecords.Attributes.AttributeList
             }
             else
             {
-                var volume = attributeList.Header.FileRecord.Volume;
                 var mftRecord = FindMasterFileTableRecord(attributeList);
 
                 var mftRecordDataAttr = mftRecord.FindAttributeByType(AttributeHeaderBase.NTFS_ATTR_TYPE.DATA);
@@ -75,19 +77,21 @@ namespace NtfsSharp.FileRecords.Attributes.AttributeList
                 else if (mftRecordDataAttr?.Header is NonResident)
                 {
                     // $DATA attribute in $MFT is huge, so it's best to go to where we want to read and get that cluster, rather than read entire thing
-                    var vcn = Header.BaseFileReference.FileRecordNumber * volume.BytesPerFileRecord /
-                              (volume.BytesPerSector * volume.SectorsPerCluster);
-                    var offsetInCluster = Header.BaseFileReference.FileRecordNumber * volume.BytesPerFileRecord %
-                                          (volume.BytesPerSector * volume.SectorsPerCluster);
+                    var bytesPerFileRecord = owner.SectorsPerMftRecord * owner.BytesPerSector;
+
+                    var vcn = Header.BaseFileReference.FileRecordNumber * bytesPerFileRecord /
+                              (owner.BytesPerSector * owner.SectorsPerCluster);
+                    var offsetInCluster = Header.BaseFileReference.FileRecordNumber * bytesPerFileRecord %
+                                          (owner.BytesPerSector * owner.SectorsPerCluster);
 
                     var lcn = ((NonResident) mftRecordDataAttr.Header).VcnToLcn(vcn);
 
                     if (!lcn.HasValue)
                         return;
 
-                    var cluster = volume.ReadLcn(lcn.Value);
+                    var cluster = owner.ReadLcn(lcn.Value);
 
-                    data = new byte[volume.BytesPerFileRecord];
+                    data = new byte[bytesPerFileRecord];
 
                     Array.Copy(cluster.Data, (long) offsetInCluster, data, 0, data.Length);
                 }
@@ -96,14 +100,13 @@ namespace NtfsSharp.FileRecords.Attributes.AttributeList
                     return;
                 }
 
-                var fileRecord = new FileRecord(data, volume);
-                fileRecord.ReadAttributes();
+                var fileRecord = FileRecordAttributesFacade.Build(data, owner);
 
                 ChildAttribute = fileRecord.FindAttribute(Header.AttributeId, Header.Type, Name);
             }
 
         }
-
+        
         /// <summary>
         /// Finds the $MFT file record to locate attributes from
         /// </summary>
@@ -112,7 +115,7 @@ namespace NtfsSharp.FileRecords.Attributes.AttributeList
         {
             var parentFileRecord = parentAttributeList.Header.FileRecord;
 
-            return parentFileRecord.MasterFileTable?[0] ?? parentFileRecord.Volume?.MFT?[0];
+            return parentFileRecord.Volume?.MFT?[0];
         }
 
         public struct NTFS_ATTRIBUTE_LIST_HEADER
