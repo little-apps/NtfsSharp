@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using Aga.Controls.Tree;
+using NtfsSharp.Volumes;
 
 namespace NtfsSharp.Explorer.FileModelEntry
 {

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using NtfsSharp.FileRecords.Attributes.Base;
 using NtfsSharp.FileRecords.Attributes.Base.NonResident;
+using NtfsSharp.Volumes;
 
 namespace NtfsSharp.DiskUsage
 {

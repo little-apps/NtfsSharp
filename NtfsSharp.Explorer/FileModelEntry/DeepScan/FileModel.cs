@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using NtfsSharp.FileRecords;
 using NtfsSharp.FileRecords.Attributes;
 using NtfsSharp.FileRecords.Attributes.Base;
+using NtfsSharp.Volumes;
 
 namespace NtfsSharp.Explorer.FileModelEntry.DeepScan
 {

@@ -1,5 +1,7 @@
-﻿using NtfsSharp.FileRecords;
+﻿using NtfsSharp.Facades;
+using NtfsSharp.FileRecords;
 using NtfsSharp.Tests.Driver;
+using NtfsSharp.Volumes;
 using NUnit.Framework;
 
 namespace NtfsSharp.Tests.FileRecords
@@ -42,10 +44,10 @@ namespace NtfsSharp.Tests.FileRecords
         /// <returns>FileRecord</returns>
         protected FileRecord ReadDummyFileRecord(bool readAttributes = true)
         {
-            var fileRecord = new FileRecord(DummyFileRecord.BuildWithUsa(BytesPerFileRecord, Driver, 0xab), Volume);
-
-            if (readAttributes)
-                fileRecord.ReadAttributes();
+            var dummyFileRecord = DummyFileRecord.BuildWithUsa(BytesPerFileRecord, Driver, 0xab);
+            var fileRecord = readAttributes
+                ? FileRecordAttributesFacade.Build(dummyFileRecord, Volume)
+                : FileRecordFacade.Build(dummyFileRecord, Volume);
 
             return fileRecord;
         }

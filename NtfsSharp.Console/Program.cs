@@ -3,12 +3,13 @@ using System.Diagnostics;
 using System.IO;
 using NtfsSharp.Drivers;
 using NtfsSharp.Drivers.Physical;
+using NtfsSharp.Volumes;
 
 namespace NtfsSharp.Console
 {
     internal class Program
     {
-        private NtfsSharp.Volume Volume;
+        private Volume Volume;
         private Options Options;
 
         private TextWriter Output

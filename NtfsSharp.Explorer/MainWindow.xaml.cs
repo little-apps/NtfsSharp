@@ -4,13 +4,13 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using System.Windows;
 using Microsoft.Win32;
 using NtfsSharp.Drivers;
 using NtfsSharp.Explorer.FileModelEntry;
 using NtfsSharp.Explorer.FileModelEntry.DeepScan;
 using NtfsSharp.Explorer.Properties;
+using NtfsSharp.Volumes;
 using FILETIME = System.Runtime.InteropServices.ComTypes.FILETIME;
 
 namespace NtfsSharp.Explorer

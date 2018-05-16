@@ -9,6 +9,7 @@ using System.Windows.Controls;
 using System.Windows.Controls.DataVisualization.Charting;
 using NtfsSharp.DiskUsage.Properties;
 using NtfsSharp.Drivers;
+using NtfsSharp.Volumes;
 
 namespace NtfsSharp.DiskUsage
 {

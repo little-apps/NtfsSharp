@@ -5,6 +5,7 @@ using NtfsSharp.FileRecords;
 using NtfsSharp.FileRecords.Attributes;
 using NtfsSharp.FileRecords.Attributes.Base;
 using NtfsSharp.FileRecords.Attributes.Base.NonResident;
+using NtfsSharp.Volumes;
 
 namespace NtfsSharp.Explorer.FileModelEntry.DeepScan
 {

@@ -1,6 +1,8 @@
 ﻿using System;
 using NtfsSharp.Exceptions;
+using NtfsSharp.Facades;
 using NtfsSharp.FileRecords;
+using NtfsSharp.Helpers;
 using NUnit.Framework;
 
 namespace NtfsSharp.Tests.FileRecords
@@ -33,18 +35,20 @@ namespace NtfsSharp.Tests.FileRecords
                 Assert.AreNotEqual(expectedUsas[sectorIndex], actualUsa);
             }
 
-            var fileRecord = new FileRecord(fileRecordWithUsa, Volume);
+            var fixuable = new Fixupable();
+            var fileRecordFixed = new byte[fileRecordWithUsa.Length];
 
-            Assert.NotNull(fileRecord);
+            Array.Copy(fileRecordWithUsa, fileRecordFixed, fileRecordFixed.Length);
 
-            var fileRecordParsed = fileRecord.Data;
-
+            fixuable.Fixup(fileRecordFixed, DummyFileRecord.FileRecord.UpdateSequenceOffset,
+                DummyFileRecord.FileRecord.UpdateSequenceSize, BootSector.DummyBootSector.BytesPerSector);
+            
             // Make sure last two bytes of each sector match expected USA (after it's parsed)
             for (var sectorIndex = 0;
                 sectorIndex < BytesPerFileRecord / BootSector.DummyBootSector.BytesPerSector;
                 sectorIndex++)
             {
-                var actualUsa = BitConverter.ToUInt16(fileRecordParsed,
+                var actualUsa = BitConverter.ToUInt16(fileRecordFixed,
                     (sectorIndex + 1) * BootSector.DummyBootSector.BytesPerSector - 2);
 
                 Assert.AreEqual(expectedUsas[sectorIndex], actualUsa);
@@ -69,18 +73,16 @@ namespace NtfsSharp.Tests.FileRecords
 
             var fileRecordWithUsa = fileRecordWithoutUsaBytes;
 
+            var sectors = BytesPerFileRecord / BootSector.DummyBootSector.BytesPerSector;
+
             // Set last two bytes of each sector in file record to end tag
-            for (var sectorIndex = 0;
-                sectorIndex < BytesPerFileRecord / BootSector.DummyBootSector.BytesPerSector;
-                sectorIndex++)
+            for (var sectorIndex = 0; sectorIndex < sectors; sectorIndex++)
             {
                 Array.Copy(expectedEndTag, 0, fileRecordWithUsa,
                     (sectorIndex + 1) * BootSector.DummyBootSector.BytesPerSector - 2, 2);
             }
 
-            for (var sectorIndex = 0;
-                sectorIndex < BytesPerFileRecord / BootSector.DummyBootSector.BytesPerSector;
-                sectorIndex++)
+            for (var sectorIndex = 0; sectorIndex < sectors; sectorIndex++)
             {
                 // Make sure last two bytes of each sector are set to end tag
                 Assert.AreEqual(expectedEndTag[0],
@@ -92,14 +94,15 @@ namespace NtfsSharp.Tests.FileRecords
             // Tests if file record is parsed and end tags match
             FileRecord fileRecord = null;
 
-            Assert.DoesNotThrow(() =>
-            {
-                fileRecord = new FileRecord(fileRecordWithUsa, Volume);
-            });
+            var fixupable = new Fixupable();
+
+            fixupable.Fixup(fileRecordWithUsa, usaOffset, (ushort) (sectors + 1), BootSector.DummyBootSector.BytesPerSector);
+
+            Assert.DoesNotThrow(() => { fileRecord = FileRecordFacade.Build(fileRecordWithUsa, Volume); });
 
             Assert.NotNull(fileRecord);
-            Assert.AreEqual(expectedEndTag[0], fileRecord.EndTag[0]);
-            Assert.AreEqual(expectedEndTag[1], fileRecord.EndTag[1]);
+            Assert.AreEqual(expectedEndTag[0], fixupable.EndTag[0]);
+            Assert.AreEqual(expectedEndTag[1], fixupable.EndTag[1]);
         }
 
         /// <summary>
@@ -145,9 +148,9 @@ namespace NtfsSharp.Tests.FileRecords
             FileRecord fileRecord = null;
 
             Assert.Throws<InvalidFileRecordException>(() =>
-            {
-                fileRecord = new FileRecord(fileRecordWithUsa, Volume);
-            });
+                {
+                    fileRecord = FileRecordFacade.Build(fileRecordWithUsa, Volume);
+                });
 
             Assert.Null(fileRecord);
         }
