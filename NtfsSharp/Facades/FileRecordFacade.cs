@@ -9,8 +9,6 @@ namespace NtfsSharp.Facades
 {
     public static class FileRecordFacade
     {
-        private static readonly Fixupable Fixupable = new Fixupable();
-
         /// <summary>
         /// Builds a FileRecord using data and fixes it up (from the update sequence array)
         /// </summary>
@@ -25,18 +23,20 @@ namespace NtfsSharp.Facades
             if (header.UpdateSequenceSize - 1 > reader.SectorsPerMftRecord)
                 throw new InvalidFileRecordException(nameof(header.UpdateSequenceSize), "Update sequence size exceeds number of sectors in file record", null);
 
+            var fixuable = new Fixupable();
+
             try
             {
-                Fixupable.Fixup(data, header.UpdateSequenceOffset, header.UpdateSequenceSize, reader.BytesPerSector);
+                fixuable.Fixup(data, header.UpdateSequenceOffset, header.UpdateSequenceSize, reader.BytesPerSector);
             }
             catch (InvalidEndTagsException ex)
             {
-                throw new InvalidFileRecordException(nameof(Fixupable.EndTag),
+                throw new InvalidFileRecordException(nameof(fixuable.EndTag),
                     $"Last 2 bytes of sector {ex.InvalidSector} don't match update sequence array end tag.", null);
             }
 
             var fileRecord = BytesFactory.Build(data, reader);
-            fileRecord.Fixupable = Fixupable;
+            fileRecord.Fixupable = fixuable;
             
             return fileRecord;
         }
