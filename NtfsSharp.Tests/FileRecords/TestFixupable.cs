@@ -1,6 +1,7 @@
 ﻿using System;
 using NtfsSharp.Exceptions;
 using NtfsSharp.Facades;
+using NtfsSharp.Factories.FileRecords;
 using NtfsSharp.FileRecords;
 using NtfsSharp.Helpers;
 using NUnit.Framework;
@@ -94,15 +95,12 @@ namespace NtfsSharp.Tests.FileRecords
             // Tests if file record is parsed and end tags match
             FileRecord fileRecord = null;
 
-            var fixupable = new Fixupable();
-
-            fixupable.Fixup(fileRecordWithUsa, usaOffset, (ushort) (sectors + 1), BootSector.DummyBootSector.BytesPerSector);
-
             Assert.DoesNotThrow(() => { fileRecord = FileRecordFacade.Build(fileRecordWithUsa, Volume); });
 
             Assert.NotNull(fileRecord);
-            Assert.AreEqual(expectedEndTag[0], fixupable.EndTag[0]);
-            Assert.AreEqual(expectedEndTag[1], fixupable.EndTag[1]);
+            Assert.NotNull(fileRecord.Fixupable);
+            Assert.AreEqual(expectedEndTag[0], fileRecord.Fixupable.EndTag[0]);
+            Assert.AreEqual(expectedEndTag[1], fileRecord.Fixupable.EndTag[1]);
         }
 
         /// <summary>
