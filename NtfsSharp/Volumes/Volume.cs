@@ -4,27 +4,30 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using NtfsSharp.Data;
 using NtfsSharp.Exceptions;
+using NtfsSharp.Facades;
 using NtfsSharp.FileRecords;
 using NtfsSharp.FileRecords.Attributes;
 using NtfsSharp.FileRecords.Attributes.Base;
 using NtfsSharp.FileRecords.Attributes.Base.NonResident;
 
-namespace NtfsSharp
+namespace NtfsSharp.Volumes
 {
-    public class Volume : IDisposable, IComparable, IComparable<Volume>, IEquatable<Volume>
+    public class Volume : IDisposable, IComparable, IComparable<Volume>, IEquatable<Volume>, IVolume
     {
-        public readonly BaseDiskDriver Driver;
+        public BaseDiskDriver Driver { get; }
 
         public NtfsBootSector BootSector { get; private set; }
-        public MasterFileTable MFT { get; private set; }
+        public IReadOnlyDictionary<uint, FileRecord> MFT { get; private set; }
+
+        public ulong MftLcn { get; private set; }
 
         public readonly SortedList<uint, FileRecord> FileRecords = new SortedList<uint, FileRecord>();
 
         #region Units
-        public uint SectorsPerCluster = 8;
-        public ushort BytesPerSector = 512;
-        public uint BytesPerFileRecord = 1024;
-        public uint SectorsPerMFTRecord => BytesPerFileRecord / BytesPerSector;
+        public uint SectorsPerCluster { get; private set; } = 8;
+        public ushort BytesPerSector { get; private set; } = 512;
+        public uint BytesPerFileRecord { get; private set; } = 1024;
+        public uint SectorsPerMftRecord => BytesPerFileRecord / BytesPerSector;
         #endregion
 
         /// <summary>
@@ -54,6 +57,11 @@ namespace NtfsSharp
         #endregion
 
         #region IComparable<Volume> Implementation
+        public int CompareTo(IVolume other)
+        {
+            return other is Volume volume ? CompareTo(volume) : -1;
+        }
+
         public int CompareTo(Volume other)
         {
             if (ReferenceEquals(null, other))
@@ -175,12 +183,17 @@ namespace NtfsSharp
             try
             {
                 MFT = ReadMftAtLcn(BootSector.MFTLCN);
+                MftLcn = BootSector.MFTLCN;
             }
             catch
             {
                 // If readMftMirrorOnFailure and an exception occurred, read from the MFT mirror LCN which is specified in the boot sector.
                 if (readMftMirrorOnFailure)
+                {
                     MFT = ReadMftAtLcn(BootSector.MFTMirrLCN);
+                    MftLcn = BootSector.MFTMirrLCN;
+                }
+                    
             }
         }
 
@@ -194,9 +207,9 @@ namespace NtfsSharp
             if (lcn == 0)
                 throw new ArgumentOutOfRangeException(nameof(lcn), "Logical cluster number must be greater than 0.");
             
-            var masterFileTable = new MasterFileTable(this);
+            var masterFileTable = new MasterFileTable(lcn, this);
 
-            masterFileTable.ReadRecords(lcn);
+            masterFileTable.Read();
 
             return masterFileTable;
         }
@@ -223,7 +236,7 @@ namespace NtfsSharp
         /// <summary>
         /// Produces list of file records
         /// </summary>
-        /// <param name="readAttributes">If true, attributes of files are read as well</param>
+        /// <param name="readAttributes">Read attributes associated with file record</param>
         /// <returns>List of FileRecord objects</returns>
         public IEnumerable<FileRecord> ReadFileRecords(bool readAttributes)
         {
@@ -242,7 +255,8 @@ namespace NtfsSharp
 
             var mftBitmap = mftBitmapAttr.Bitmap;
 
-            var bytesPerFileRecord = SectorsPerMFTRecord * BytesPerSector;
+            var bytesPerFileRecord = SectorsPerMftRecord * BytesPerSector;
+            
 
             for (var currentInode = MFT.Count; currentInode < mftBitmap.Length; currentInode++)
             {
@@ -251,7 +265,7 @@ namespace NtfsSharp
                 if (!mftBitmap.Get(currentInode))
                 {
                     // Skip to next LCN
-                    currentOffset += SectorsPerMFTRecord * BytesPerSector;
+                    currentOffset += SectorsPerMftRecord * BytesPerSector;
 
                     continue;
                 }
@@ -261,7 +275,9 @@ namespace NtfsSharp
                     var bytes = (mftDataAttr.Header as NonResident).GetDataAtOffset((ulong) (currentInode * bytesPerFileRecord),
                         bytesPerFileRecord, out uint actualBytesRead);
 
-                    fileRecord = new FileRecord(bytes, this);
+                    fileRecord = readAttributes
+                        ? ReadFileRecordWithAttributes(bytes)
+                        : ReadFileRecordWithoutAttributes(bytes);
                 }
                 catch (InvalidFileRecordException ex)
                 {
@@ -272,36 +288,48 @@ namespace NtfsSharp
                 if (fileRecord == null)
                     continue;
 
-                if (readAttributes)
-                    fileRecord.ReadAttributes();
-
                 yield return fileRecord;
             }
+        }
+
+        /// <summary>
+        /// Reads file record with attributes
+        /// </summary>
+        /// <param name="data">Bytes containing file record</param>
+        /// <returns><seealso cref="FileRecord"/> object with attributes</returns>
+        private FileRecord ReadFileRecordWithAttributes(byte[] data)
+        {
+            return FileRecordAttributesFacade.Build(data, this);
+        }
+
+        /// <summary>
+        /// Reads file record without attributes
+        /// </summary>
+        /// <param name="data">Bytes containing file record</param>
+        /// <returns><seealso cref="FileRecord"/> object with no attributes</returns>
+        private FileRecord ReadFileRecordWithoutAttributes(byte[] data)
+        {
+            return FileRecordFacade.Build(data, this);
         }
 
         /// <summary>
         /// Reads file record at specified inode
         /// </summary>
         /// <param name="inode">Inode to read</param>
-        /// <param name="readAttributes">If true, attributes are read</param>
+        /// <param name="readAttributes">Read attributes associated with file record</param>
         /// <returns>FileRecord object</returns>
         public FileRecord ReadFileRecord(ulong inode, bool readAttributes)
         {
-            var bytesPerFileRecord = SectorsPerMFTRecord * BytesPerSector;
+            var bytesPerFileRecord = SectorsPerMftRecord * BytesPerSector;
 
             var mftRecord = MFT[0];
             var mftDataAttr =
                 mftRecord.FindAttributeByType(AttributeHeaderBase.NTFS_ATTR_TYPE.DATA).Body as DataAttribute;
 
-            var bytes = (mftDataAttr.Header as NonResident).GetDataAtOffset((ulong)(inode * bytesPerFileRecord),
+            var bytes = (mftDataAttr.Header as NonResident).GetDataAtOffset(inode * bytesPerFileRecord,
                         bytesPerFileRecord, out uint actualBytesRead);
 
-            var fileRecord = new FileRecord(bytes, this);
-
-            if (readAttributes)
-                fileRecord.ReadAttributes();
-
-            return fileRecord;
+            return readAttributes ? ReadFileRecordWithAttributes(bytes) : ReadFileRecordWithoutAttributes(bytes);
         }
 
         public Sector ReadSectorAtOffset(ulong offset)

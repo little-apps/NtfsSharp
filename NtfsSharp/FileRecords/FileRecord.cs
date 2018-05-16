@@ -4,34 +4,27 @@ using System.Runtime.InteropServices;
 using NtfsSharp.Exceptions;
 using NtfsSharp.Helpers;
 using System.Collections.Generic;
+using NtfsSharp.Facades;
 using NtfsSharp.FileRecords.Attributes;
 using NtfsSharp.FileRecords.Attributes.Base;
 using NtfsSharp.FileRecords.Attributes.Base.NonResident;
 using NtfsSharp.FileRecords.Attributes.Shared;
 using NtfsSharp.Factories;
+using NtfsSharp.Factories.Attributes;
+using NtfsSharp.Volumes;
 
 namespace NtfsSharp.FileRecords
 {
     /// <summary>
     /// Represents a FILE record
     /// </summary>
-    public class FileRecord : Fixupable, IComparer<FileRecord>, IComparable<FileRecord>, IEquatable<FileRecord>
+    public class FileRecord : IComparer<FileRecord>, IComparable<FileRecord>, IEquatable<FileRecord>
     {
-        private uint _currentOffset;
-        private readonly byte[] _data;
-        private bool _hasReadAttributes = false;
 
-        public readonly Volume Volume;
-        public readonly MasterFileTable MasterFileTable;
+        public readonly IVolume Volume;
 
         public FILE_RECORD_HEADER_NTFS Header { get; private set; }
         public readonly List<Attributes.Attribute> Attributes = new List<Attributes.Attribute>();
-
-        /// <summary>
-        /// Gets the (a clone of) all the bytes in the file record.
-        /// </summary>
-        /// <remarks>A clone of the array is returned so the integrity of the <see cref="FileRecord"/> object isn't ruined.</remarks>
-        public byte[] Data => (byte[]) _data.Clone();
 
         public string Filename
         {
@@ -72,128 +65,15 @@ namespace NtfsSharp.FileRecords
         }
 
         /// <summary>
-        /// Reads file record from bytes
+        /// Constructor for FileRecord object
         /// </summary>
-        /// <param name="data">Bytes with data for file record and attributes. Cannot be empty or null.</param>
-        /// <param name="vol">Volume containing file record. Cannot be null.</param>
-        /// <exception cref="ArgumentNullException">Thrown if <paramref name="data"/> or <paramref name="vol"/> is null</exception>
-        /// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="data"/> is empty</exception>
-        /// <exception cref="InvalidFileRecordException">Thrown if unable to read file record</exception>
-        public FileRecord(byte[] data, Volume vol)
+        /// <param name="header">File record header</param>
+        /// <param name="reader">Reader that read the file record</param>
+        /// <remarks>Use the <see cref="FileRecordAttributesFacade"/> to create a FileRecord object</remarks>
+        public FileRecord(FILE_RECORD_HEADER_NTFS header, IVolume reader)
         {
-            Volume = vol ?? throw new ArgumentNullException(nameof(vol), "Volume cannot be null");
-            _data = data ?? throw new ArgumentNullException(nameof(data), "Data cannot be null");
-
-            if (data.Length == 0)
-                throw new ArgumentOutOfRangeException(nameof(data), "Data cannot be empty");
-
-            ParseHeader();
-
-            PerformFixup();
-        }
-
-        /// <summary>
-        /// Reads file record from bytes
-        /// </summary>
-        /// <param name="data">Bytes with data for file record and attributes. Cannot be empty or null.</param>
-        /// <param name="masterFileTable"><seealso cref="MasterFileTable"/> containing the file record. Cannot be null.</param>
-        /// <exception cref="ArgumentNullException">Thrown if <paramref name="data"/> or <paramref name="masterFileTable"/> is null</exception>
-        /// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="data"/> is empty</exception>
-        /// <exception cref="InvalidFileRecordException">Thrown if unable to read file record</exception>
-        public FileRecord(byte[] data, MasterFileTable masterFileTable)
-        {
-            _data = data ?? throw new ArgumentNullException(nameof(data), "Data cannot be null");
-
-            MasterFileTable = masterFileTable ?? throw new ArgumentNullException(nameof(masterFileTable));
-            Volume = masterFileTable.Volume;
-            
-            if (data.Length == 0)
-                throw new ArgumentOutOfRangeException(nameof(data), "Data cannot be empty");
-
-            ParseHeader();
-
-            PerformFixup();
-        }
-
-        /// <summary>
-        /// Reads a file record at specified number in the volume
-        /// </summary>
-        /// <param name="recordNum">File record number</param>
-        /// <param name="vol">Volume containing file record</param>
-        /// <exception cref="ArgumentNullException">Thrown if Volume is null</exception>
-        /// <exception cref="InvalidFileRecordException">Thrown if unable to read file record</exception>
-        public FileRecord(ulong recordNum, Volume vol)
-        {
-            if (vol == null)
-                throw new ArgumentNullException(nameof(vol), "Volume cannot be null");
-
-            vol.Driver.Move((long) (vol.LcnToOffset(vol.BootSector.MFTLCN) + vol.BytesPerFileRecord * recordNum));
-            var data = vol.Driver.ReadSectorBytes(vol.BytesPerFileRecord);
-
-            Volume = vol;
-            _data = data;
-
-            ParseHeader();
-
-            PerformFixup();
-        }
-
-        /// <summary>
-        /// Parses the file record
-        /// </summary>
-        /// <exception cref="InvalidFileRecordException">Thrown if magic number is not FILE</exception>
-        private void ParseHeader()
-        {
-            Header = _data.ToStructure<FILE_RECORD_HEADER_NTFS>();
-            _currentOffset = (uint)Marshal.SizeOf<FILE_RECORD_HEADER_NTFS>();
-
-            if (!Header.Magic.SequenceEqual(new byte[] { 0x46, 0x49, 0x4C, 0x45 }))
-                throw new InvalidFileRecordException(nameof(Header.Magic), this);
-
-            if (Header.UpdateSequenceSize - 1 > Volume.SectorsPerMFTRecord)
-                throw new InvalidFileRecordException(nameof(Header.UpdateSequenceSize), "Update sequence size exceeds number of sectors in file record", this);
-        }
-
-        /// <summary>
-        /// Performs fixup on data
-        /// </summary>
-        /// <exception cref="InvalidFileRecordException">Thrown when last 2 bytes do not match update sequence array end tag.</exception>
-        private void PerformFixup()
-        {
-            try
-            {
-                Fixup(_data, Header.UpdateSequenceOffset, Header.UpdateSequenceSize, Volume.BytesPerSector);
-            }
-            catch (InvalidEndTagsException ex)
-            {
-                throw new InvalidFileRecordException(nameof(EndTag),
-                    $"Last 2 bytes of sector {ex.InvalidSector} don't match update sequence array end tag.", this);
-            }
-        }
-
-        /// <summary>
-        /// Reads attributes from file record
-        /// </summary>
-        /// <remarks>Current offset must be set back if calling this more than once</remarks>
-        public void ReadAttributes()
-        {
-            var attributeFactory = new AttributeFactory();
-
-            _currentOffset = Header.FirstAttributeOffset;
-
-            while (_currentOffset < _data.Length && BitConverter.ToUInt32(_data, (int) _currentOffset) != 0xffffffff)
-            {
-                var newData = new byte[_data.Length - _currentOffset];
-                Array.Copy(_data, _currentOffset, newData, 0, newData.Length);
-
-                var attribute = attributeFactory.Build(newData, this);
-                Attributes.Add(attribute);
-
-                _currentOffset += attribute.Header.Header.Length;
-
-            }
-
-            _hasReadAttributes = true;
+            Header = header;
+            Volume = reader ?? throw new ArgumentNullException(nameof(reader), "Reader cannot be null");
         }
 
         /// <summary>
@@ -247,53 +127,18 @@ namespace NtfsSharp.FileRecords
         /// <returns>Matching AttributeBase or null if it wasn't found</returns>
         public Attributes.Attribute FindAttribute(ushort attrNum, AttributeHeaderBase.NTFS_ATTR_TYPE attrType, string name)
         {
-            if (!_hasReadAttributes)
+            foreach (var attr in Attributes)
             {
-                var found = false;
+                if (attr.Header.Header.Type != attrType)
+                    continue;
 
-                var attributeFactory = new AttributeFactory();
+                if (string.IsNullOrEmpty(name) && string.IsNullOrEmpty(attr.Header.Name) &&
+                    attr.Header.Header.AttributeID == attrNum)
+                    return attr;
 
-                while (_currentOffset < _data.Length && BitConverter.ToUInt32(_data, (int) _currentOffset) != 0xffffffff)
-                {
-                    var newData = new byte[_data.Length - _currentOffset];
-                    Array.Copy(_data, _currentOffset, newData, 0, newData.Length);
-
-                    var attr = attributeFactory.Build(newData, this);
-
-                    if (attr.Header.Header.Type == attrType)
-                    {
-                        if (string.IsNullOrEmpty(name) && string.IsNullOrEmpty(attr.Header.Name) &&
-                            attr.Header.Header.AttributeID == attrNum)
-                            found = true;
-                        else if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(attr.Header.Name))
-                        {
-                            if (name == attr.Header.Name)
-                                found = true;
-                        }
-
-                    }
-
-                    _currentOffset += attr.Header.Header.Length;
-
-                    if (found)
-                        return attr;
-                }
-            }
-            else
-            {
-                foreach (var attr in Attributes)
-                {
-                    if (attr.Header.Header.Type != attrType)
-                        continue;
-
-                    if (string.IsNullOrEmpty(name) && string.IsNullOrEmpty(attr.Header.Name) &&
-                        attr.Header.Header.AttributeID == attrNum)
-                        return attr;
-
-                    if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(attr.Header.Name) &&
-                        name == attr.Header.Name)
-                        return attr;
-                }
+                if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(attr.Header.Name) &&
+                    name == attr.Header.Name)
+                    return attr;
             }
 
             return null;

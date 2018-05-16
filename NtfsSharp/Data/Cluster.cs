@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using NtfsSharp.Volumes;
 
 namespace NtfsSharp.Data
 {
@@ -8,7 +9,7 @@ namespace NtfsSharp.Data
         private byte[] _data;
         private Sector[] _sectors;
 
-        private readonly Volume _volume;
+        private readonly IVolume _volume;
 
         public readonly ulong Lcn;
 
@@ -64,12 +65,9 @@ namespace NtfsSharp.Data
         /// <param name="lcn">Logical cluster number on <seealso cref="Volume"/></param>
         /// <param name="vol">Volume containg cluster</param>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="vol"/> is null.</exception>
-        public Cluster(ulong lcn, Volume vol)
+        public Cluster(ulong lcn, IVolume vol)
         {
-            if (ReferenceEquals(null, vol))
-                throw new ArgumentNullException(nameof(vol), "Volume cannot be null.");
-
-            _volume = vol;
+            _volume = vol ?? throw new ArgumentNullException(nameof(vol), "Volume cannot be null.");
             Lcn = lcn;
         }
 
