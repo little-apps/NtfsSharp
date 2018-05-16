@@ -20,11 +20,15 @@ namespace NtfsSharp.FileRecords
     /// </summary>
     public class FileRecord : IComparer<FileRecord>, IComparable<FileRecord>, IEquatable<FileRecord>
     {
-
         public readonly IVolume Volume;
 
         public FILE_RECORD_HEADER_NTFS Header { get; private set; }
         public readonly List<Attributes.Attribute> Attributes = new List<Attributes.Attribute>();
+
+        /// <summary>
+        /// Fixuable instance used on file record (if any)
+        /// </summary>
+        public Fixupable Fixupable { get; set; }
 
         public string Filename
         {
