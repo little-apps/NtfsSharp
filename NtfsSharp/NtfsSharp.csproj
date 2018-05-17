@@ -63,6 +63,7 @@
     <Compile Include="Factories\FileRecords\RecordNumberFactory.cs" />
     <Compile Include="Factories\FileRecords\BytesFactory.cs" />
     <Compile Include="Facades\FileRecordFacade.cs" />
+    <Compile Include="Factories\MetaData\BootSectorFactory.cs" />
     <Compile Include="FileRecords\Attributes\Attribute.cs" />
     <Compile Include="Factories\Attributes\AttributeFactory.cs" />
     <Compile Include="Factories\Attributes\BodyFactory.cs" />
@@ -97,6 +98,7 @@
     <Compile Include="FileRecords\Attributes\VolumeInformation.cs" />
     <Compile Include="FileRecords\Attributes\VolumeName.cs" />
     <Compile Include="FileRecords\FileRecord.cs" />
+    <Compile Include="MetaData\BootSector.cs" />
     <Compile Include="Volumes\MasterFileTable.cs" />
     <Compile Include="Helpers\Fixupable.cs" />
     <Compile Include="Helpers\MarshalHelper.cs" />

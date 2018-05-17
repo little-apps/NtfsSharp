@@ -5,10 +5,12 @@ using System.Runtime.InteropServices;
 using NtfsSharp.Data;
 using NtfsSharp.Exceptions;
 using NtfsSharp.Facades;
+using NtfsSharp.Factories.MetaData;
 using NtfsSharp.FileRecords;
 using NtfsSharp.FileRecords.Attributes;
 using NtfsSharp.FileRecords.Attributes.Base;
 using NtfsSharp.FileRecords.Attributes.Base.NonResident;
+using NtfsSharp.MetaData;
 
 namespace NtfsSharp.Volumes
 {
@@ -16,7 +18,7 @@ namespace NtfsSharp.Volumes
     {
         public BaseDiskDriver Driver { get; }
 
-        public NtfsBootSector BootSector { get; private set; }
+        public BootSector BootSector { get; private set; }
         public IReadOnlyDictionary<uint, FileRecord> MFT { get; private set; }
 
         public ulong MftLcn { get; private set; }
@@ -24,10 +26,27 @@ namespace NtfsSharp.Volumes
         public readonly SortedList<uint, FileRecord> FileRecords = new SortedList<uint, FileRecord>();
 
         #region Units
-        public uint SectorsPerCluster { get; private set; } = 8;
-        public ushort BytesPerSector { get; private set; } = 512;
-        public uint BytesPerFileRecord { get; private set; } = 1024;
-        public uint SectorsPerMftRecord => BytesPerFileRecord / BytesPerSector;
+        /// <summary>
+        /// Sectors in a cluster
+        /// </summary>
+        /// <remarks>Uses the guessed value (from the <seealso cref="BaseDiskDriver"/>) to read the bootsector, otherwise, the actual value.</remarks>
+        public uint SectorsPerCluster => BootSector?.SectorsPerCluster ?? Driver.DefaultSectorsPerCluster;
+
+        /// <summary>
+        /// Bytes in a sector
+        /// </summary>
+        /// <remarks>Uses the guessed value (from the <seealso cref="BaseDiskDriver"/>) to read the bootsector, otherwise, the actual value.</remarks>
+        public ushort BytesPerSector => BootSector?.BytesPerSector ?? Driver.DefaultBytesPerSector;
+
+        /// <summary>
+        /// Bytes in a file record
+        /// </summary>
+        public uint BytesPerFileRecord => BootSector.BytesPerFileRecord;
+
+        /// <summary>
+        /// Sectors in a file record
+        /// </summary>
+        public uint SectorsPerMftRecord => BootSector.SectorsPerMftRecord;
         #endregion
 
         /// <summary>
@@ -70,13 +89,13 @@ namespace NtfsSharp.Volumes
             if (ReferenceEquals(this, other))
                 return 0;
 
-            if (BootSector.VolumeSerialNumber == 0)
+            if (BootSector.BootSectorStructure.VolumeSerialNumber == 0)
                 return -1;
 
-            if (other.BootSector.VolumeSerialNumber == 0)
+            if (other.BootSector.BootSectorStructure.VolumeSerialNumber == 0)
                 return 1;
 
-            return BootSector.VolumeSerialNumber.CompareTo(other.BootSector.VolumeSerialNumber);
+            return BootSector.BootSectorStructure.VolumeSerialNumber.CompareTo(other.BootSector.BootSectorStructure.VolumeSerialNumber);
         }
         #endregion
 
@@ -133,44 +152,12 @@ namespace NtfsSharp.Volumes
         }
 
         /// <summary>
-        /// Reads the boot sector (located at offset in the disk)
+        /// Reads the boot sector (located at offset 0 in the disk)
         /// </summary>
         /// <exception cref="InvalidBootSectorException">Thrown if the bytes per sector, sectors per cluster, or clusters per MFT record is invalid.</exception>
         public void ReadBootSector()
         {
-            BootSector = ReadLcn(0).ReadFile<NtfsBootSector>(0);
-
-            BytesPerSector = BootSector.BytesPerSector;
-            SectorsPerCluster = BootSector.SectorsPerCluster;
-
-            if (BytesPerSector == 0)
-                throw new InvalidBootSectorException(nameof(BootSector.BytesPerSector), "BytesPerSector cannot be zero.");
-
-            if (BytesPerSector % 512 != 0)
-                throw new InvalidBootSectorException(nameof(BootSector.BytesPerSector), "BytesPerSector must be multiple of 512.");
-
-            if (BytesPerSector > 4096)
-                throw new InvalidBootSectorException(nameof(BootSector.BytesPerSector), "BytesPerSector must be equal to or less than 4096.");
-
-            if (SectorsPerCluster == 0)
-                throw new InvalidBootSectorException(nameof(BootSector.SectorsPerCluster), "SectorsPerCluster cannot be zero.");
-
-            // If ClustersPerMFTRecord is positive (up to 0x7F), it represents clusters per MFT record
-            if (BootSector.ClustersPerMFTRecord <= 0x7F)
-                BytesPerFileRecord =
-                    (uint)(BootSector.ClustersPerMFTRecord * BootSector.BytesPerSector *
-                            BootSector.SectorsPerCluster);
-            else
-            {
-                // Otherwise if it's negative (from 0x80 to 0xFF), the size is 2 raised to its absolute value
-
-                // Anything between 0x80 and 0xE0 will result in an integer overflow (since it's a 32 bit integer)
-                if (BootSector.ClustersPerMFTRecord >= 0x80 && BootSector.ClustersPerMFTRecord <= 0xE0)
-                    throw new InvalidBootSectorException(nameof(BootSector.ClustersPerMFTRecord), "ClustersPerMFTRecord cannot be between 0xE0 and 0x80");
-
-                BytesPerFileRecord = (uint)(1 << 256 - BootSector.ClustersPerMFTRecord);
-            }
-
+            BootSector = BootSectorFactory.Build(ReadLcn(0).Data);
         }
 
         /// <summary>
@@ -182,16 +169,16 @@ namespace NtfsSharp.Volumes
         {
             try
             {
-                MFT = ReadMftAtLcn(BootSector.MFTLCN);
-                MftLcn = BootSector.MFTLCN;
+                MFT = ReadMftAtLcn(BootSector.BootSectorStructure.MFTLCN);
+                MftLcn = BootSector.BootSectorStructure.MFTLCN;
             }
             catch
             {
                 // If readMftMirrorOnFailure and an exception occurred, read from the MFT mirror LCN which is specified in the boot sector.
                 if (readMftMirrorOnFailure)
                 {
-                    MFT = ReadMftAtLcn(BootSector.MFTMirrLCN);
-                    MftLcn = BootSector.MFTMirrLCN;
+                    MFT = ReadMftAtLcn(BootSector.BootSectorStructure.MFTMirrLCN);
+                    MftLcn = BootSector.BootSectorStructure.MFTMirrLCN;
                 }
                     
             }
@@ -243,7 +230,7 @@ namespace NtfsSharp.Volumes
             // MFT record #5 is root directory
             FileRecords[(uint) MasterFileTable.Files.RootDir] = MFT[(uint) MasterFileTable.Files.RootDir];
 
-            var currentOffset = LcnToOffset(BootSector.MFTLCN) + (ulong) (MFT.Count * BytesPerFileRecord);
+            var currentOffset = LcnToOffset(BootSector.BootSectorStructure.MFTLCN) + (ulong) (MFT.Count * BytesPerFileRecord);
 
             var mftRecord = MFT[0];
             var mftBitmapAttr =
