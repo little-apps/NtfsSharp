@@ -34,7 +34,7 @@ namespace NtfsSharp.DiskUsage
             {
                 return _volume == null
                     ? string.Empty
-                    : (_volume.BootSector.TotalSectors * _volume.BytesPerSector).ToString("N0");
+                    : (_volume.BootSector.BootSectorStructure.TotalSectors * _volume.BytesPerSector).ToString("N0");
             }
         }
 
@@ -52,7 +52,9 @@ namespace NtfsSharp.DiskUsage
         {
             get
             {
-                return _volume == null ? string.Empty : (_volume.BootSector.TotalSectors / _volume.SectorsPerCluster).ToString("N0");
+                return _volume == null
+                    ? string.Empty
+                    : (_volume.BootSector.BootSectorStructure.TotalSectors / _volume.SectorsPerCluster).ToString("N0");
             }
         }
         
