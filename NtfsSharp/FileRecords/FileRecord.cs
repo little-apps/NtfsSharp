@@ -69,7 +69,7 @@ namespace NtfsSharp.FileRecords
         /// </summary>
         /// <param name="header">File record header</param>
         /// <param name="reader">Reader that read the file record</param>
-        /// <remarks>Use the <see cref="FileRecordAttributesFacade"/> to create a FileRecord object</remarks>
+        /// <remarks>Use the <see cref="Facades.FileRecordAttributesFacade"/> to create a FileRecord object</remarks>
         public FileRecord(FILE_RECORD_HEADER_NTFS header, IVolume reader)
         {
             Header = header;
