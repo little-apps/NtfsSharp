@@ -1,16 +1,12 @@
 ﻿using System;
 using System.Linq;
 using System.Runtime.InteropServices;
-using NtfsSharp.Exceptions;
 using NtfsSharp.Helpers;
 using System.Collections.Generic;
-using NtfsSharp.Facades;
 using NtfsSharp.FileRecords.Attributes;
 using NtfsSharp.FileRecords.Attributes.Base;
 using NtfsSharp.FileRecords.Attributes.Base.NonResident;
 using NtfsSharp.FileRecords.Attributes.Shared;
-using NtfsSharp.Factories;
-using NtfsSharp.Factories.Attributes;
 using NtfsSharp.Volumes;
 
 namespace NtfsSharp.FileRecords
