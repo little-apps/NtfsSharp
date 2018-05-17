@@ -39,10 +39,10 @@ namespace NtfsSharp.Drivers.Physical
                 switch (moveMethod)
                 {
                     case MoveMethod.Begin:
-                        offset = (long) (SelectedPartition.StartSector * 512 + (ulong) offset);
+                        offset = (long) (SelectedPartition.StartSector * DefaultBytesPerSector + (ulong) offset);
                         break;
                     case MoveMethod.End:
-                        offset = offset + (long) (SelectedPartition.EndSector * 512);
+                        offset = offset + (long) (SelectedPartition.EndSector * DefaultBytesPerSector);
                         moveMethod = MoveMethod.End;
                         break;
                 }
@@ -54,9 +54,9 @@ namespace NtfsSharp.Drivers.Physical
             return newOffset;
         }
         
-        private static byte[] AllocateByteArray(uint bytesToRead, out uint leftOverBytes)
+        private byte[] AllocateByteArray(uint bytesToRead, out uint leftOverBytes)
         {
-            leftOverBytes = 512 - bytesToRead % 512;
+            leftOverBytes = DefaultBytesPerSector - bytesToRead % DefaultBytesPerSector;
 
             return new byte[bytesToRead + leftOverBytes];
         }
