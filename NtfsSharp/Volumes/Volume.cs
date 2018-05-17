@@ -157,7 +157,7 @@ namespace NtfsSharp.Volumes
         /// <exception cref="InvalidBootSectorException">Thrown if the bytes per sector, sectors per cluster, or clusters per MFT record is invalid.</exception>
         public void ReadBootSector()
         {
-            BootSector = BootSectorFactory.Build(ReadLcn(0).Data);
+            BootSector = BootSectorFactory.Build(ReadSectorAtOffset(0).Data);
         }
 
         /// <summary>
