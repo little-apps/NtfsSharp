@@ -5,6 +5,18 @@ namespace NtfsSharp
     public abstract class BaseDiskDriver : IDisposable
     {
         /// <summary>
+        /// Guessed sectors per cluster
+        /// </summary>
+        /// <remarks>Since we don't know the size of a cluster yet (cause that info is in the boot sector) to do a read, we can only guess that so we can read the bootsector.</remarks>
+        public virtual uint DefaultSectorsPerCluster => 8;
+
+        /// <summary>
+        /// Guessed bytes per sector
+        /// </summary>
+        /// <remarks>Since we don't know the size of a sector yet (cause that info is in the boot sector) to do a read, we can only guess that so we can read the bootsector.</remarks>
+        public virtual ushort DefaultBytesPerSector => 512;
+
+        /// <summary>
         /// Moves to a position inside the NTFS file system
         /// </summary>
         /// <param name="offset">Offset in the NTFS to move to</param>
