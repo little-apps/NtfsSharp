@@ -41,9 +41,7 @@ namespace NtfsSharp.Tests.FileRecords
 
             var ex =
                 Assert.Throws<InvalidFileRecordException>(() =>
-                {
-                    FileRecordFacade.Build(DummyFileRecord.BuildWithUsa(BytesPerFileRecord, Driver, 0xab), Volume);
-                });
+                    FileRecordFacade.Build(DummyFileRecord.BuildWithUsa(BytesPerFileRecord, Driver, 0xab), Volume));
             
             Assert.AreEqual(nameof(DummyFileRecord.FileRecord.Magic), ex.ParamName);
         }
@@ -58,11 +56,7 @@ namespace NtfsSharp.Tests.FileRecords
 
             Assert.IsFalse(fileRecordBytes.Any(b => b != 0));
 
-            var ex =
-                Assert.Throws<InvalidFileRecordException>(() =>
-                {
-                    FileRecordFacade.Build(fileRecordBytes, Volume);
-                });
+            var ex = Assert.Throws<InvalidFileRecordException>(() => FileRecordFacade.Build(fileRecordBytes, Volume));
 
             // Should fail at magic identifier
             Assert.AreEqual(nameof(DummyFileRecord.FileRecord.Magic), ex.ParamName);
