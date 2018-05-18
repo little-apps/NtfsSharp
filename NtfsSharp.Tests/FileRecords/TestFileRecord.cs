@@ -47,5 +47,25 @@ namespace NtfsSharp.Tests.FileRecords
             
             Assert.AreEqual(nameof(DummyFileRecord.FileRecord.Magic), ex.ParamName);
         }
+
+        /// <summary>
+        /// Test file record containing all zeroes is invalid
+        /// </summary>
+        [Test]
+        public void TestFileRecordZeroes()
+        {
+            var fileRecordBytes = new byte[BytesPerFileRecord];
+
+            Assert.IsFalse(fileRecordBytes.Any(b => b != 0));
+
+            var ex =
+                Assert.Throws<InvalidFileRecordException>(() =>
+                {
+                    FileRecordFacade.Build(fileRecordBytes, Volume);
+                });
+
+            // Should fail at magic identifier
+            Assert.AreEqual(nameof(DummyFileRecord.FileRecord.Magic), ex.ParamName);
+        }
     }
 }
