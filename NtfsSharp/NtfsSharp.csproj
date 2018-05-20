@@ -60,6 +60,7 @@
     <Compile Include="Exceptions\InvalidMasterFileTableException.cs" />
     <Compile Include="Exceptions\NtfsSharpException.cs" />
     <Compile Include="Facades\FileRecordAttributesFacade.cs" />
+    <Compile Include="Factories\FileRecords\FixupableFactory.cs" />
     <Compile Include="Factories\FileRecords\RecordNumberFactory.cs" />
     <Compile Include="Factories\FileRecords\BytesFactory.cs" />
     <Compile Include="Facades\FileRecordFacade.cs" />

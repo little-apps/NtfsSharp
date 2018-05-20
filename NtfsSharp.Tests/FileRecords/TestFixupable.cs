@@ -35,14 +35,14 @@ namespace NtfsSharp.Tests.FileRecords
 
                 Assert.AreNotEqual(expectedUsas[sectorIndex], actualUsa);
             }
-
-            var fixuable = new Fixupable();
+            
             var fileRecordFixed = new byte[fileRecordWithUsa.Length];
 
             Array.Copy(fileRecordWithUsa, fileRecordFixed, fileRecordFixed.Length);
 
-            fixuable.Fixup(fileRecordFixed, DummyFileRecord.FileRecord.UpdateSequenceOffset,
-                DummyFileRecord.FileRecord.UpdateSequenceSize, BootSector.DummyBootSector.BytesPerSector);
+            var fixuable = FixupableFactory.Build(fileRecordFixed, Volume.BytesPerSector);
+
+            fixuable.Fixup(fileRecordFixed);
             
             // Make sure last two bytes of each sector match expected USA (after it's parsed)
             for (var sectorIndex = 0;
