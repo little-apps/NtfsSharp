@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Runtime.InteropServices;
 using NtfsSharp.Exceptions;
+using NtfsSharp.Factories.FileRecords;
 using NtfsSharp.Helpers;
 using NtfsSharp.PInvoke;
 
@@ -10,7 +11,7 @@ namespace NtfsSharp.FileRecords.Attributes.IndexAllocation
     /// <summary>
     /// Represents a file index inside a $INDEX_ALLOCATION attribute
     /// </summary>
-    public class FileIndex : Fixupable
+    public class FileIndex
     {
         public uint CurrentOffset { get; private set; } = 0;
 
@@ -33,8 +34,8 @@ namespace NtfsSharp.FileRecords.Attributes.IndexAllocation
             {
                 try
                 {
-                    Fixup(data, Header.UpdateSequenceOffset, Header.UpdateSequenceSize,
-                        indexAllocation.Header.FileRecord.Volume.BytesPerSector);
+                    var fixupable = FixupableFactory.Build(data, indexAllocation.Header.FileRecord.Volume.BytesPerSector);
+                    fixupable.Fixup(data);
                 }
                 catch (InvalidEndTagsException ex)
                 {

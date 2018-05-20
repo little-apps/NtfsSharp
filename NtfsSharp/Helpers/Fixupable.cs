@@ -5,43 +5,63 @@ namespace NtfsSharp.Helpers
 {
     public class Fixupable
     {
-        public byte[] EndTag { get; private set; }
-        public byte[] UpdateSequenceArray { get; private set; }
+        /// <summary>
+        /// Bytes expected at the end of each sector for file record.
+        /// </summary>
+        public byte[] EndTag { get; }
+
+        /// <summary>
+        /// Bytes to be replaced at end of each sector for file record.
+        /// </summary>
+        public byte[] UpdateSequenceArray { get; }
+
+        /// <summary>
+        /// Number of bytes in a sector
+        /// </summary>
+        public ushort BytesPerSector { get; }
+
+        public Fixupable(byte[] endTag, byte[] updateSequenceArray, ushort bytesPerSector)
+        {
+            if (endTag == null)
+                throw new ArgumentNullException(nameof(endTag));
+
+            if (endTag.Length == 0)
+                throw new ArgumentOutOfRangeException(nameof(endTag), "End tag bytes cannot be emptied.");
+
+            if (updateSequenceArray == null)
+                throw new ArgumentNullException(nameof(updateSequenceArray));
+
+            if (updateSequenceArray.Length == 0)
+                throw new ArgumentOutOfRangeException(nameof(updateSequenceArray), "Update sequence array cannot be emptied.");
+
+            EndTag = endTag;
+            UpdateSequenceArray = updateSequenceArray;
+            BytesPerSector = bytesPerSector;
+        }
 
         /// <summary>
         /// Checks if last two bytes of each sector in file record match first two bytes of update sequence array.
         /// If they do, replace the last two bytes of each sector with the corresponding bytes in the fixup array.
         /// </summary>
         /// <param name="data">Bytes containing sectors to fix up</param>
-        /// <param name="usaOffset">Offset of update sequeunce array in <see cref="data"/></param>
-        /// <param name="usaSize">Size of update sequeunce array in <see cref="data"/></param>
-        /// <param name="bytesPerSector">Bytes per sector (usually 512)</param>
-        /// <returns>True if end tags match and fixup was performed</returns>
         /// <exception cref="InvalidEndTagsException">Thrown if end tags do not match</exception>
-        public void Fixup(byte[] data, ushort usaOffset, ushort  usaSize, ushort bytesPerSector)
+        public void Fixup(byte[] data)
         {
-            // Get end tag + USA
-            EndTag = new byte[2];
-            UpdateSequenceArray = new byte[(usaSize - 1) * 2];
-
-            // First two bytes of USA are end tag
-            Array.Copy(data, usaOffset, EndTag, 0, 2);
-            // Rest of bytes in USA are fixup bytes
-            Array.Copy(data, usaOffset + 2, UpdateSequenceArray, 0, UpdateSequenceArray.Length);
-
             // Fixup sectors
-            for (var i = 1; i < usaSize; i++)
+            for (var i = 0; i < UpdateSequenceArray.Length; i++)
             {
+                // Which byte in end tag is it?
+                var endTagOffset = i % 2;
+
                 // Offset of last two bytes in sector
-                var sectorUsaOffset = i * bytesPerSector - 2;
+                var sectorUsaOffset = (uint) (Math.Ceiling((i + 1) / (decimal)2) * 512) - (2 - (i % 2));
 
                 // Do last two bytes in sector match end tag?
-                if (data[sectorUsaOffset] != EndTag[0] || data[sectorUsaOffset + 1] != EndTag[1])
-                    throw new InvalidEndTagsException(i - 1);
+                if (data[sectorUsaOffset] != EndTag[endTagOffset])
+                    throw new InvalidEndTagsException(i);
 
-                // Replace last two bytes in sector with corresponding bytes in USA
-                data[sectorUsaOffset] = UpdateSequenceArray[(i - 1) * 2];
-                data[sectorUsaOffset + 1] = UpdateSequenceArray[(i - 1) * 2 + 1];
+                // Replace corresponding bytes in sector with corresponding bytes in USA
+                data[sectorUsaOffset] = UpdateSequenceArray[i];
             }
         }
 

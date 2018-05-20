@@ -23,20 +23,20 @@ namespace NtfsSharp.Facades
             if (header.UpdateSequenceSize - 1 > reader.SectorsPerMftRecord)
                 throw new InvalidFileRecordException(nameof(header.UpdateSequenceSize), "Update sequence size exceeds number of sectors in file record", null);
 
-            var fixuable = new Fixupable();
+            var fixupable = FixupableFactory.Build(data, reader.BytesPerSector);
 
             try
             {
-                fixuable.Fixup(data, header.UpdateSequenceOffset, header.UpdateSequenceSize, reader.BytesPerSector);
+                fixupable.Fixup(data);
             }
             catch (InvalidEndTagsException ex)
             {
-                throw new InvalidFileRecordException(nameof(fixuable.EndTag),
+                throw new InvalidFileRecordException(nameof(fixupable.EndTag),
                     $"Last 2 bytes of sector {ex.InvalidSector} don't match update sequence array end tag.", null);
             }
 
             var fileRecord = BytesFactory.Build(data, reader);
-            fileRecord.Fixupable = fixuable;
+            fileRecord.Fixupable = fixupable;
             
             return fileRecord;
         }
