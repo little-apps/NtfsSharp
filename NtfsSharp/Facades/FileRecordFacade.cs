@@ -40,10 +40,7 @@ namespace NtfsSharp.Facades
                     $"Last 2 bytes of sector {ex.InvalidSector} don't match update sequence array end tag.", null);
             }
 
-            var fileRecord = BytesFactory.Build(data, reader);
-            fileRecord.Fixupable = fixupable;
-            
-            return fileRecord;
+            return new FileRecord(header, reader) { Fixupable = fixupable };
         }
     }
 }
