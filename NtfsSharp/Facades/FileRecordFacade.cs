@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using NtfsSharp.Exceptions;
 using NtfsSharp.Factories.FileRecords;
 using NtfsSharp.FileRecords;
@@ -19,6 +20,10 @@ namespace NtfsSharp.Facades
         public static FileRecord Build(byte[] data, IVolume reader)
         {
             var header = data.ToStructure<FileRecord.FILE_RECORD_HEADER_NTFS>();
+
+            // Is it a FILE record?
+            if (!header.Magic.SequenceEqual(new byte[] { 0x46, 0x49, 0x4C, 0x45 }))
+                throw new InvalidFileRecordException(nameof(header.Magic), null);
 
             if (header.UpdateSequenceSize - 1 > reader.SectorsPerMftRecord)
                 throw new InvalidFileRecordException(nameof(header.UpdateSequenceSize), "Update sequence size exceeds number of sectors in file record", null);
