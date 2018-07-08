@@ -71,8 +71,6 @@ namespace NtfsSharp.Drivers
 
             while (bytesRead < bytesToRead)
             {
-                Console.WriteLine($"Reading sector at index {CurrentSectorOffset}");
-
                 var sector = _vhd.ReadSector(CurrentSectorOffset);
 
                 Array.Copy(sector.Data, 0, dest, currentOffset, sector.Data.Length);
