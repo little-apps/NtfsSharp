@@ -3,7 +3,6 @@ using NtfsSharp.Helpers;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using NtfsSharp.Data;
-using NtfsSharp.Exceptions;
 
 namespace NtfsSharp.FileRecords.Attributes.Base.NonResident
 {
@@ -19,7 +18,7 @@ namespace NtfsSharp.FileRecords.Attributes.Base.NonResident
         /// <summary>
         /// A list of the data blocks or data runs to locate the data on the disk
         /// </summary>
-        public readonly List<DataBlock> DataBlocks = new List<DataBlock>();
+        public DataBlocks DataBlocks { get; private set; }
 
         public NonResident(NTFS_ATTRIBUTE_HEADER header, byte[] data, FileRecord fileRecord) : base(header, data, fileRecord)
         {
@@ -36,26 +35,11 @@ namespace NtfsSharp.FileRecords.Attributes.Base.NonResident
         /// <param name="data"></param>
         private void ReadDataBlocks(byte[] data)
         {
-            var currentOffset = CurrentOffset;
+            var offset = CurrentOffset;
 
-            ulong vcn = 0;
+            DataBlocks = DataBlocks.BuildFromData(data, this, ref offset);
 
-            while (currentOffset < Header.Length && data[currentOffset] != 0)
-            {
-                var dataBlock = DataBlock.GetDataBlockFromRun(data, ref currentOffset, vcn);
-
-                if (dataBlock.LastVcn > SubHeader.LastVCN - SubHeader.StartingVCN)
-                {
-                    DataBlocks.Clear();
-                    return;
-                }
-
-                DataBlocks.Add(dataBlock);
-
-                vcn += dataBlock.RunLength;
-            }
-
-            CurrentOffset = currentOffset;
+            CurrentOffset = offset;
         }
 
         /// <summary>
@@ -65,44 +49,12 @@ namespace NtfsSharp.FileRecords.Attributes.Base.NonResident
         /// <returns>LCN or null if it wasn't found</returns>
         public ulong? VcnToLcn(ulong vcn)
         {
-            var isFirst = true;
-            ulong lcnOffset = 0;
-
-            var signExtends = new ulong[]
-            {
-                0xffffffffffffff00,
-                0xffffffffffff0000,
-                0xffffffffff000000,
-                0xffffffff00000000,
-                0xffffff0000000000,
-                0xffff000000000000,
-                0xff00000000000000,
-                0x0000000000000000
-            };
-
             foreach (var dataBlock in DataBlocks)
             {
-                if (dataBlock.LcnOffsetNegative)
-                {
-                    if (isFirst)
-                        throw new InvalidAttributeException("The first virtual cluster cannot have a negative LCN.");
-
-                    // Last bit in last byte is 1 (meaning it's negative)
-                    lcnOffset = (ulong) ((long) lcnOffset + (long) dataBlock.LcnOffset +
-                                         (long) signExtends[dataBlock.OffsetFieldLength - 1]);
-                }
-                else
-                {
-                    // Offset is positive
-                    lcnOffset += dataBlock.LcnOffset;
-                }
-
                 // Is VCN in this run?
-                if (vcn < dataBlock.RunLength)
-                    return vcn + lcnOffset;
-
-                vcn -= dataBlock.RunLength;
-                isFirst = false;
+                if (vcn >= dataBlock.StartVcn && vcn <= dataBlock.LastVcn)
+                    // Return the actual LCN offset plus the requested VCN minus the start VCN (so it's the LCN in the datablock)
+                    return dataBlock.ActualLcnOffset + (vcn - dataBlock.StartVcn);
             }
 
             // Not found
