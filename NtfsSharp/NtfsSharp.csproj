@@ -71,6 +71,7 @@
     <Compile Include="Factories\Attributes\HeaderFactory.cs" />
     <Compile Include="FileRecords\Attributes\AttributeList\AttributeListItem.cs" />
     <Compile Include="FileRecords\Attributes\AttributeList\AttributeList.cs" />
+    <Compile Include="FileRecords\Attributes\Base\NonResident\DataBlocks.cs" />
     <Compile Include="FileRecords\Attributes\MetaData\MetaDataBase.cs" />
     <Compile Include="FileRecords\Attributes\MetaData\NonResidentAttribute.cs" />
     <Compile Include="FileRecords\Attributes\MetaData\ResidentAttribute.cs" />
