@@ -5,7 +5,7 @@ using NtfsSharp.Exceptions;
 
 namespace NtfsSharp.FileRecords.Attributes.Base.NonResident
 {
-    public class DataBlocks : IEnumerable<DataBlock>, IReadOnlyList<DataBlock>
+    public class DataBlocks : IReadOnlyList<DataBlock>
     {
         private readonly List<DataBlock> _dataBlocks;
 
