@@ -27,7 +27,7 @@ namespace NtfsSharp.Data
                 if (_data != null)
                     return _data;
 
-                _volume.Driver.Move((long) Offset);
+                _volume.Driver.MoveFromBeginning((long) Offset);
                 _data = _volume.Driver.ReadSectorBytes(BytesPerSector);
 
                 return _data;

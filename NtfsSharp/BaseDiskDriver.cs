@@ -2,7 +2,7 @@
 
 namespace NtfsSharp
 {
-    public abstract class BaseDiskDriver : IDisposable
+    public abstract class BaseDiskDriver : IDiskDriver, IDisposable
     {
         /// <summary>
         /// Guessed sectors per cluster
@@ -23,6 +23,21 @@ namespace NtfsSharp
         /// <param name="moveMethod">Whether the <paramref name="offset"/> is from the beginning, current position or end of the NTFS</param>
         /// <returns></returns>
         public abstract long Move(long offset, MoveMethod moveMethod = MoveMethod.Begin);
+        
+        public long MoveFromBeginning(long offset)
+        {
+            return Move(offset, MoveMethod.Begin);
+        }
+
+        public long MoveFromCurrent(long offset)
+        {
+            return Move(offset, MoveMethod.Current);
+        }
+
+        public long MoveFromEnd(long offset)
+        {
+            return Move(offset, MoveMethod.End);
+        }
 
         /// <summary>
         /// Reads the number of bytes from inside the NTFS

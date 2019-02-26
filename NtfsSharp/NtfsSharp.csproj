@@ -100,6 +100,7 @@
     <Compile Include="FileRecords\Attributes\VolumeInformation.cs" />
     <Compile Include="FileRecords\Attributes\VolumeName.cs" />
     <Compile Include="FileRecords\FileRecord.cs" />
+    <Compile Include="IDiskDriver.cs" />
     <Compile Include="MetaData\BootSector.cs" />
     <Compile Include="Volumes\MasterFileTable.cs" />
     <Compile Include="Helpers\Fixupable.cs" />
