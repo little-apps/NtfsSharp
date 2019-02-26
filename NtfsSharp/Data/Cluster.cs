@@ -77,7 +77,7 @@ namespace NtfsSharp.Data
         /// <returns>Byte array that is <seealso cref="Volume.BytesPerSector"/> * <seealso cref="Volume.SectorsPerCluster"/> in length</returns>
         private byte[] DataOnDemand()
         {
-            _volume.Driver.Move((long) (Lcn * _volume.BytesPerSector * _volume.SectorsPerCluster));
+            _volume.Driver.MoveFromBeginning((long) (Lcn * _volume.BytesPerSector * _volume.SectorsPerCluster));
             return _volume.Driver.ReadSectorBytes(_volume.BytesPerSector * _volume.SectorsPerCluster);
         }
 

@@ -7,7 +7,7 @@ namespace NtfsSharp.Volumes
 {
     public interface IVolume : IComparable<IVolume>
     {
-        BaseDiskDriver Driver { get; }
+        IDiskDriver Driver { get; }
 
         ulong MftLcn { get; }
 

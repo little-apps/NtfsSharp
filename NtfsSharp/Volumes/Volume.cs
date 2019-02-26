@@ -16,7 +16,7 @@ namespace NtfsSharp.Volumes
 {
     public class Volume : IDisposable, IComparable, IComparable<Volume>, IEquatable<Volume>, IVolume
     {
-        public BaseDiskDriver Driver { get; }
+        public IDiskDriver Driver { get; }
 
         public BootSector BootSector { get; private set; }
         public IReadOnlyDictionary<uint, FileRecord> MFT { get; private set; }
@@ -29,13 +29,13 @@ namespace NtfsSharp.Volumes
         /// <summary>
         /// Sectors in a cluster
         /// </summary>
-        /// <remarks>Uses the guessed value (from the <seealso cref="BaseDiskDriver"/>) to read the bootsector, otherwise, the actual value.</remarks>
+        /// <remarks>Uses the guessed value (from the <seealso cref="IDiskDriver"/>) to read the bootsector, otherwise, the actual value.</remarks>
         public uint SectorsPerCluster => BootSector?.SectorsPerCluster ?? Driver.DefaultSectorsPerCluster;
 
         /// <summary>
         /// Bytes in a sector
         /// </summary>
-        /// <remarks>Uses the guessed value (from the <seealso cref="BaseDiskDriver"/>) to read the bootsector, otherwise, the actual value.</remarks>
+        /// <remarks>Uses the guessed value (from the <seealso cref="IDiskDriver"/>) to read the bootsector, otherwise, the actual value.</remarks>
         public ushort BytesPerSector => BootSector?.BytesPerSector ?? Driver.DefaultBytesPerSector;
 
         /// <summary>
@@ -345,7 +345,8 @@ namespace NtfsSharp.Volumes
 
             if (disposing)
             {
-                Driver?.Dispose();
+                if (Driver != null && Driver is IDisposable disposable)
+                    disposable.Dispose();
             }
         }
 

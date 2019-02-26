@@ -17,7 +17,7 @@ namespace NtfsSharp.Volumes
         public readonly Volume Volume;
         private readonly SortedList<uint, FileRecord> _table = new SortedList<uint, FileRecord>();
 
-        public BaseDiskDriver Driver => Volume.Driver;
+        public IDiskDriver Driver => Volume.Driver;
         public uint SectorsPerCluster => Volume.SectorsPerCluster;
         public ushort BytesPerSector => Volume.BytesPerSector;
         public uint SectorsPerMftRecord => Volume.SectorsPerMftRecord;
