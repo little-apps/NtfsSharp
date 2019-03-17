@@ -82,6 +82,8 @@ namespace NtfsSharp.Console
                 Volume = new Volume(new PartitionDriver($@"\\.\{Options.Drive}:"));
             }
 
+            Volume.Read();
+
             Interactive();
         }
 

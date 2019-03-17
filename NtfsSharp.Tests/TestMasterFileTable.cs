@@ -27,7 +27,7 @@ namespace NtfsSharp.Tests
         public void SetUpDummyDisk()
         {
             Driver = new DummyDriver();
-            Volume = new Volume(Driver, false);
+            Volume = new Volume(Driver);
             BootSector = new BootSector();
 
             Driver.Clusters.Add(0, BootSector);
