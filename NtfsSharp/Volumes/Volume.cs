@@ -53,14 +53,11 @@ namespace NtfsSharp.Volumes
         /// Constructor for opening a volume and (optionally) reading it.
         /// </summary>
         /// <param name="diskDriver">Disk driver to use to read the Volume.</param>
-        /// <param name="doRead">If true, calls the <seealso cref="Read"/> method in the constructor (default: true)</param>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="diskDriver"/> is null.</exception>
-        public Volume(BaseDiskDriver diskDriver, bool doRead = true)
+        /// <remarks>The <seealso cref="Read"/> method is not called when a <see cref="Volume"/> object is created. This must be done by the calling method.</remarks>
+        public Volume(BaseDiskDriver diskDriver)
         {
             Driver = diskDriver ?? throw new ArgumentNullException(nameof(diskDriver));
-
-            if (doRead)
-                Read();
         }
 
         ~Volume()

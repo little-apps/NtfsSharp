@@ -67,10 +67,12 @@ namespace NtfsSharp.Explorer
                 return;
 
             ((BaseFileModel) Tree.Model)?.Dispose();
+
+            var volume = new Volume(CreateDiskDriver());
             
-            Tree.Model =
-                new FileModelEntry.QuickScan.FileModel(
-                    new Volume(CreateDiskDriver()));
+            volume.Read();
+
+            Tree.Model = new FileModelEntry.QuickScan.FileModel(volume);
         }
 
         private async void DeepScanButton_OnClick(object sender, RoutedEventArgs e)
@@ -84,7 +86,11 @@ namespace NtfsSharp.Explorer
 
             ((BaseFileModel) Tree.Model)?.Dispose();
 
-            Tree.Model = await scanning.Scan(new Volume(CreateDiskDriver()));
+            var volume = new Volume(CreateDiskDriver());
+            
+            volume.Read();
+
+            Tree.Model = await scanning.Scan(volume);
 
             scanning.Close();
         }

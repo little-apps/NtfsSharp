@@ -119,6 +119,7 @@ namespace NtfsSharp.DiskUsage
             try
             {
                 _volume = new Volume(new PartitionDriver($@"\\.\{volumeChar}:"));
+                _volume.Read();
             }
             catch (Exception)
             {
