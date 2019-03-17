@@ -142,19 +142,24 @@ namespace NtfsSharp.Volumes
         /// <summary>
         /// Reads the boot sector and then the master file table.
         /// </summary>
-        public void Read()
+        /// <returns>Current instance of <seealso cref="Volume"/></returns>
+        public IVolume Read()
         {
-            ReadBootSector();
-            ReadMft();
+            return 
+                ReadBootSector()
+                    .ReadMft();
         }
 
         /// <summary>
         /// Reads the boot sector (located at offset 0 in the disk)
         /// </summary>
         /// <exception cref="InvalidBootSectorException">Thrown if the bytes per sector, sectors per cluster, or clusters per MFT record is invalid.</exception>
-        public void ReadBootSector()
+        /// <returns>Current instance of <seealso cref="Volume"/></returns>
+        public Volume ReadBootSector()
         {
             BootSector = BootSectorFactory.Build(ReadSectorAtOffset(0).Data);
+
+            return this;
         }
 
         /// <summary>
@@ -162,7 +167,8 @@ namespace NtfsSharp.Volumes
         /// </summary>
         /// <param name="readMftMirrorOnFailure">If true and an exception occurs reading the MFT specified in the bootsector, the MFT mirror is attempted to be read. (default: true)</param>
         /// <exception cref="InvalidMasterFileTableException">See <seealso cref="MasterFileTable.ReadRecords"/> for conditions causing exception to be thrown.</exception>
-        public void ReadMft(bool readMftMirrorOnFailure = true)
+        /// <returns>Current instance of <seealso cref="Volume"/></returns>
+        public Volume ReadMft(bool readMftMirrorOnFailure = true)
         {
             try
             {
@@ -179,6 +185,8 @@ namespace NtfsSharp.Volumes
                 }
                     
             }
+
+            return this;
         }
 
         /// <summary>

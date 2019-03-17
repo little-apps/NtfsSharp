@@ -87,10 +87,8 @@ namespace NtfsSharp.Explorer
             ((BaseFileModel) Tree.Model)?.Dispose();
 
             var volume = new Volume(CreateDiskDriver());
-            
-            volume.Read();
 
-            Tree.Model = await scanning.Scan(volume);
+            Tree.Model = await scanning.Scan(volume.Read() as Volume);
 
             scanning.Close();
         }
