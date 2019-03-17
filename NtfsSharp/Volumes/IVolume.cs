@@ -17,7 +17,7 @@ namespace NtfsSharp.Volumes
 
         IReadOnlyDictionary<uint, FileRecord> MFT { get; }
 
-        void Read();
+        IVolume Read();
         Cluster ReadLcn(ulong lcn);
     }
 }

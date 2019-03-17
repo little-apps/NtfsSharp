@@ -45,7 +45,8 @@ namespace NtfsSharp.Volumes
         /// <remarks>
         ///     The attributes of each MFT record are parsed as well.
         /// </remarks>
-        public void Read()
+        /// <returns>Current instance of <seealso cref="MasterFileTable"/></returns>
+        public IVolume Read()
         {
             var currentCluster = Volume.ReadLcn(MftLcn);
             var bytesPerFileRecord = _sectorsPerMftRecord * Volume.BytesPerSector;
@@ -80,9 +81,12 @@ namespace NtfsSharp.Volumes
                 catch (InvalidFileRecordException)
                 {
                     // Some MFT system files may be empty
+                    throw;
                 }
                 
             }
+
+            return this;
         }
 
         /// <summary>
