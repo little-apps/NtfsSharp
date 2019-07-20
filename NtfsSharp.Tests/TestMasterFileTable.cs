@@ -35,14 +35,14 @@ namespace NtfsSharp.Tests
             Volume.ReadBootSector();
 
             var bytesPerCluster = BytesPerSector * SectorsPerCluster;
-            
+            var filesPerPart = (uint) (bytesPerCluster / BytesPerFileRecord);
             var neededMftClusters =
                 Math.Ceiling((decimal) _masterFileTableEntries * BytesPerFileRecord / bytesPerCluster);
 
             for (var lcn = MftStartLcn; lcn < MftStartLcn + neededMftClusters; lcn++)
             {
-                var mftPart = new MasterFileTableCluster(Driver, (uint) (bytesPerCluster / BytesPerFileRecord),
-                    BytesPerFileRecord, (uint) lcn);
+                var mftPart = new MasterFileTableCluster(Driver, filesPerPart,
+                    BytesPerFileRecord, (uint) lcn, (uint) (lcn - MftStartLcn) * filesPerPart);
                 
                 MasterFileTableParts.Add(mftPart);
                 Driver.Clusters.Add((long) lcn, mftPart);

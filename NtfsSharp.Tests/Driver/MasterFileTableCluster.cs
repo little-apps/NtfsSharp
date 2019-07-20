@@ -10,6 +10,7 @@ namespace NtfsSharp.Tests.Driver
         public readonly uint FilesPerPart;
         public readonly uint BytesPerFileRecord;
         public readonly uint Lcn;
+        public readonly uint StartMftNum;
         public readonly DummyFileRecord[] FileRecords;
 
         public bool UseUpdateSequenceArray { get; set; } = false;
@@ -21,14 +22,20 @@ namespace NtfsSharp.Tests.Driver
         /// <remarks>An array of bytes set to zero are added if the index in <seealso cref="FileRecords"/> is null.</remarks>
         protected override bool ShouldGenerateDefault => false;
 
-        public MasterFileTableCluster(DummyDriver driver, uint filesPerPart, uint bytesPerFileRecord, uint lcn)
+        public MasterFileTableCluster(DummyDriver driver, uint filesPerPart, uint bytesPerFileRecord, uint lcn, uint startMftNum)
         {
             _driver = driver;
             FilesPerPart = filesPerPart;
             BytesPerFileRecord = bytesPerFileRecord;
             Lcn = lcn;
+            StartMftNum = startMftNum;
 
+            // Create dummy file records
             FileRecords = new DummyFileRecord[filesPerPart];
+            for (var i = 0; i < FileRecords.Length; i++)
+            {
+                FileRecords[i] = DummyFileRecord.BuildDummyFileRecord((uint) (StartMftNum + i));
+            }
         }
         
         protected override void GenerateDefaultDummy()
