@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using CommandLine;
 using NtfsSharp.Drivers;
 using NtfsSharp.Drivers.Physical;
 using NtfsSharp.Volumes;
@@ -33,15 +35,15 @@ namespace NtfsSharp.Console
                 return;
             }
 
-            if (options.PhysicalDrive.Length > 0 && !string.IsNullOrEmpty(options.PhysicalDrive[0]))
+            if (options.PhysicalDrive.Any() && !string.IsNullOrEmpty(options.PhysicalDrive.ElementAt(0)))
             {
-                if (options.PhysicalDrive.Length != 2)
+                if (options.PhysicalDrive.Count() != 2)
                 {
                     OutputError("Two options (drive and partition number) are not specified.");
                     return;
                 }
 
-                if (string.IsNullOrEmpty(options.PhysicalDrive[0]) || string.IsNullOrEmpty(options.PhysicalDrive[1]))
+                if (string.IsNullOrEmpty(options.PhysicalDrive.ElementAt(0)) || string.IsNullOrEmpty(options.PhysicalDrive.ElementAt(1)))
                 {
                     OutputError("Either the drive or partition number are empty.");
                     return;
@@ -51,7 +53,7 @@ namespace NtfsSharp.Console
 
                 try
                 {
-                    driveNum = Convert.ToUInt16(options.PhysicalDrive[0]);
+                    driveNum = Convert.ToUInt16(options.PhysicalDrive.ElementAt(0));
                 }
                 catch
                 {
@@ -61,7 +63,7 @@ namespace NtfsSharp.Console
 
                 try
                 {
-                    partitionNum = Convert.ToUInt16(options.PhysicalDrive[1]);
+                    partitionNum = Convert.ToUInt16(options.PhysicalDrive.ElementAt(1));
                 }
                 catch
                 {
@@ -83,8 +85,6 @@ namespace NtfsSharp.Console
             }
 
             Volume.Read();
-
-            Interactive();
         }
 
         private void ListPhysicalDrives()
@@ -101,7 +101,7 @@ namespace NtfsSharp.Console
             }
         }
 
-        private void Interactive()
+        private int InteractiveMode()
         {
             var cmd = ' ';
 
@@ -142,7 +142,8 @@ namespace NtfsSharp.Console
                         break;
                 }
             }
-            
+
+            return 0;
         }
 
         private void DisplayCommands(TextWriter textWriter)
@@ -220,12 +221,11 @@ namespace NtfsSharp.Console
 
         static void Main(string[] args)
         {
-            var options = new Options();
-
-            if (CommandLine.Parser.Default.ParseArguments(args, options))
+            CommandLine.Parser.Default.ParseArguments<Console.Options>(args).MapResult(options =>
             {
                 var program = new Program(options);
-            }
+                return program.InteractiveMode();
+            }, _ => 1);
         }
     }
 }
