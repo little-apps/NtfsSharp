@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using CommandLine;
+using NtfsSharp.Console.Exceptions;
 using NtfsSharp.Drivers;
 using NtfsSharp.Drivers.Physical;
 using NtfsSharp.Volumes;
@@ -13,6 +14,9 @@ namespace NtfsSharp.Console
     {
         private Volume Volume;
         private Options Options;
+
+        private uint? DriveNum { get; set; }
+        private uint? PartitionNum { get; set; }
 
         private TextWriter Output
         {
@@ -29,59 +33,24 @@ namespace NtfsSharp.Console
         {
             Options = options;
 
+            ValidateOptions();
+
             if (options.ListPhysicalDrives)
             {
                 ListPhysicalDrives();
                 return;
             }
 
-            if (options.PhysicalDrive.Any() && !string.IsNullOrEmpty(options.PhysicalDrive.ElementAt(0)))
+            try
             {
-                if (options.PhysicalDrive.Count() != 2)
-                {
-                    OutputError("Two options (drive and partition number) are not specified.");
-                    return;
-                }
-
-                if (string.IsNullOrEmpty(options.PhysicalDrive.ElementAt(0)) || string.IsNullOrEmpty(options.PhysicalDrive.ElementAt(1)))
-                {
-                    OutputError("Either the drive or partition number are empty.");
-                    return;
-                }
-
-                ushort driveNum, partitionNum;
-
-                try
-                {
-                    driveNum = Convert.ToUInt16(options.PhysicalDrive.ElementAt(0));
-                }
-                catch
-                {
-                    OutputError("Drive must a number between 0-65535");
-                    return;
-                }
-
-                try
-                {
-                    partitionNum = Convert.ToUInt16(options.PhysicalDrive.ElementAt(1));
-                }
-                catch
-                {
-                    OutputError("Partition must a number between 0-65535");
-                    return;
-                }
-
-                Volume = new Volume(new PhysicalDiskDriver($@"\\.\PhysicalDrive{driveNum}", partitionNum));
+                if (DriveNum.HasValue && PartitionNum.HasValue)
+                    Volume = new Volume(new PhysicalDiskDriver($@"\\.\PhysicalDrive{DriveNum}", PartitionNum.Value));
+                else
+                    Volume = new Volume(new PartitionDriver($@"\\.\{Options.Drive}:"));
             }
-            else
+            catch (Exception ex)
             {
-                if (!char.IsUpper(Options.Drive))
-                {
-                    OutputError("Drive must be a upper case letter (A-Z)");
-                    return;
-                }
-
-                Volume = new Volume(new PartitionDriver($@"\\.\{Options.Drive}:"));
+                throw new InvalidOptionsException(ex.Message, ex);
             }
 
             Volume.Read();
@@ -214,17 +183,63 @@ namespace NtfsSharp.Console
             
         }
 
-        private void OutputError(string message)
+        private void ValidateOptions()
         {
-            Output.WriteLine("Error: {0}", message);
+            if (Options.PhysicalDrive.Any())
+            {
+                if (Options.PhysicalDrive.Count() != 2)
+                {
+                    throw new InvalidOptionsException("Two options (drive and partition number) are not specified.");
+                }
+
+                if (string.IsNullOrEmpty(Options.PhysicalDrive.ElementAt(0)) || string.IsNullOrEmpty(Options.PhysicalDrive.ElementAt(1)))
+                {
+                    throw new InvalidOptionsException("Either the drive or partition number are empty.");
+                }
+
+                try
+                {
+                    DriveNum = Convert.ToUInt16(Options.PhysicalDrive.ElementAt(0));
+                }
+                catch (Exception ex)
+                {
+                    throw new InvalidOptionsException("Drive must a number between 0-65535", ex);
+                }
+
+                try
+                {
+                    PartitionNum = Convert.ToUInt16(Options.PhysicalDrive.ElementAt(1));
+                }
+                catch (Exception ex)
+                {
+                    throw new InvalidOptionsException("Partition must a number between 0-65535", ex);
+                }
+            }
+            else
+            {
+                if (!char.IsUpper(Options.Drive))
+                {
+                    throw new InvalidOptionsException("Drive must be a upper case letter (A-Z)");
+                }
+            }
+            
         }
 
         static void Main(string[] args)
         {
             CommandLine.Parser.Default.ParseArguments<Console.Options>(args).MapResult(options =>
             {
-                var program = new Program(options);
-                return program.InteractiveMode();
+                try
+                {
+                    var program = new Program(options);
+                    return program.InteractiveMode();
+                }
+                catch (InvalidOptionsException ex)
+                {
+                    System.Console.WriteLine(ex.Message);
+                    return 1;
+                }
+               
             }, _ => 1);
         }
     }
