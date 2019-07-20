@@ -145,7 +145,7 @@ namespace NtfsSharp.Tests
 
             Volume.ReadMft();
 
-            Assert.AreEqual(_masterFileTableEntries - 1, Volume.MFT.Count);
+            Assert.AreEqual(_masterFileTableEntries, Volume.MFT.Count);
 
             for (var i = 0; i < Volume.MFT.Count; i++)
             {
@@ -177,7 +177,7 @@ namespace NtfsSharp.Tests
 
             Volume.ReadMft();
 
-            Assert.AreEqual(_masterFileTableEntries - 1, Volume.MFT.Count);
+            Assert.AreEqual(_masterFileTableEntries, Volume.MFT.Count);
 
             for (var i = 0; i < Volume.MFT.Count; i++)
             {
