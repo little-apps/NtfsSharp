@@ -72,9 +72,9 @@ namespace NtfsSharp.Drivers.Physical
         {
             if (GuidPartitionTable == null)
             {
-                if (partition >= MaxMasterBootRecordPartitions)
+                if (partition >= MbrStruct.PartitionEntries.Length)
                     throw new ArgumentOutOfRangeException(nameof(partition),
-                        $"Partition number cannot be greater than {MaxMasterBootRecordPartitions}");
+                        $"Partition number cannot be greater than or equal to {MbrStruct.PartitionEntries.Length}");
 
                 var partitionEntry = MbrStruct.PartitionEntries[partition];
                 
@@ -82,9 +82,9 @@ namespace NtfsSharp.Drivers.Physical
             }
             else
             {
-                if (partition >= GuidPartitionTable.Header.PartitionEntries)
+                if (partition >= GuidPartitionTable.Count)
                     throw new ArgumentOutOfRangeException(nameof(partition),
-                        $"Partition number cannot be greater than {GuidPartitionTable.Header.PartitionEntries}");
+                        $"Partition number cannot be greater than or equal to {GuidPartitionTable.Count}");
 
                 var efiPartitionEntry = GuidPartitionTable[(int) partition];
 
