@@ -6,6 +6,7 @@ namespace NtfsSharp.Console
 {
     /// <summary>
     /// An ASCII progress bar
+    /// Found on <see href="https://gist.github.com/co89757/5ae15bf61a62f82f9abd32a285f0c76a">GitHub Gist</see>.
     /// </summary>
     public class ProgressBar : IDisposable, IProgress<double>
     {
