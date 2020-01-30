@@ -27,3 +27,4 @@ NtfsSharp is free and open source, and is licensed under the MIT License.
 
 ## Credits ##
  * [CommandLineParser by Giacomo Stelluti Scala](https://github.com/gsscoder/commandline)
+ * [ProgressBar in Console C# by co89757](https://gist.github.com/co89757/5ae15bf61a62f82f9abd32a285f0c76a)
