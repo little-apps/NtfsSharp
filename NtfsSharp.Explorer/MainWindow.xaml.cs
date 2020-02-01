@@ -105,22 +105,25 @@ namespace NtfsSharp.Explorer
 
         private static string FieldValueToString(object obj)
         {
-            if (obj is string)
-                return (string) obj;
-
-            if (obj is Enum)
-                return ((Enum) obj).ToString();
-
-            if (obj is FILETIME)
+            switch (obj)
             {
-                var fileTime = (FILETIME) obj;
-                var fileTimeLong = ((ulong)fileTime.dwHighDateTime << 32) + (uint) fileTime.dwLowDateTime;
+                case string str:
+                    return str;
+                
+                case Enum choice:
+                    return choice.ToString();
+                
+                case FILETIME fileTime:
+                {
+                    var fileTimeLong = ((ulong)fileTime.dwHighDateTime << 32) + (uint) fileTime.dwLowDateTime;
 
-                var dateTime = DateTime.FromFileTimeUtc((long) fileTimeLong);
-                return dateTime.ToString(CultureInfo.InvariantCulture);
+                    var dateTime = DateTime.FromFileTimeUtc((long) fileTimeLong);
+                    return dateTime.ToString(CultureInfo.InvariantCulture);
+                }
+
+                default:
+                    return Convert.ToString(obj);
             }
-
-            return Convert.ToString(obj);
         }
 
         private void Save_OnClick(object sender, RoutedEventArgs e)
