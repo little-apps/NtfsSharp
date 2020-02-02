@@ -80,6 +80,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Attributes.cs" />
+    <Compile Include="Factories\DiskDriverFactory.cs" />
     <Compile Include="FileModelEntry\BaseFileModel.cs" />
     <Compile Include="FileModelEntry\DeepScan\FileModel.cs" />
     <Compile Include="FileModelEntry\DeepScan\FileModelEntry.cs" />
@@ -144,5 +145,6 @@
       <Name>Aga.Controls</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
