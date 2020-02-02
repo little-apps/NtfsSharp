@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Windows;
 using Microsoft.Win32;
 using NtfsSharp.Drivers;
+using NtfsSharp.Explorer.Factories;
 using NtfsSharp.Explorer.FileModelEntry;
 using NtfsSharp.Explorer.FileModelEntry.DeepScan;
 using NtfsSharp.Explorer.Properties;
@@ -46,21 +47,6 @@ namespace NtfsSharp.Explorer
             }
         }
 
-        private BaseDiskDriver CreateDiskDriver()
-        {
-            switch (_options.MediaType)
-            {
-                case Options.MediaTypes.Drive:
-                    return new PartitionDriver($@"\\.\{_options.SelectedDriveLetter}:");
-
-                case Options.MediaTypes.VhdFile: 
-                    return new VhdDriver(_options.VhdFile);
-
-                default:
-                    throw new Exception("Unknown media type selected.");
-            }
-        }
-
         private void QuickScanButton_OnClick(object sender, RoutedEventArgs e)
         {
             if (!CheckCanScan())
@@ -68,7 +54,8 @@ namespace NtfsSharp.Explorer
 
             ((BaseFileModel) Tree.Model)?.Dispose();
 
-            var volume = new Volume(CreateDiskDriver());
+            var diskDriver = DiskDriverFactory.Make(_options);
+            var volume = new Volume(diskDriver);
             
             volume.Read();
 
@@ -86,7 +73,8 @@ namespace NtfsSharp.Explorer
 
             ((BaseFileModel) Tree.Model)?.Dispose();
 
-            var volume = new Volume(CreateDiskDriver());
+            var diskDriver = DiskDriverFactory.Make(_options);
+            var volume = new Volume(diskDriver);
 
             Tree.Model = await scanning.Scan(volume.Read() as Volume);
 
