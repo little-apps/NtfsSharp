@@ -137,19 +137,12 @@ namespace NtfsSharp.Explorer
                 CreatePrompt = true,
                 OverwritePrompt = true
             };
-            
-            var firstDotIndex = SelectedFileModelEntry.Filename.IndexOf('.');
-            if (firstDotIndex >= 0)
-            {
-                var selectedFileExt =
-                    SelectedFileModelEntry.Filename.Substring(firstDotIndex + 1);
 
-                saveFileDialog.Filter = $"*.{selectedFileExt}|*.{selectedFileExt}|*.*|*.*";
-            }
-            else
-            {
-                saveFileDialog.Filter = "*.*|*.*";
-            }
+            var fileExtension = Path.GetExtension(SelectedFileModelEntry.Filename);
+
+            saveFileDialog.Filter = !string.IsNullOrEmpty(fileExtension)
+                ? $"*{fileExtension}|*{fileExtension}|*.*|*.*"
+                : "*.*|*.*";
 
             if (saveFileDialog.ShowDialog(this) == true)
             {
