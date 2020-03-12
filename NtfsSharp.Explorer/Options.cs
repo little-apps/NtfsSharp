@@ -5,29 +5,18 @@ namespace NtfsSharp.Explorer
 {
     internal class Options
     {
-        private uint _selectedDrive;
-        private string _vhdFile;
-
         internal MediaTypes MediaType { get; set; } = MediaTypes.Drive;
 
         internal DriveInfo[] AvailableDrives { get; }
 
-        internal uint SelectedDriveIndex
-        {
-            get => _selectedDrive;
-            set => _selectedDrive = value;
-        }
+        internal uint SelectedDriveIndex { get; set; }
 
         internal char SelectedDriveLetter
         {
             get { return AvailableDrives[SelectedDriveIndex].Name[0]; }
         }
 
-        internal string VhdFile
-        {
-            get => _vhdFile;
-            set => _vhdFile = value;
-        }
+        internal string VhdFile { get; set; }
 
         internal Options()
         {
@@ -40,7 +29,7 @@ namespace NtfsSharp.Explorer
             {
                 case MediaTypes.Drive:
                 {
-                    if (_selectedDrive > AvailableDrives.Length)
+                    if (SelectedDriveIndex > AvailableDrives.Length)
                         throw new Exception("Unknown drive selected.");
 
                     break;
@@ -48,10 +37,10 @@ namespace NtfsSharp.Explorer
 
                 case MediaTypes.VhdFile:
                 {
-                    if (string.IsNullOrWhiteSpace(_vhdFile))
+                    if (string.IsNullOrWhiteSpace(VhdFile))
                         throw new Exception("VHD file path must be specified.");
 
-                    if (!File.Exists(_vhdFile))
+                    if (!File.Exists(VhdFile))
                         throw new Exception("VHD file could not be found.");
 
                     break;
