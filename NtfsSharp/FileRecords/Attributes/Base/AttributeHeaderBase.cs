@@ -29,13 +29,10 @@ namespace NtfsSharp.FileRecords.Attributes.Base
         /// <param name="fileRecord">File record containing attribute</param>
         protected AttributeHeaderBase(NTFS_ATTRIBUTE_HEADER header, byte[] data, FileRecord fileRecord)
         {
-            if (fileRecord == null)
-                throw new ArgumentNullException(nameof(fileRecord));
-
             Header = header;
             CurrentOffset += HeaderSize;
             Bytes = data;
-            FileRecord = fileRecord;
+            FileRecord = fileRecord ?? throw new ArgumentNullException(nameof(fileRecord));
         }
 
         protected byte[] GetBytesFromCurrentOffset(uint length)
