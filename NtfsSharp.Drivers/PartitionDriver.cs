@@ -56,7 +56,7 @@ namespace NtfsSharp.Drivers
 
         public override byte[] ReadInsideSectorBytes(uint bytesToRead)
         {
-            var buffer = AllocateByteArray(bytesToRead, out uint _);
+            var buffer = AllocateByteArray(bytesToRead, out _);
 
             FileStream.Read(buffer, 0, buffer.Length);
 
