@@ -9,27 +9,42 @@ namespace NtfsSharp.Drivers
 {
     public class PartitionDriver : BaseDiskDriver
     {
-        private SafeFileHandle Handle { get; }
+        private FileStream FileStream { get; }
 
         public readonly string Path;
 
         public PartitionDriver(string path)
         {
             Path = path;
-            Handle = CreateFile(path, FileAccess.Read, FileShare.ReadWrite, IntPtr.Zero, FileMode.Open, 0, IntPtr.Zero);
 
-            if (Handle.IsClosed || Handle.IsInvalid)
-                throw new Win32Exception(Marshal.GetHRForLastWin32Error());
+                var fileHandle = CreateFile(path, FileAccess.Read, FileShare.ReadWrite, IntPtr.Zero, FileMode.Open, 0, IntPtr.Zero);
+
+                if (fileHandle.IsClosed || fileHandle.IsInvalid)
+                    throw new Win32Exception(Marshal.GetHRForLastWin32Error());
+
+                FileStream = new FileStream(fileHandle, FileAccess.Read, 4096, false);
         }
 
         public override long Move(long offset, MoveMethod moveMethod = MoveMethod.Begin)
         {
-            long newOffset = 0;
+            SeekOrigin seekOrigin;
+            switch (moveMethod)
+            {
+                case MoveMethod.Current:
+                    seekOrigin = SeekOrigin.Current;
+                    break;
+                    
 
-            if (!SetFilePointerEx(Handle, offset, out newOffset, moveMethod))
-                throw new Win32Exception(Marshal.GetLastWin32Error());
+                case MoveMethod.End:
+                    seekOrigin = SeekOrigin.End;
+                    break;
 
-            return newOffset;
+                default:
+                    seekOrigin = SeekOrigin.Begin;
+                    break;
+            }
+
+            return FileStream.Seek(offset, seekOrigin);
         }
 
         private static byte[] AllocateByteArray(uint bytesToRead, out uint leftOverBytes)
@@ -43,8 +58,7 @@ namespace NtfsSharp.Drivers
         {
             var buffer = AllocateByteArray(bytesToRead, out uint _);
 
-            if (!ReadFile(Handle, buffer, (uint)buffer.Length, out uint _, IntPtr.Zero))
-                throw new Win32Exception(Marshal.GetLastWin32Error());
+            FileStream.Read(buffer, 0, buffer.Length);
 
             Array.Resize(ref buffer, (int) bytesToRead);
 
@@ -55,15 +69,14 @@ namespace NtfsSharp.Drivers
         {
             var buffer = new byte[bytesToRead];
 
-            if (!ReadFile(Handle, buffer, bytesToRead, out var _, IntPtr.Zero))
-                throw new Win32Exception(Marshal.GetLastWin32Error());
+            FileStream.Read(buffer, 0, (int) bytesToRead);
 
             return buffer;
         }
 
         public override void Dispose()
         {
-            Handle?.Dispose();
+            FileStream.Close();
         }
 
         [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
