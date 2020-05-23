@@ -1,4 +1,5 @@
 ﻿using System.Runtime.InteropServices;
+using System.Text;
 using NtfsSharp.Volumes;
 
 namespace NtfsSharp.Tests.Driver
@@ -22,7 +23,7 @@ namespace NtfsSharp.Tests.Driver
             DummyBootSector = new NtfsBootSector
             {
                 JMPInstruction = new byte[] {0xeb, 0x52, 0x90},
-                OEMID = "NTFS    ".ToCharArray(),
+                OEMID = Encoding.UTF8.GetBytes("NTFS    "),
                 BytesPerSector = (ushort) DummyDriver.BytesPerSector,
                 SectorsPerCluster = (byte) DummyDriver.SectorsPerCluster,
                 ReservedSectors = 0,
@@ -53,7 +54,7 @@ namespace NtfsSharp.Tests.Driver
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 3)]
             public byte[] JMPInstruction;
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 8)]
-            public char[] OEMID;
+            public byte[] OEMID;
             public ushort BytesPerSector;
             public byte SectorsPerCluster;
             public ushort ReservedSectors;
