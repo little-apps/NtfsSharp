@@ -46,7 +46,7 @@ namespace NtfsSharp.MetaData
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 3)]
             public readonly byte[] JMPInstruction;
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 8)]
-            public readonly char[] OEMID;
+            public readonly byte[] OEMID;
             public readonly ushort BytesPerSector;
             public readonly byte SectorsPerCluster;
             public readonly ushort ReservedSectors;
