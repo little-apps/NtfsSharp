@@ -97,7 +97,7 @@ namespace NtfsSharp.FileRecords.Attributes.Base.NonResident
             }
 
             if (actualOffset < 0 || actualOffset > Length)
-                throw new ArgumentException("Trying to seek before beginning or after end of file.", nameof(offset));
+                throw new ArgumentOutOfRangeException(nameof(offset), "Trying to seek before beginning or after end of file.");
 
             if (actualOffset == Position)
                 // Nothing to do
