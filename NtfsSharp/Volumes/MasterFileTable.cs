@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using NtfsSharp.Data;
 using NtfsSharp.Exceptions;
 using NtfsSharp.Facades;
 using NtfsSharp.FileRecords;
+using NtfsSharp.Units;
 
 namespace NtfsSharp.Volumes
 {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using NtfsSharp.Data;
 using NtfsSharp.FileRecords;
+using NtfsSharp.Units;
 
 namespace NtfsSharp.Volumes
 {

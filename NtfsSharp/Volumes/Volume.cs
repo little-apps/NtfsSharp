@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
-using NtfsSharp.Data;
 using NtfsSharp.Exceptions;
 using NtfsSharp.Facades;
 using NtfsSharp.Factories.MetaData;
@@ -11,6 +10,7 @@ using NtfsSharp.FileRecords.Attributes;
 using NtfsSharp.FileRecords.Attributes.Base;
 using NtfsSharp.FileRecords.Attributes.Base.NonResident;
 using NtfsSharp.MetaData;
+using NtfsSharp.Units;
 
 namespace NtfsSharp.Volumes
 {
