@@ -2,7 +2,7 @@
 using NtfsSharp.Helpers;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using NtfsSharp.Data;
+using NtfsSharp.Units;
 
 namespace NtfsSharp.FileRecords.Attributes.Base.NonResident
 {

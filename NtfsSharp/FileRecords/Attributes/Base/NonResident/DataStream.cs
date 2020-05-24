@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using NtfsSharp.Data;
+using NtfsSharp.Units;
 using NtfsSharp.Volumes;
 
 namespace NtfsSharp.FileRecords.Attributes.Base.NonResident

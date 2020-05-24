@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 using NtfsSharp.Volumes;
 
-namespace NtfsSharp.Data
+namespace NtfsSharp.Units
 {
     public class Cluster : IComparable, IComparable<Cluster>
     {

@@ -49,8 +49,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Data\Cluster.cs" />
-    <Compile Include="Data\Sector.cs" />
+    <Compile Include="Units\Cluster.cs" />
+    <Compile Include="Units\Sector.cs" />
     <Compile Include="BaseDiskDriver.cs" />
     <Compile Include="Exceptions\InvalidEndTagsException.cs" />
     <Compile Include="Exceptions\InvalidAttributeException.cs" />
