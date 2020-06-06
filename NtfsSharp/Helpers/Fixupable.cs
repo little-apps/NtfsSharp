@@ -54,7 +54,7 @@ namespace NtfsSharp.Helpers
                 var endTagOffset = i % 2;
 
                 // Offset of last two bytes in sector
-                var sectorUsaOffset = (uint) (Math.Ceiling((i + 1) / (decimal)2) * 512) - (2 - (i % 2));
+                var sectorUsaOffset = (uint) (Math.Ceiling((i + 1) / (decimal) 2) * BytesPerSector) - (2 - (i % 2));
 
                 // Do last two bytes in sector match end tag?
                 if (data[sectorUsaOffset] != EndTag[endTagOffset])
