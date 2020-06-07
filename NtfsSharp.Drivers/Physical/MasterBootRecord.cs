@@ -18,7 +18,7 @@ namespace NtfsSharp.Drivers.Physical
         /// <remarks>Unlike a sector, a LBA is always 512 bytes.</remarks>
         public const uint LogicalBlockAddressSize = 512;
 
-        private readonly BaseDiskDriver _diskDriver;
+        private readonly IDiskDriver _diskDriver;
         
         public MasterBootRecordStruct MbrStruct { get; private set; }
 
@@ -28,7 +28,7 @@ namespace NtfsSharp.Drivers.Physical
         /// <remarks>Not all drives use a GPT so this maybe null.</remarks>
         public GuidPartitionTable GuidPartitionTable { get; private set; }
 
-        public MasterBootRecord(BaseDiskDriver diskDriver)
+        public MasterBootRecord(IDiskDriver diskDriver)
         {
             _diskDriver = diskDriver ?? throw new ArgumentNullException(nameof(diskDriver));
 
@@ -42,7 +42,7 @@ namespace NtfsSharp.Drivers.Physical
         /// <exception cref="InvalidMasterBootRecord">Thrown if sector marker isn't 0xAA55</exception>
         private void ReadMasterBootRecord()
         {
-            _diskDriver.Move(0);
+            _diskDriver.MoveFromBeginning(0);
 
             var mbrBytes = _diskDriver.ReadSectorBytes(LogicalBlockAddressSize);
             MbrStruct = mbrBytes.ToStructure<MasterBootRecordStruct>();
@@ -99,7 +99,7 @@ namespace NtfsSharp.Drivers.Physical
         /// <returns>New offset on disk</returns>
         public long MoveToLba(ulong lba)
         {
-            return _diskDriver.Move((long) LbaToOffset(lba));
+            return _diskDriver.MoveFromBeginning((long) LbaToOffset(lba));
         }
 
         /// <summary>
