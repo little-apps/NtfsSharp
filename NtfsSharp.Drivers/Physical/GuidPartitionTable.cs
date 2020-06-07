@@ -13,7 +13,7 @@ namespace NtfsSharp.Drivers.Physical
         private const uint HeaderLba = 1;
 
         private MasterBootRecord Mbr { get; }
-        private IDiskDriver DiskDriver { get; }
+        private IDiskDriver DiskDriver => Mbr.DiskDriver;
 
         public PartitionTableHeader Header { get; }
 
@@ -30,12 +30,10 @@ namespace NtfsSharp.Drivers.Physical
         /// Constructor for GuidPartitionTable
         /// </summary>
         /// <param name="masterBootRecord">Instance of <see cref="MasterBootRecord"/> containing the GPT</param>
-        /// <param name="diskDriver">Disk driver to access the GPT</param>
         /// <exception cref="InvalidGuidPartitionTable">Thrown if the GPT signature is not 'EFI PART'</exception>
-        public GuidPartitionTable(MasterBootRecord masterBootRecord, IDiskDriver diskDriver)
+        public GuidPartitionTable(MasterBootRecord masterBootRecord)
         {
             Mbr = masterBootRecord ?? throw new ArgumentNullException(nameof(masterBootRecord));
-            DiskDriver = diskDriver ?? throw new ArgumentNullException(nameof(diskDriver));
 
             Mbr.MoveToLba(HeaderLba);
 
