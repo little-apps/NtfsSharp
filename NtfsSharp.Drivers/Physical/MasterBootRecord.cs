@@ -18,7 +18,7 @@ namespace NtfsSharp.Drivers.Physical
         /// <remarks>Unlike a sector, a LBA is always 512 bytes.</remarks>
         public const uint LogicalBlockAddressSize = 512;
 
-        private readonly IDiskDriver _diskDriver;
+        internal IDiskDriver DiskDriver { get; }
         
         public MasterBootRecordStruct MbrStruct { get; private set; }
 
@@ -30,7 +30,7 @@ namespace NtfsSharp.Drivers.Physical
 
         public MasterBootRecord(IDiskDriver diskDriver)
         {
-            _diskDriver = diskDriver ?? throw new ArgumentNullException(nameof(diskDriver));
+            DiskDriver = diskDriver ?? throw new ArgumentNullException(nameof(diskDriver));
 
             ReadMasterBootRecord();
             ReadGuidPartitionTable();
@@ -42,9 +42,9 @@ namespace NtfsSharp.Drivers.Physical
         /// <exception cref="InvalidMasterBootRecord">Thrown if sector marker isn't 0xAA55</exception>
         private void ReadMasterBootRecord()
         {
-            _diskDriver.MoveFromBeginning(0);
+            DiskDriver.MoveFromBeginning(0);
 
-            var mbrBytes = _diskDriver.ReadSectorBytes(LogicalBlockAddressSize);
+            var mbrBytes = DiskDriver.ReadSectorBytes(LogicalBlockAddressSize);
             MbrStruct = mbrBytes.ToStructure<MasterBootRecordStruct>();
 
             if (MbrStruct.EndOfSectorMarker != 0xAA55)
@@ -60,7 +60,7 @@ namespace NtfsSharp.Drivers.Physical
             if (MbrStruct.PartitionEntries[0].SystemID != SystemId.GptProtectiveMbr)
                 return;
 
-            GuidPartitionTable = new GuidPartitionTable(this, _diskDriver);
+            GuidPartitionTable = new GuidPartitionTable(this);
         }
 
         /// <summary>
@@ -99,7 +99,7 @@ namespace NtfsSharp.Drivers.Physical
         /// <returns>New offset on disk</returns>
         public long MoveToLba(ulong lba)
         {
-            return _diskDriver.MoveFromBeginning((long) LbaToOffset(lba));
+            return DiskDriver.MoveFromBeginning((long) LbaToOffset(lba));
         }
 
         /// <summary>
