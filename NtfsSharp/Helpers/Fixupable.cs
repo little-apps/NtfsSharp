@@ -50,11 +50,18 @@ namespace NtfsSharp.Helpers
             // Fixup sectors
             for (var i = 0; i < UpdateSequenceArray.Length; i++)
             {
+                // What sector index is it?
+                // Take the index in the USA, divide it by 2.
+                var sectorIndex = i / 2;
+
+                // Multiply the sectorIndex by the bytes per sector to get the first index for the sector. Add bytes per sector - 1 to get the last index for the sector.
+                var sectorEndIndex = sectorIndex * BytesPerSector + (BytesPerSector - 1);
+
                 // Which byte in end tag is it?
                 var endTagOffset = i % 2;
 
-                // Offset of last two bytes in sector
-                var sectorUsaOffset = (uint) (Math.Ceiling((i + 1) / (decimal) 2) * BytesPerSector) - (2 - (i % 2));
+                // The index of the byte for the current USA item is the sectorEndIndex subtract 1 if it's the first or 0 if it's the last.
+                var sectorUsaOffset = sectorEndIndex - (1 - endTagOffset);
 
                 // Do last two bytes in sector match end tag?
                 if (data[sectorUsaOffset] != EndTag[endTagOffset])
