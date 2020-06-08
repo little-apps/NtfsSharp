@@ -26,13 +26,13 @@ namespace NtfsSharp.Helpers
                 throw new ArgumentNullException(nameof(endTag));
 
             if (endTag.Length == 0)
-                throw new ArgumentOutOfRangeException(nameof(endTag), "End tag bytes cannot be emptied.");
+                throw new ArgumentOutOfRangeException(nameof(endTag), "End tag bytes cannot be empty.");
 
             if (updateSequenceArray == null)
                 throw new ArgumentNullException(nameof(updateSequenceArray));
 
             if (updateSequenceArray.Length == 0)
-                throw new ArgumentOutOfRangeException(nameof(updateSequenceArray), "Update sequence array cannot be emptied.");
+                throw new ArgumentOutOfRangeException(nameof(updateSequenceArray), "Update sequence array cannot be empty.");
 
             EndTag = endTag;
             UpdateSequenceArray = updateSequenceArray;
