@@ -14,7 +14,8 @@ namespace NtfsSharp.Units
         private byte[] _data;
         private readonly IVolume _volume;
 
-        public readonly ulong Offset;
+        public readonly ulong SectorIndex;
+        public ulong Offset => SectorIndex * BytesPerSector;
 
         /// <summary>
         /// Data contained in sector
@@ -37,31 +38,26 @@ namespace NtfsSharp.Units
         /// <summary>
         /// Constructor for Sector on <seealso cref="Volume"/>
         /// </summary>
-        /// <param name="offset">Offset of sector</param>
+        /// <param name="index">Sector index</param>
         /// <param name="vol">Volume containing sector</param>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="vol"/> is null.</exception>
-        /// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="offset"/> is not a multiple of <seealso cref="Volume.BytesPerSector"/></exception>
-        public Sector(ulong offset, IVolume vol)
+        public Sector(ulong index, IVolume vol)
         {
             if (ReferenceEquals(null, vol))
                 throw new ArgumentNullException(nameof(vol), "Volume cannot be null.");
 
-            if (offset % vol.BytesPerSector > 0)
-                throw new ArgumentOutOfRangeException(nameof(offset),
-                    $"Offset must be multiple of {vol.BytesPerSector}");
-
-            Offset = offset;
+            SectorIndex = index;
             _volume = vol;
         }
 
         /// <summary>
         /// Constructor for Sector with data for it specified
         /// </summary>
-        /// <param name="offset">Offset that sector is located</param>
+        /// <param name="index">Index of sector.</param>
         /// <param name="data">Data contained in sector</param>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="data"/> is null.</exception>
         /// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="data"/> is not <seealso cref="BytesPerSector"/></exception>
-        public Sector(ulong offset, byte[] data)
+        public Sector(ulong index, byte[] data)
         {
             if (data == null)
                 throw new ArgumentNullException(nameof(data), "Data cannot be null");
@@ -69,7 +65,7 @@ namespace NtfsSharp.Units
             if (data.Length != BytesPerSector)
                 throw new ArgumentOutOfRangeException(nameof(data), $"Data must be {BytesPerSector} bytes.");
 
-            Offset = offset;
+            SectorIndex = index;
             _data = data;
         }
 

@@ -157,7 +157,7 @@ namespace NtfsSharp.Volumes
         /// <returns>Current instance of <seealso cref="Volume"/></returns>
         public Volume ReadBootSector()
         {
-            BootSector = BootSectorFactory.Build(ReadSectorAtOffset(0).Data);
+            BootSector = BootSectorFactory.Build(ReadSector(0).Data);
 
             return this;
         }
@@ -324,9 +324,14 @@ namespace NtfsSharp.Volumes
             return readAttributes ? ReadFileRecordWithAttributes(bytes) : ReadFileRecordWithoutAttributes(bytes);
         }
 
-        public Sector ReadSectorAtOffset(ulong offset)
+        /// <summary>
+        /// Creates an object representing a sector at index on the volume.
+        /// </summary>
+        /// <param name="index">Index of sector.</param>
+        /// <returns>Instance of <seealso cref="Sector"/></returns>
+        public Sector ReadSector(ulong index)
         {
-            return new Sector(offset, this);
+            return new Sector(index, this);
         }
 
         public Cluster ReadLcn(ulong lcn)
