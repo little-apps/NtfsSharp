@@ -40,20 +40,6 @@ namespace NtfsSharp.Tests
         }
 
         /// <summary>
-        /// Tests that <seealso cref="ArgumentOutOfRangeException"/> is thrown from using an offset not a multiple of 512
-        /// </summary>
-        [Test]
-        public void TestSectorOffsetInvalid()
-        {
-            var ex = Assert.Throws<ArgumentOutOfRangeException>(() =>
-            {
-                var sector = new Sector(1, Volume);
-            });
-
-            Assert.AreEqual("offset", ex.ParamName);
-        }
-
-        /// <summary>
         /// Tests that <seealso cref="ArgumentNullException"/> is thrown from passing null as the byte array
         /// </summary>
         [Test]
@@ -147,7 +133,7 @@ namespace NtfsSharp.Tests
 
             Array.Copy(expectedBytes, 0, dataCluster.Data, sectorOffset, expectedBytes.Length);
 
-            var sector = new Sector(lcn * DummyDriver.BytesPerSector * DummyDriver.SectorsPerCluster, Volume);
+            var sector = new Sector(lcn * Volume.SectorsPerCluster, Volume);
             var actual = sector.ReadFile<Guid>(sectorOffset);
 
             Assert.AreEqual(expected, actual, "Actual GUID is different than expected GUID.");
