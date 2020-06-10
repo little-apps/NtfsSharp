@@ -334,11 +334,21 @@ namespace NtfsSharp.Volumes
             return new Sector(index, this);
         }
 
+        /// <summary>
+        /// Creates an object representing a cluster at logical cluster number (LCN) on the volume.
+        /// </summary>
+        /// <param name="lcn">Logical Cluster Number</param>
+        /// <returns>Instance of <seealso cref="Cluster"/></returns>
         public Cluster ReadLcn(ulong lcn)
         {
             return new Cluster(lcn, this);
         }
 
+        /// <summary>
+        /// Translates a logical cluster number to the byte offset on the volume.
+        /// </summary>
+        /// <param name="lcn">Logical Cluster Number</param>
+        /// <returns>Byte offset on volume.</returns>
         public ulong LcnToOffset(ulong lcn)
         {
             return lcn * BytesPerSector * SectorsPerCluster;
