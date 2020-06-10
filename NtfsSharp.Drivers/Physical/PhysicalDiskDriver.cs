@@ -119,8 +119,6 @@ namespace NtfsSharp.Drivers.Physical
                     .Where(device => device.StartsWith("PhysicalDrive"));
         }
 
-        
-
         public enum BootIndicator : byte
         {
             NoBoot = 0,
