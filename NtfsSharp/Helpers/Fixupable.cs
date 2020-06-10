@@ -71,7 +71,5 @@ namespace NtfsSharp.Helpers
                 data[sectorUsaOffset] = UpdateSequenceArray[i];
             }
         }
-
-        
     }
 }
