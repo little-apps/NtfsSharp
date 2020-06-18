@@ -49,6 +49,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FileRecords\Attributes\SecurityDescriptor\AccessControlEntry.cs" />
+    <Compile Include="FileRecords\Attributes\SecurityDescriptor\AccessControlList.cs" />
+    <Compile Include="FileRecords\Attributes\SecurityDescriptor\SecurityIdentifier.cs" />
     <Compile Include="Units\Cluster.cs" />
     <Compile Include="Units\Sector.cs" />
     <Compile Include="BaseDiskDriver.cs" />
@@ -94,7 +97,7 @@
     <Compile Include="FileRecords\Attributes\ObjectId.cs" />
     <Compile Include="FileRecords\Attributes\Base\Resident.cs" />
     <Compile Include="FileRecords\Attributes\ReparsePoint.cs" />
-    <Compile Include="FileRecords\Attributes\SecurityDescriptor.cs" />
+    <Compile Include="FileRecords\Attributes\SecurityDescriptor\SecurityDescriptor.cs" />
     <Compile Include="FileRecords\Attributes\Shared\FileName.cs" />
     <Compile Include="FileRecords\Attributes\StandardInformation.cs" />
     <Compile Include="FileRecords\Attributes\VolumeInformation.cs" />
