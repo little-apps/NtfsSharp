@@ -19,7 +19,7 @@ namespace NtfsSharp.Volumes
         public IDiskDriver Driver { get; }
 
         public BootSector BootSector { get; private set; }
-        public IReadOnlyDictionary<uint, FileRecord> MFT { get; private set; }
+        public MasterFileTable MFT { get; private set; }
 
         public ulong MftLcn { get; private set; }
 
@@ -170,20 +170,19 @@ namespace NtfsSharp.Volumes
         /// <returns>Current instance of <seealso cref="Volume"/></returns>
         public Volume ReadMft(bool readMftMirrorOnFailure = true)
         {
+            MFT = new MasterFileTable(this);
+
             try
             {
-                MFT = ReadMftAtLcn(BootSector.BootSectorStructure.MFTLCN);
-                MftLcn = BootSector.BootSectorStructure.MFTLCN;
+                ReadMftAtLcn(BootSector.BootSectorStructure.MFTLCN);
             }
             catch
             {
                 // If readMftMirrorOnFailure and an exception occurred, read from the MFT mirror LCN which is specified in the boot sector.
                 if (readMftMirrorOnFailure)
                 {
-                    MFT = ReadMftAtLcn(BootSector.BootSectorStructure.MFTMirrLCN);
-                    MftLcn = BootSector.BootSectorStructure.MFTMirrLCN;
+                    ReadMftAtLcn(BootSector.BootSectorStructure.MFTMirrLCN);
                 }
-                    
             }
 
             return this;
@@ -198,12 +197,12 @@ namespace NtfsSharp.Volumes
         {
             if (lcn == 0)
                 throw new ArgumentOutOfRangeException(nameof(lcn), "Logical cluster number must be greater than 0.");
-            
-            var masterFileTable = new MasterFileTable(lcn, this);
 
-            masterFileTable.Read();
+            var mft = MFT.Read(lcn);
 
-            return masterFileTable;
+            MftLcn = lcn;
+
+            return mft;
         }
         
         /// <summary>
