@@ -329,11 +329,6 @@ namespace NtfsSharp.Volumes
             return new Sector(index, this);
         }
 
-        /// <summary>
-        /// Creates an object representing a cluster at logical cluster number (LCN) on the volume.
-        /// </summary>
-        /// <param name="lcn">Logical Cluster Number</param>
-        /// <returns>Instance of <seealso cref="Cluster"/></returns>
         public Cluster ReadLcn(ulong lcn)
         {
             return new Cluster(lcn, this);
