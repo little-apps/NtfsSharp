@@ -16,7 +16,7 @@ namespace NtfsSharp.FileRecords
     /// </summary>
     public class FileRecord : IComparer<FileRecord>, IComparable<FileRecord>, IEquatable<FileRecord>
     {
-        public readonly IVolume Volume;
+        public readonly Volume Volume;
 
         public FILE_RECORD_HEADER_NTFS Header { get; private set; }
         public readonly List<Attributes.Attribute> Attributes = new List<Attributes.Attribute>();
@@ -70,7 +70,7 @@ namespace NtfsSharp.FileRecords
         /// <param name="header">File record header</param>
         /// <param name="reader">Reader that read the file record</param>
         /// <remarks>Use the <see cref="Facades.FileRecordAttributesFacade"/> to create a FileRecord object</remarks>
-        public FileRecord(FILE_RECORD_HEADER_NTFS header, IVolume reader)
+        public FileRecord(FILE_RECORD_HEADER_NTFS header, Volume reader)
         {
             Header = header;
             Volume = reader ?? throw new ArgumentNullException(nameof(reader), "Reader cannot be null");

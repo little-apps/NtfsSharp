@@ -18,7 +18,7 @@ namespace NtfsSharp.Factories.FileRecords
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="data"/> is null</exception>
         /// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="data"/> is empty</exception>
         /// <exception cref="InvalidFileRecordException">Thrown if unable to read file record</exception>
-        public static FileRecord Build(byte[] data, IVolume reader)
+        public static FileRecord Build(byte[] data, Volume reader)
         {
             if (data == null)
                 throw new ArgumentNullException(nameof(data), "Data cannot be null");

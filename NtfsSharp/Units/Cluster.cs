@@ -9,7 +9,7 @@ namespace NtfsSharp.Units
         private byte[] _data;
         private Sector[] _sectors;
 
-        private readonly IVolume _volume;
+        private readonly Volume _volume;
 
         public readonly ulong Lcn;
 
@@ -65,7 +65,7 @@ namespace NtfsSharp.Units
         /// <param name="lcn">Logical cluster number on <seealso cref="Volume"/></param>
         /// <param name="vol">Volume containg cluster</param>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="vol"/> is null.</exception>
-        public Cluster(ulong lcn, IVolume vol)
+        public Cluster(ulong lcn, Volume vol)
         {
             _volume = vol ?? throw new ArgumentNullException(nameof(vol), "Volume cannot be null.");
             Lcn = lcn;

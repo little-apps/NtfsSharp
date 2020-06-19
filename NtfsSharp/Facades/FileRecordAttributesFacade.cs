@@ -13,7 +13,7 @@ namespace NtfsSharp.Facades
         /// <param name="data">Data containing file record header and attributes</param>
         /// <param name="reader">Where the data was read from</param>
         /// <returns><seealso cref="FileRecord"/> object with attributes.</returns>
-        public static FileRecord Build(byte[] data, IVolume reader)
+        public static FileRecord Build(byte[] data, Volume reader)
         {
             var fileRecord = FileRecordFacade.Build(data, reader);
 
