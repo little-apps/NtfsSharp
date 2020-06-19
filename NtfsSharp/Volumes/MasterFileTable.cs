@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using NtfsSharp.Exceptions;
 using NtfsSharp.Facades;
 using NtfsSharp.FileRecords;
-using NtfsSharp.Units;
 
 namespace NtfsSharp.Volumes
 {
