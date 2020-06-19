@@ -12,7 +12,7 @@ namespace NtfsSharp.Units
         private ushort BytesPerSector => _volume?.BytesPerSector ?? 512;
 
         private byte[] _data;
-        private readonly IVolume _volume;
+        private readonly Volume _volume;
 
         public readonly ulong SectorIndex;
         public ulong Offset => SectorIndex * BytesPerSector;
@@ -41,7 +41,7 @@ namespace NtfsSharp.Units
         /// <param name="index">Sector index</param>
         /// <param name="vol">Volume containing sector</param>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="vol"/> is null.</exception>
-        public Sector(ulong index, IVolume vol)
+        public Sector(ulong index, Volume vol)
         {
             if (ReferenceEquals(null, vol))
                 throw new ArgumentNullException(nameof(vol), "Volume cannot be null.");

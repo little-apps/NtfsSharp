@@ -17,7 +17,7 @@ namespace NtfsSharp.Facades
         /// <param name="reader">Reader that read the file record bytes</param>
         /// <returns><seealso cref="FileRecord"/> object</returns>
         /// <exception cref="InvalidFileRecordException">Thrown when last 2 bytes do not match update sequence array end tag.</exception>
-        public static FileRecord Build(byte[] data, IVolume reader)
+        public static FileRecord Build(byte[] data, Volume reader)
         {
             var header = data.ToStructure<FileRecord.FILE_RECORD_HEADER_NTFS>();
 
