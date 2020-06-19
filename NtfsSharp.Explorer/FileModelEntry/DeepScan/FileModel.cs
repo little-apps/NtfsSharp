@@ -90,7 +90,7 @@ namespace NtfsSharp.Explorer.FileModelEntry.DeepScan
                     var parentFileRecordNum = (fileNameAttr?.FileName.Data.FileReference.FileRecordNumber)
                         .GetValueOrDefault();
 
-                    if (parentFileRecordNum == default(ulong))
+                    if (parentFileRecordNum == default)
                         continue;
 
                     var parentFileModelEntry = new FileModelEntry(parentFileRecordNum);
