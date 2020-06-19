@@ -43,6 +43,10 @@ namespace NtfsSharp.Volumes
         /// <returns>Current instance of <seealso cref="MasterFileTable"/></returns>
         public MasterFileTable Read(ulong mftLcn)
         {
+            // Clear any existing file records in case a read is being performed after a bad read.
+            if (_table.Count > 0)
+                _table.Clear();
+
             var currentCluster = Volume.ReadLcn(mftLcn);
             var bytesPerFileRecord = _sectorsPerMftRecord * Volume.BytesPerSector;
 
