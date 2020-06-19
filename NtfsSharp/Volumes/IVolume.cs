@@ -19,5 +19,12 @@ namespace NtfsSharp.Volumes
 
         IVolume Read();
         Cluster ReadLcn(ulong lcn);
+
+        /// <summary>
+        /// Creates an object representing a sector at index on the volume.
+        /// </summary>
+        /// <param name="index">Index of sector.</param>
+        /// <returns>Instance of <seealso cref="Sector"/></returns>
+        Sector ReadSector(ulong index);
     }
 }

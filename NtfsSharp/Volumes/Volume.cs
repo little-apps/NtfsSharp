@@ -324,11 +324,6 @@ namespace NtfsSharp.Volumes
             return readAttributes ? ReadFileRecordWithAttributes(bytes) : ReadFileRecordWithoutAttributes(bytes);
         }
 
-        /// <summary>
-        /// Creates an object representing a sector at index on the volume.
-        /// </summary>
-        /// <param name="index">Index of sector.</param>
-        /// <returns>Instance of <seealso cref="Sector"/></returns>
         public Sector ReadSector(ulong index)
         {
             return new Sector(index, this);
