@@ -36,7 +36,7 @@ namespace NtfsSharp.Helpers
                     // don't process static fields
                     continue;
 
-                if (fieldType == typeof(string)) 
+                if (fieldType == typeof(string))
                     // don't swap bytes for strings
                     continue;
 
@@ -61,13 +61,13 @@ namespace NtfsSharp.Helpers
                         if (customAttr.NamedArguments == null ||
                             !customAttr.ConstructorArguments.Any(constructorArgs =>
                                 constructorArgs.ArgumentType == typeof(UnmanagedType) &&
-                                ((int)constructorArgs.Value == (int)UnmanagedType.ByValArray ||
-                                 (int)constructorArgs.Value == (int)UnmanagedType.ByValTStr)))
+                                ((int) constructorArgs.Value == (int) UnmanagedType.ByValArray ||
+                                 (int) constructorArgs.Value == (int) UnmanagedType.ByValTStr)))
                             continue;
 
                         // Get value of SizeConst
                         sizeConst =
-                            (int)customAttr.NamedArguments
+                            (int) customAttr.NamedArguments
                                 .First(namedArg => namedArg.MemberName == nameof(MarshalAsAttribute.SizeConst))
                                 .TypedValue.Value;
                     }
