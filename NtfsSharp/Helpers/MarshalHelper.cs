@@ -20,7 +20,7 @@ namespace NtfsSharp.Helpers
         /// <param name="endianness">The endian the <paramref name="data"/> should be</param>
         /// <param name="startOffset">Starting offseting in <paramref name="data"/> (default is 0)</param>
         /// <remarks>Modified from https://stackoverflow.com/a/15020402/533242. </remarks>
-        private static void MaybeAdjustEndianness(Type type, byte[] data, Endianness endianness, int startOffset = 0)
+        public static void MaybeAdjustEndianness(Type type, byte[] data, Endianness endianness, int startOffset = 0)
         {
             if (BitConverter.IsLittleEndian == (endianness == Endianness.LittleEndian))
             {
