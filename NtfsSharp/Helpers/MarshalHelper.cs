@@ -82,6 +82,13 @@ namespace NtfsSharp.Helpers
             }
         }
 
+        /// <summary>
+        /// Translates raw bytes into a structure and adjusts the endianness (if needed).
+        /// </summary>
+        /// <typeparam name="T">Structure type to translate to.</typeparam>
+        /// <param name="rawData">Raw bytes to translate.</param>
+        /// <param name="endianness">Endinness to use before translating to structure.</param>
+        /// <returns>Structure with type <typeparamref name="T"/>.</returns>
         public static T ToStructure<T>(this byte[] rawData, Endianness endianness) where T : struct
         {
             MaybeAdjustEndianness(typeof(T), rawData, endianness);
@@ -99,6 +106,13 @@ namespace NtfsSharp.Helpers
             }
         }
 
+        /// <summary>
+        /// Translates raw bytes into a structure.
+        /// </summary>
+        /// <typeparam name="T">Structure type to translate to.</typeparam>
+        /// <param name="bytes">Raw bytes to translate.</param>
+        /// <param name="offset">Offset in bytes to start at (default is 0)</param>
+        /// <returns>Structure with type <typeparamref name="T"/>.</returns>
         public static T ToStructure<T>(this byte[] bytes, uint offset = 0)
         {
             var bytesPtr = GCHandle.Alloc(bytes, GCHandleType.Pinned);
@@ -110,6 +124,13 @@ namespace NtfsSharp.Helpers
             return ret;
         }
 
+        /// <summary>
+        /// Extracts bytes from offset to offset + length.
+        /// </summary>
+        /// <param name="bytes">Bytes to extract from.</param>
+        /// <param name="offset">Starting offset of bytes.</param>
+        /// <param name="length">Length of bytes from offset.</param>
+        /// <returns>Extracted bytes.</returns>
         public static byte[] GetBytesAtOffset(this byte[] bytes, uint offset, uint length)
         {
             var newBytes = new byte[length];
