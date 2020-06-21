@@ -63,7 +63,7 @@ namespace NtfsSharp.Units
         /// Constructor for Cluster
         /// </summary>
         /// <param name="lcn">Logical cluster number on <seealso cref="Volume"/></param>
-        /// <param name="vol">Volume containg cluster</param>
+        /// <param name="vol">Volume containing cluster</param>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="vol"/> is null.</exception>
         public Cluster(ulong lcn, Volume vol)
         {
