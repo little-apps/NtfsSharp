@@ -89,6 +89,7 @@ namespace NtfsSharp.Helpers
         /// <param name="rawData">Raw bytes to translate.</param>
         /// <param name="endianness">Endianness to use before translating to structure.</param>
         /// <returns>Structure with type <typeparamref name="T"/>.</returns>
+        /// <remarks>The <paramref name="rawData"/> maybe mutated by <seealso cref="MaybeAdjustEndianness"/> and therefore, a copy may need to be made.</remarks>
         public static T ToStructure<T>(this byte[] rawData, Endianness endianness) where T : struct
         {
             MaybeAdjustEndianness(typeof(T), rawData, endianness);
