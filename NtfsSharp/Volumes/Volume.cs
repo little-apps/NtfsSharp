@@ -328,7 +328,7 @@ namespace NtfsSharp.Volumes
             return new Sector(index, this);
         }
 
-        public Cluster ReadLcn(ulong lcn)
+        public Cluster ReadCluster(ulong lcn)
         {
             return new Cluster(lcn, this);
         }

@@ -89,7 +89,7 @@ namespace NtfsSharp.FileRecords.Attributes.AttributeList
                     if (!lcn.HasValue)
                         return;
 
-                    var cluster = owner.ReadLcn(lcn.Value);
+                    var cluster = owner.ReadCluster(lcn.Value);
 
                     data = new byte[bytesPerFileRecord];
 

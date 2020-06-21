@@ -32,7 +32,7 @@ namespace NtfsSharp.FileRecords.Attributes.Base.NonResident
         private ulong CurrentLcn { get; set; }
         private uint OffsetInLcn { get; set; }
 
-        private Cluster Cluster => Owner.ReadLcn(CurrentLcn);
+        private Cluster Cluster => Owner.ReadCluster(CurrentLcn);
 
         private uint ClusterSize
             =>
@@ -187,7 +187,7 @@ namespace NtfsSharp.FileRecords.Attributes.Base.NonResident
                     break;
 
                 var currentLcn = PositionToLcn(out long offsetInCluster);
-                var currentCluster = Owner.ReadLcn(currentLcn);
+                var currentCluster = Owner.ReadCluster(currentLcn);
 
                 var bytesRead = ClusterSize - offsetInCluster;
 

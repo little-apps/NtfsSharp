@@ -26,7 +26,7 @@ namespace NtfsSharp.Volumes
         /// </summary>
         /// <param name="lcn">Logical Cluster Number</param>
         /// <returns>Instance of <seealso cref="Cluster"/></returns>
-        Cluster ReadLcn(ulong lcn);
+        Cluster ReadCluster(ulong lcn);
 
         /// <summary>
         /// Creates an object representing a sector at index on the volume.
