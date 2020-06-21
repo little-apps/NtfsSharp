@@ -8,7 +8,7 @@ using NtfsSharp.Helpers;
 namespace NtfsSharp.FileRecords.Attributes.SecurityDescriptor
 {
     /// <summary>
-    ///   The security descriptor is necessary to prevent unauthorised access to files. It stores information about:
+    ///   The security descriptor is necessary to prevent unauthorized access to files. It stores information about:
     ///
     ///    The owner of the file
     ///    Permissions the owner has granted to other users

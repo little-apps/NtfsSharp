@@ -7,7 +7,7 @@ namespace NtfsSharp.Units
     public class Sector
     {
         /// <summary>
-        /// Specifys the BytesPerSector. The value from <seealso cref="Volume"/> is used if it is not null, otherwise, 512 is used.
+        /// Specifies the BytesPerSector. The value from <seealso cref="Volume"/> is used if it is not null, otherwise, 512 is used.
         /// </summary>
         private ushort BytesPerSector => _volume?.BytesPerSector ?? 512;
 
@@ -20,7 +20,7 @@ namespace NtfsSharp.Units
         /// <summary>
         /// Data contained in sector
         /// </summary>
-        /// <remarks>If using Volume, data is retreived once (and only once) when this property is accessed.</remarks>
+        /// <remarks>If using Volume, data is retrieved once (and only once) when this property is accessed.</remarks>
         public byte[] Data
         {
             get

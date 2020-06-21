@@ -22,7 +22,6 @@ namespace NtfsSharp.FileRecords.Attributes.Base
         /// Constructor for AttributeBodyBase
         /// </summary>
         /// <param name="header"><see cref="AttributeHeaderBase"/> that contains this body</param>
-        /// <param name="mustBe">Whether body data must be resident and/or non-resident</param>
         /// <param name="readBody">If false, the data is not read in constructor. Useful for when dealing with large amounts of data.</param>
         protected AttributeBodyBase(AttributeHeaderBase header, bool readBody = true)
         {
