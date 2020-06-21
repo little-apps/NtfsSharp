@@ -1,6 +1,7 @@
 ﻿using NtfsSharp.Exceptions;
 using NtfsSharp.Helpers;
 using NtfsSharp.MetaData;
+using NtfsSharp.Units;
 
 namespace NtfsSharp.Factories.MetaData
 {
@@ -9,12 +10,12 @@ namespace NtfsSharp.Factories.MetaData
         /// <summary>
         /// Creates a BootSector object
         /// </summary>
-        /// <param name="data">Data containing boot sector</param>
+        /// <param name="sector">Sector containing boot sector</param>
         /// <returns><seealso cref="BootSector"/> object</returns>
         /// <exception cref="InvalidBootSectorException">Thrown if BytesPerSector, ClustersPerMFTRecord or SectorsPerCluster is invalid.</exception>
-        public static BootSector Build(byte[] data)
+        public static BootSector Build(Sector sector)
         {
-            var bootSectorStructure = data.ToStructure<BootSector.NtfsBootSector>();
+            var bootSectorStructure = sector.Data.ToStructure<BootSector.NtfsBootSector>();
 
             var bytesPerSector = bootSectorStructure.BytesPerSector;
             var sectorsPerCluster = bootSectorStructure.SectorsPerCluster;
