@@ -23,7 +23,7 @@ namespace NtfsSharp.FileRecords.Attributes.IndexAllocation
         /// <summary>
         /// Reads file indices in IndexAllocation
         /// </summary>
-        /// <remarks>This can a bit of time (depending on the size of the IndexAllocation)</remarks>
+        /// <remarks>This can take a bit of time (depending on the size of the IndexAllocation)</remarks>
         /// <returns>List of file indices</returns>
         public IEnumerable<FileIndex> ReadFileIndices()
         {
