@@ -157,7 +157,7 @@ namespace NtfsSharp.Volumes
         /// <returns>Current instance of <seealso cref="Volume"/></returns>
         public Volume ReadBootSector()
         {
-            BootSector = BootSectorFactory.Build(ReadSector(0).Data);
+            BootSector = BootSectorFactory.Build(ReadSector(0));
 
             return this;
         }
