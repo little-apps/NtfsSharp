@@ -20,7 +20,6 @@ namespace NtfsSharp.Volumes
         /// <summary>
         /// Constructor of MasterFileTable
         /// </summary>
-        /// <param name="mftLcn">Logical cluster number MFT starts at</param>
         /// <param name="volume">Volume instance</param>
         /// <remarks>This object will have 0 elements until <seealso cref="Read"/> is called.</remarks>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="volume"/> is null.</exception>
@@ -32,7 +31,7 @@ namespace NtfsSharp.Volumes
         }
 
         /// <summary>
-        /// Reads master file table records from the LCN specified in <seealso cref="MftLcn"/>
+        /// Reads master file table records from the LCN specified in <paramref name="mftLcn"/>.
         /// </summary>
         /// <param name="mftLcn">LCN of start of MFT.</param>
         /// <exception cref="InvalidMasterFileTableException">Thrown when the MFT record number does not match the index of it</exception>
