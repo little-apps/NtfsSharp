@@ -45,7 +45,7 @@ namespace NtfsSharp.Volumes
             if (_table.Count > 0)
                 _table.Clear();
 
-            var currentCluster = Volume.ReadLcn(mftLcn);
+            var currentCluster = Volume.ReadCluster(mftLcn);
             var bytesPerFileRecord = _sectorsPerMftRecord * Volume.BytesPerSector;
 
             for (uint i = 0; i < RecordsToRead * _sectorsPerMftRecord; i += _sectorsPerMftRecord)
@@ -53,7 +53,7 @@ namespace NtfsSharp.Volumes
                 var sectorOffsetInLcn = i % Volume.SectorsPerCluster;
 
                 if (sectorOffsetInLcn == 0 && i > 0)
-                    currentCluster = Volume.ReadLcn(currentCluster.Lcn + 1);
+                    currentCluster = Volume.ReadCluster(currentCluster.Lcn + 1);
 
                 var fileRecordBytes = new byte[bytesPerFileRecord];
 

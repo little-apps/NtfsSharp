@@ -71,7 +71,7 @@ namespace NtfsSharp.Tests
                 Array.Copy(sectorExpected.ToByteArray(), 0, dataCluster.Data, clusterOffset,
                     sectorExpected.ToByteArray().Length);
 
-                var cluster = Volume.ReadLcn(lcn);
+                var cluster = Volume.ReadCluster(lcn);
 
                 Assert.AreEqual(sectorExpected, cluster.ReadFile<Guid>(clusterOffset), $"GUID read at offset {clusterOffset} in cluster is different.");
                 Assert.AreEqual(sectorExpected, cluster.Sectors[sectorIndex].ReadFile<Guid>(sectorOffset), $"GUID read in sector #{sectorExpected} is different.");
@@ -85,7 +85,7 @@ namespace NtfsSharp.Tests
         [Test]
         public void TestClusterSectorsReadInvalidOffset()
         {
-            var cluster = Volume.ReadLcn(0);
+            var cluster = Volume.ReadCluster(0);
 
             Assert.Throws<ArgumentOutOfRangeException>(() => cluster.ReadFile<Guid>(4090));
             Assert.Throws<ArgumentOutOfRangeException>(() => cluster.Sectors[0].ReadFile<Guid>(500));

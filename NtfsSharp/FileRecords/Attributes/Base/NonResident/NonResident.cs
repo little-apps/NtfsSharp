@@ -264,7 +264,7 @@ namespace NtfsSharp.FileRecords.Attributes.Base.NonResident
 
             for (ulong i = 0; i < dataBlock.RunLength; i++)
             {
-                yield return FileRecord.Volume.ReadLcn(dataBlock.LcnOffset + i);
+                yield return FileRecord.Volume.ReadCluster(dataBlock.LcnOffset + i);
             }
         }
 
@@ -297,7 +297,7 @@ namespace NtfsSharp.FileRecords.Attributes.Base.NonResident
 
             for (long i = 0, currentLcn = (long) lcnOffset.Value; i < clustersToRead; i++, currentLcn++)
             {
-                var cluster = FileRecord.Volume.ReadLcn((ulong) currentLcn);
+                var cluster = FileRecord.Volume.ReadCluster((ulong) currentLcn);
 
                 Array.Copy(cluster.Data, 0, data, i * FileRecord.Volume.BytesPerSector * FileRecord.Volume.SectorsPerCluster, cluster.Data.Length);
             }

@@ -39,7 +39,7 @@ namespace NtfsSharp.FileRecords.Attributes.IndexAllocation
                 if (lcn == null)
                     continue;
 
-                var cluster = headerNonResident.FileRecord.Volume.ReadLcn(lcn.Value);
+                var cluster = headerNonResident.FileRecord.Volume.ReadCluster(lcn.Value);
 
                 var magicNum = BitConverter.ToUInt32(cluster.Data, 0);
 
