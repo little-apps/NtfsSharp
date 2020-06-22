@@ -3,7 +3,6 @@ solution: NtfsSharp.sln
 mono: latest
 install:
   - nuget restore NtfsSharp.sln
-  - nuget install NUnit.ConsoleRunner -Version 3.6.1 -OutputDirectory testrunner
 script:
   - xbuild /p:Configuration=Mono NtfsSharp.sln
-  - mono ./testrunner/NUnit.ConsoleRunner.3.6.1/tools/nunit3-console.exe ./NtfsSharp.Tests/bin/Mono/NtfsSharp.Tests.dll
+  - mono ~/.nuget/packages/nunit.consolerunner/3.11.1/tools/nunit3-console.exe ./NtfsSharp.Tests/bin/Mono/NtfsSharp.Tests.dll
