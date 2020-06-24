@@ -4,5 +4,5 @@ mono: latest
 install:
   - nuget restore NtfsSharp.sln
 script:
-  - xbuild /p:Configuration=Mono NtfsSharp.sln
-  - mono ~/.nuget/packages/nunit.consolerunner/3.11.1/tools/nunit3-console.exe ./NtfsSharp.Tests/bin/Mono/NtfsSharp.Tests.dll
+  - msbuild /p:Configuration=Testing NtfsSharp.sln
+  - mono ~/.nuget/packages/nunit.consolerunner/3.11.1/tools/nunit3-console.exe ./NtfsSharp.Tests/bin/Release/NtfsSharp.Tests.dll
