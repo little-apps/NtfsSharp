@@ -4,6 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>NtfsSharp</AssemblyName>
     <RootNamespace>NtfsSharp</RootNamespace>
+    <Configurations>Debug;Release</Configurations>
   </PropertyGroup>
 
 </Project>
