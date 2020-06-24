@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
 using NtfsSharp.Helpers;
-using SID = System.Security.Principal.SecurityIdentifier;
 
 namespace NtfsSharp.FileRecords.Attributes.SecurityDescriptor
 {
@@ -16,11 +16,6 @@ namespace NtfsSharp.FileRecords.Attributes.SecurityDescriptor
         public byte SubAuthorityCount { get; }
         public byte[] NtAuthority { get; }
         public uint[] SubAuthorities { get; }
-
-        /// <summary>
-        /// The <seealso cref="System.Security.Principal.SecurityIdentifier"/> instance for the SID.
-        /// </summary>
-        public SID SID { get; }
 
         /// <summary>
         /// Creates an instance of <see cref="SecurityIdentifier"/> using the raw bytes.
@@ -49,28 +44,35 @@ namespace NtfsSharp.FileRecords.Attributes.SecurityDescriptor
 
                 SubAuthorities[sidPart] = BitConverter.ToUInt32(bytes, partStartOffset);
             }
-
-            SID = new SID(bytes, 0);
         }
 
         public int CompareTo(SecurityIdentifier other)
         {
-            return SID.CompareTo(other.SID);
+            if (other == null)
+                return -1;
+
+            return ReferenceEquals(this, other) ? 0 : GetHashCode().CompareTo(other.GetHashCode());
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object other)
         {
-            return SID.Equals(obj);
+            if (other == null)
+                return false;
+
+            if (ReferenceEquals(this, other))
+                return true;
+
+            return GetHashCode().Equals(other.GetHashCode());
         }
 
         public override int GetHashCode()
         {
-            return SID.GetHashCode();
-        }
-
-        public override string ToString()
-        {
-            return SID.ToString();
+            var hashCode = -2102657097;
+            hashCode = hashCode * -1521134295 + Revision.GetHashCode();
+            hashCode = hashCode * -1521134295 + SubAuthorityCount.GetHashCode();
+            hashCode = hashCode * -1521134295 + EqualityComparer<byte[]>.Default.GetHashCode(NtAuthority);
+            hashCode = hashCode * -1521134295 + EqualityComparer<uint[]>.Default.GetHashCode(SubAuthorities);
+            return hashCode;
         }
 
         /// <summary>
@@ -87,6 +89,35 @@ namespace NtfsSharp.FileRecords.Attributes.SecurityDescriptor
             var sidBytes = bytes.GetBytesAtOffset(offset, sidSize);
 
             return new SecurityIdentifier(sidBytes);
+        }
+
+        /// <summary>
+        /// Gets the bytes that represent a Security Identifier
+        /// </summary>
+        /// <param name="sid">Security Identifier</param>
+        /// <returns>Bytes representing SID.</returns>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="sid"/> is null.</exception>
+        /// <remarks>This can be used to create a <seealso cref="System.Security.Principal.SecurityIdentifier"/> instance.</remarks>
+        public static byte[] GetBytes(SecurityIdentifier sid)
+        {
+            if (sid == null)
+                throw new ArgumentNullException(nameof(sid));
+
+            var sidSize = 8 + ((uint) sid.SubAuthorityCount * 4);
+            var bytes = new byte[sidSize];
+
+            bytes[0] = sid.Revision;
+            bytes[1] = sid.SubAuthorityCount;
+            Array.Copy(sid.NtAuthority, 0, bytes, 2, sid.NtAuthority.Length);
+
+            for (var i = 0; i < sid.SubAuthorities.Length; i++)
+            {
+                var subAuthorityBytes = BitConverter.GetBytes(sid.SubAuthorities[i]);
+
+                Array.Copy(subAuthorityBytes, 0, bytes, 8 + i * 4, bytes.Length);
+            }
+
+            return bytes;
         }
     }
 }
