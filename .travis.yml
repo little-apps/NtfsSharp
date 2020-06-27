@@ -6,5 +6,5 @@ install:
   - dotnet restore NtfsSharp.sln
   - dotnet add NtfsSharp.Tests package NUnit.Console --version 3.11.1 --package-directory testrunner
 script:
-  - msbuild /p:Configuration=Testing NtfsSharp.sln
+  - dotnet build /p:Configuration=Testing NtfsSharp.sln
   - dotnet ./testrunner/nunit.consolerunner/3.11.1/tools/nunit3-console.exe ./NtfsSharp.Tests/bin/Release/NtfsSharp.Tests.dll
