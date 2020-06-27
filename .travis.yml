@@ -3,7 +3,8 @@ solution: NtfsSharp.sln
 mono: none
 dotnet: 3.1
 install:
-  - nuget restore NtfsSharp.sln
+  - dotnet restore NtfsSharp.sln
+  - dotnet add NtfsSharp.Tests package NUnit.Console --version 3.11.1 --package-directory testrunner
 script:
   - msbuild /p:Configuration=Testing NtfsSharp.sln
-  - dotnet ~/.nuget/packages/nunit.consolerunner/3.11.1/tools/nunit3-console.exe ./NtfsSharp.Tests/bin/Release/NtfsSharp.Tests.dll
+  - dotnet ./testrunner/nunit.consolerunner/3.11.1/tools/nunit3-console.exe ./NtfsSharp.Tests/bin/Release/NtfsSharp.Tests.dll
