@@ -1,4 +1,4 @@
-﻿namespace NtfsSharp
+﻿namespace NtfsSharp.Contracts
 {
     public interface IDiskDriver
     {

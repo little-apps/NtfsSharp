@@ -1,4 +1,5 @@
 ﻿using System;
+using NtfsSharp.Contracts;
 
 namespace NtfsSharp
 {

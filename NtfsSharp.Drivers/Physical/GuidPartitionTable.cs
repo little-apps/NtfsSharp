@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.InteropServices;
+using NtfsSharp.Contracts;
 using NtfsSharp.Drivers.Physical.Exceptions;
 using NtfsSharp.Helpers;
 

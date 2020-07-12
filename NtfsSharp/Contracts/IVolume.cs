@@ -1,7 +1,7 @@
 ﻿using System;
 using NtfsSharp.Units;
 
-namespace NtfsSharp.Volumes
+namespace NtfsSharp.Contracts
 {
     public interface IVolume : IComparable<IVolume>
     {
