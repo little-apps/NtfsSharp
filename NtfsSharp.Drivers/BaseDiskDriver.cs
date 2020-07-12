@@ -1,7 +1,7 @@
 ﻿using System;
 using NtfsSharp.Contracts;
 
-namespace NtfsSharp
+namespace NtfsSharp.Drivers
 {
     public abstract class BaseDiskDriver : IDiskDriver, IDisposable
     {
