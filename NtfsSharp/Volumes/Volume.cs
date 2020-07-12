@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
+using NtfsSharp.Contracts;
 using NtfsSharp.Exceptions;
 using NtfsSharp.Facades;
 using NtfsSharp.Factories.MetaData;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using NtfsSharp.Contracts;
 using NtfsSharp.Drivers.Physical.Exceptions;
 using NtfsSharp.Helpers;
 
