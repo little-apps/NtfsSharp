@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\NtfsSharp.Drivers\NtfsSharp.Drivers.csproj" />
     <ProjectReference Include="..\NtfsSharp\NtfsSharp.csproj" />
   </ItemGroup>
 
