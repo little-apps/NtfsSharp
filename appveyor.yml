@@ -17,7 +17,7 @@ environment:
 
 test_script:
   # generate report for NUnit testing framework:
-  - cmd: c:\projects\ntfssharp\packages\opencover\4.7.922\tools\OpenCover.Console.exe -register:administrator -target:"c:\Program Files\dotnet\dotnet.exe" -targetargs:"test" -output:c:\projects\ntfssharp\coverage.xml
+  - cmd: c:\projects\ntfssharp\packages\opencover\4.7.922\tools\OpenCover.Console.exe -register:administrator -filter:"+[NtfsSharp*]*" -target:"c:\Program Files\dotnet\dotnet.exe" -targetargs:"test" -output:c:\projects\ntfssharp\coverage.xml
 after_test: 
   - cmd: c:\projects\ntfssharp\packages\coveralls.io\1.4.2\tools\coveralls.net.exe --opencover "c:\projects\ntfssharp\coverage.xml"
   
