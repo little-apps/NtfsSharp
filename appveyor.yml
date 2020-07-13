@@ -9,10 +9,13 @@ before_build:
 build:
   project: NtfsSharp.Tests/
   verbosity: minimal
+
 environment:
   COVERALLS_REPO_TOKEN:  
     secure: N0XNTb1xnn0yOFDTnjoKu1vRSIVQvcO9Pt9v0If0LtG6TjZ1iE1Rn8ur5h6sU1Yz
-after_test: 
+
+test_script:
   # generate report for NUnit testing framework:
-  - cmd: packages\OpenCover.4.7.922\tools\OpenCover.Console.exe -register:user -filter:"+[NtfsSharp*]*" -target:"c:\Program Files\dotnet\dotnet.exe" -targetargs:"test" -output:coverage.xml
-  - cmd: packages\coveralls.io.1.4.2\tools\coveralls.net.exe --opencover coverage.xml
+  - cmd: c:\projects\ntfssharp\packages\OpenCover.4.7.922\tools\OpenCover.Console.exe -register:user -filter:"+[NtfsSharp*]*" -target:"c:\Program Files\dotnet\dotnet.exe" -targetargs:"test" -output:coverage.xml
+after_test: 
+  - cmd: c:\projects\ntfssharp\packages\coveralls.io.1.4.2\tools\coveralls.net.exe --opencover coverage.xml
