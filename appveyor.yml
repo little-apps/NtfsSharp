@@ -2,9 +2,9 @@ version: 1.0.{build}
 image: Visual Studio 2019
 
 before_build:
-  - ps: dotnet restore NtfsSharp.sln
   - ps: dotnet add NtfsSharp.Tests package OpenCover --version 4.7.922
   - ps: dotnet add NtfsSharp.Tests package coveralls.io --version 1.4.2
+  - ps: dotnet restore --packages ./packages NtfsSharp.sln
   - cmd: dir c:\projects\ntfssharp /S /B
 
 build:
