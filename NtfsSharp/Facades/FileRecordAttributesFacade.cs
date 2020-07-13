@@ -1,7 +1,6 @@
 ﻿using System;
 using NtfsSharp.Factories.Attributes;
-using NtfsSharp.FileRecords;
-using NtfsSharp.Volumes;
+using NtfsSharp.Files;
 
 namespace NtfsSharp.Facades
 {

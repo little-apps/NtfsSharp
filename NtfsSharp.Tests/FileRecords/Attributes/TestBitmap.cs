@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Linq;
-using NtfsSharp.FileRecords.Attributes.Base;
+using NtfsSharp.Files.Attributes.Base;
 using NtfsSharp.Tests.Driver;
 using NtfsSharp.Tests.Driver.Attributes.NonResident;
 using NUnit.Framework;

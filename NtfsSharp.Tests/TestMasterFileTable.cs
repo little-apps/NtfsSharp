@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using NtfsSharp.Exceptions;
 using NtfsSharp.Tests.Driver;
-using NtfsSharp.Volumes;
 using NUnit.Framework;
 
 namespace NtfsSharp.Tests

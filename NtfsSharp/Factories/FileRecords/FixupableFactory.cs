@@ -1,5 +1,4 @@
 ﻿using NtfsSharp.Helpers;
-using NtfsSharp.Volumes;
 using System;
 
 namespace NtfsSharp.Factories.FileRecords

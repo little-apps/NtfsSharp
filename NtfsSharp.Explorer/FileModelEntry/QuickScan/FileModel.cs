@@ -1,9 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using NtfsSharp.FileRecords;
-using NtfsSharp.FileRecords.Attributes.Base;
-using NtfsSharp.FileRecords.Attributes.IndexAllocation;
-using NtfsSharp.FileRecords.Attributes.IndexRoot;
+using NtfsSharp.Files.Attributes.Base;
+using NtfsSharp.Files.Attributes.IndexAllocation;
+using NtfsSharp.Files.Attributes.IndexRoot;
 using NtfsSharp.PInvoke;
 using NtfsSharp.Volumes;
 

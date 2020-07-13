@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
-using NtfsSharp.FileRecords.Attributes;
-using NtfsSharp.FileRecords.Attributes.Base;
+using NtfsSharp.Files.Attributes;
+using NtfsSharp.Files.Attributes.Base;
 using NtfsSharp.Tests.Driver.Attributes;
 using NUnit.Framework;
 

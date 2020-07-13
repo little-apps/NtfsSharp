@@ -1,5 +1,5 @@
-﻿using NtfsSharp.FileRecords;
-using NtfsSharp.FileRecords.Attributes;
+﻿using NtfsSharp.Files;
+using NtfsSharp.Files.Attributes;
 
 namespace NtfsSharp.Factories.Attributes
 {

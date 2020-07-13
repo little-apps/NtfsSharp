@@ -1,7 +1,7 @@
 ﻿using System;
 using NtfsSharp.Exceptions;
-using NtfsSharp.FileRecords.Attributes.Base;
-using NtfsSharp.FileRecords.Attributes.Base.NonResident;
+using NtfsSharp.Files.Attributes.Base;
+using NtfsSharp.Files.Attributes.Base.NonResident;
 using NtfsSharp.Tests.Driver;
 using NtfsSharp.Tests.Driver.Attributes;
 using NtfsSharp.Tests.Driver.Attributes.NonResident;

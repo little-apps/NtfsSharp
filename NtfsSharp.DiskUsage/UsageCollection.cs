@@ -4,8 +4,8 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using NtfsSharp.FileRecords.Attributes.Base;
-using NtfsSharp.FileRecords.Attributes.Base.NonResident;
+using NtfsSharp.Files.Attributes.Base;
+using NtfsSharp.Files.Attributes.Base.NonResident;
 using NtfsSharp.Volumes;
 
 namespace NtfsSharp.DiskUsage

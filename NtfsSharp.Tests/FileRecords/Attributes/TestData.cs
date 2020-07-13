@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Linq;
-using NtfsSharp.FileRecords.Attributes.Base;
+using NtfsSharp.Files.Attributes.Base;
 using NtfsSharp.Tests.Driver;
 using NtfsSharp.Tests.Driver.Attributes;
 using NtfsSharp.Tests.Driver.Attributes.NonResident;
-using DataAttribute = NtfsSharp.FileRecords.Attributes.DataAttribute;
+using DataAttribute = NtfsSharp.Files.Attributes.DataAttribute;
 using NUnit.Framework;
 
 namespace NtfsSharp.Tests.FileRecords.Attributes

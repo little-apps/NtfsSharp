@@ -6,7 +6,6 @@ using CommandLine;
 using NtfsSharp.Console.Exceptions;
 using NtfsSharp.Drivers;
 using NtfsSharp.Drivers.Physical;
-using NtfsSharp.Volumes;
 
 namespace NtfsSharp.Console
 {

@@ -2,7 +2,6 @@
 using System;
 using NtfsSharp.Tests.Driver;
 using NtfsSharp.Units;
-using NtfsSharp.Volumes;
 
 namespace NtfsSharp.Tests
 {

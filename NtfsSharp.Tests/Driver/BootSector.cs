@@ -1,7 +1,5 @@
 ﻿using System.Runtime.InteropServices;
 using System.Text;
-using NtfsSharp.Volumes;
-
 namespace NtfsSharp.Tests.Driver
 {
     public class BootSector : BaseDriverCluster
