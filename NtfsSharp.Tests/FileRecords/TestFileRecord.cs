@@ -2,7 +2,7 @@
 using System.Text;
 using NtfsSharp.Exceptions;
 using NtfsSharp.Facades;
-using NtfsSharp.FileRecords;
+using NtfsSharp.Files;
 using NUnit.Framework;
 
 namespace NtfsSharp.Tests.FileRecords
