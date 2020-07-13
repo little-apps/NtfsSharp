@@ -2,7 +2,9 @@ version: 1.0.{build}
 image: Visual Studio 2019
 
 before_build:
-- ps: nuget restore
+  - ps: dotnet restore NtfsSharp.sln
+  - ps: dotnet add NtfsSharp.Tests package OpenCover --version 4.7.922
+  - ps: dotnet add NtfsSharp.Tests package coveralls.io --version 1.4.2
 
 build:
   project: NtfsSharp.Tests/
@@ -12,5 +14,5 @@ environment:
     secure: N0XNTb1xnn0yOFDTnjoKu1vRSIVQvcO9Pt9v0If0LtG6TjZ1iE1Rn8ur5h6sU1Yz
 after_test: 
   # generate report for NUnit testing framework:
-  - cmd: packages\OpenCover.4.7.922\tools\OpenCover.Console.exe -register:user -filter:"+[NtfsSharp*]*" -target:"packages\NUnit.ConsoleRunner.3.11.1\tools\nunit3-console.exe" -targetargs:"/domain:single NtfsSharp.Tests\bin\Debug\NtfsSharp.Tests.dll" -output:coverage.xml
+  - cmd: packages\OpenCover.4.7.922\tools\OpenCover.Console.exe -register:user -filter:"+[NtfsSharp*]*" -target:"c:\Program Files\dotnet\dotnet.exe" -targetargs:"test" -output:coverage.xml
   - cmd: packages\coveralls.io.1.4.2\tools\coveralls.net.exe --opencover coverage.xml
