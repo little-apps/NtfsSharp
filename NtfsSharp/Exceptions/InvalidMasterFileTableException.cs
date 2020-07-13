@@ -1,5 +1,4 @@
-﻿using System;
-using NtfsSharp.FileRecords;
+﻿using NtfsSharp.Files;
 
 namespace NtfsSharp.Exceptions
 {

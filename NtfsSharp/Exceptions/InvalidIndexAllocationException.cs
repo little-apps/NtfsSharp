@@ -1,4 +1,4 @@
-﻿using NtfsSharp.FileRecords.Attributes.IndexAllocation;
+﻿using NtfsSharp.Files.Attributes.IndexAllocation;
 
 namespace NtfsSharp.Exceptions
 {

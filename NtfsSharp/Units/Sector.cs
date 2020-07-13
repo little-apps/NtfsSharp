@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using NtfsSharp.Volumes;
 
 namespace NtfsSharp.Units
 {

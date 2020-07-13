@@ -2,9 +2,8 @@
 using System.Linq;
 using NtfsSharp.Exceptions;
 using NtfsSharp.Factories.FileRecords;
-using NtfsSharp.FileRecords;
+using NtfsSharp.Files;
 using NtfsSharp.Helpers;
-using NtfsSharp.Volumes;
 
 namespace NtfsSharp.Facades
 {

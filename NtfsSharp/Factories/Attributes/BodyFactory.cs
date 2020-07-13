@@ -1,10 +1,10 @@
 ﻿using NtfsSharp.Exceptions;
-using NtfsSharp.FileRecords.Attributes.Base;
-using NtfsSharp.FileRecords.Attributes.MetaData;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using static NtfsSharp.FileRecords.Attributes.Base.AttributeHeaderBase;
+using NtfsSharp.Files.Attributes.Base;
+using NtfsSharp.Files.Attributes.MetaData;
+using static NtfsSharp.Files.Attributes.Base.AttributeHeaderBase;
 
 namespace NtfsSharp.Factories.Attributes
 {

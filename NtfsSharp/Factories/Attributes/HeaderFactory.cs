@@ -1,8 +1,8 @@
-﻿using NtfsSharp.FileRecords;
-using NtfsSharp.FileRecords.Attributes.Base;
-using NtfsSharp.FileRecords.Attributes.Base.NonResident;
+﻿using NtfsSharp.Files;
+using NtfsSharp.Files.Attributes.Base;
+using NtfsSharp.Files.Attributes.Base.NonResident;
 using NtfsSharp.Helpers;
-using static NtfsSharp.FileRecords.Attributes.Base.AttributeHeaderBase;
+using static NtfsSharp.Files.Attributes.Base.AttributeHeaderBase;
 
 namespace NtfsSharp.Factories.Attributes
 {

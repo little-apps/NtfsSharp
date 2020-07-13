@@ -1,7 +1,6 @@
 ﻿using NtfsSharp.Facades;
-using NtfsSharp.FileRecords;
+using NtfsSharp.Files;
 using NtfsSharp.Tests.Driver;
-using NtfsSharp.Volumes;
 using NUnit.Framework;
 
 namespace NtfsSharp.Tests.FileRecords
