@@ -1,7 +1,8 @@
-﻿using NtfsSharp.FileRecords.Attributes.Base;
+﻿using NtfsSharp.Files.Attributes.Base;
+using NtfsSharp.Files.Attributes.Base.NonResident;
 using NtfsSharp.Tests.Driver.Attributes.NonResident;
 using NUnit.Framework;
-using DataAttribute = NtfsSharp.FileRecords.Attributes.DataAttribute;
+using DataAttribute = NtfsSharp.Files.Attributes.DataAttribute;
 
 namespace NtfsSharp.Tests.FileRecords.Attributes
 {
@@ -48,7 +49,7 @@ namespace NtfsSharp.Tests.FileRecords.Attributes
             Assert.NotNull(actualDataAttribute);
 
             // Get non-resident header
-            var actualNonResidentHeader = actualDataAttribute.Header as NtfsSharp.FileRecords.Attributes.Base.NonResident.NonResident;
+            var actualNonResidentHeader = actualDataAttribute.Header as NonResident;
 
             // Make sure it is non-resident header
             Assert.NotNull(actualNonResidentHeader);
@@ -109,7 +110,7 @@ namespace NtfsSharp.Tests.FileRecords.Attributes
             Assert.NotNull(actualDataAttribute);
 
             // Get non-resident header
-            var actualNonResidentHeader = actualDataAttribute.Header as NtfsSharp.FileRecords.Attributes.Base.NonResident.NonResident;
+            var actualNonResidentHeader = actualDataAttribute.Header as NonResident;
 
             // Make sure it is non-resident header
             Assert.NotNull(actualNonResidentHeader);
@@ -130,6 +131,8 @@ namespace NtfsSharp.Tests.FileRecords.Attributes
             Assert.AreEqual(0xef, actualData[8191]);
         }
         
+        // Test a virtual data run
+        // Test a virtual data at the beginning
     }
 
     public class NonResidentTestAttribute : NonResidentAttributeBase
