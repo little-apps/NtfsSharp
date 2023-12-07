@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using NtfsSharp.FileRecords;
+using NtfsSharp.Files;
 using NtfsSharp.Files.Attributes;
 using NtfsSharp.Files.Attributes.Base;
 using NtfsSharp.Files.Attributes.Base.NonResident;
-using NtfsSharp.Volumes;
 
 namespace NtfsSharp.Explorer.FileModelEntry.DeepScan
 {

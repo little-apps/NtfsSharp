@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Globalization;
-using NtfsSharp.FileRecords;
+using NtfsSharp.Files;
 using NtfsSharp.Files.Attributes;
 using NtfsSharp.Files.Attributes.Base;
 using NtfsSharp.Files.Attributes.Base.NonResident;
@@ -30,12 +30,12 @@ namespace NtfsSharp.Explorer.FileModelEntry.QuickScan
             }
         }
 
-        private FileRecords.Attributes.Attribute StandardInfoAttribute
+        private Files.Attributes.Attribute StandardInfoAttribute
         {
             get { return FileRecord.FindAttributeByType(AttributeHeaderBase.NTFS_ATTR_TYPE.STANDARD_INFORMATION); }
         }
 
-        private FileRecords.Attributes.Attribute DataAttribute
+        private Files.Attributes.Attribute DataAttribute
         {
             get { return FileRecord.FindAttributeByType(AttributeHeaderBase.NTFS_ATTR_TYPE.DATA); }
         }

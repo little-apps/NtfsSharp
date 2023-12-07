@@ -1,11 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using NtfsSharp.FileRecords;
+using NtfsSharp.Files;
 using NtfsSharp.Files.Attributes.Base;
 using NtfsSharp.Files.Attributes.IndexAllocation;
 using NtfsSharp.Files.Attributes.IndexRoot;
 using NtfsSharp.PInvoke;
-using NtfsSharp.Volumes;
 
 namespace NtfsSharp.Explorer.FileModelEntry.QuickScan
 {
