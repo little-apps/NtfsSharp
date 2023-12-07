@@ -11,7 +11,6 @@ using NtfsSharp.Explorer.Factories;
 using NtfsSharp.Explorer.FileModelEntry;
 using NtfsSharp.Explorer.FileModelEntry.DeepScan;
 using NtfsSharp.Explorer.Properties;
-using NtfsSharp.Volumes;
 using FILETIME = System.Runtime.InteropServices.ComTypes.FILETIME;
 
 namespace NtfsSharp.Explorer

@@ -1,4 +1,5 @@
 ﻿using System;
+using NtfsSharp.Contracts;
 using NtfsSharp.Drivers;
 
 namespace NtfsSharp.Explorer.Factories

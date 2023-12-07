@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using NtfsSharp.FileRecords;
+using NtfsSharp.Files;
 
 namespace NtfsSharp.Explorer.FileModelEntry
 {

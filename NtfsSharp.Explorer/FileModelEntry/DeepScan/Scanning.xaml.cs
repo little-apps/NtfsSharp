@@ -5,10 +5,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using NtfsSharp.Explorer.Properties;
-using NtfsSharp.FileRecords;
+using NtfsSharp.Files;
 using NtfsSharp.Files.Attributes;
 using NtfsSharp.Files.Attributes.Base;
-using NtfsSharp.Volumes;
 
 namespace NtfsSharp.Explorer.FileModelEntry.DeepScan
 {
