@@ -6,6 +6,7 @@ using NtfsSharp.Tests.Driver.Attributes;
 using NtfsSharp.Tests.Driver.Attributes.NonResident;
 using DataAttribute = NtfsSharp.Files.Attributes.DataAttribute;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 
 namespace NtfsSharp.Tests.FileRecords.Attributes
 {
@@ -29,10 +30,10 @@ namespace NtfsSharp.Tests.FileRecords.Attributes
 
             var actualFileStream = actualFileRecord.FileStream;
 
-            Assert.AreEqual(byteLength, actualFileStream.Length);
-            Assert.True(actualFileStream.CanRead);
-            Assert.False(actualFileStream.CanWrite);
-            Assert.False(actualFileStream.EndOfFile);
+            ClassicAssert.AreEqual(byteLength, actualFileStream.Length);
+            ClassicAssert.True(actualFileStream.CanRead);
+            ClassicAssert.False(actualFileStream.CanWrite);
+            ClassicAssert.False(actualFileStream.EndOfFile);
             
             Assert.That(() =>
             {
@@ -77,19 +78,19 @@ namespace NtfsSharp.Tests.FileRecords.Attributes
 
             var actualBytes = actualDataAttribute.Header.ReadBody();
 
-            Assert.AreEqual(4 * DummyDriver.BytesPerSector * DummyDriver.SectorsPerCluster, actualBytes.Length);
+            ClassicAssert.AreEqual(4 * DummyDriver.BytesPerSector * DummyDriver.SectorsPerCluster, actualBytes.Length);
 
-            Assert.AreEqual(1, actualBytes[0 * DummyDriver.BytesPerSector * DummyDriver.SectorsPerCluster]);
-            Assert.AreEqual(4, actualBytes[0 * DummyDriver.BytesPerSector * DummyDriver.SectorsPerCluster + 4095]);
+            ClassicAssert.AreEqual(1, actualBytes[0 * DummyDriver.BytesPerSector * DummyDriver.SectorsPerCluster]);
+            ClassicAssert.AreEqual(4, actualBytes[0 * DummyDriver.BytesPerSector * DummyDriver.SectorsPerCluster + 4095]);
 
-            Assert.AreEqual(2, actualBytes[1 * DummyDriver.BytesPerSector * DummyDriver.SectorsPerCluster]);
-            Assert.AreEqual(3, actualBytes[1 * DummyDriver.BytesPerSector * DummyDriver.SectorsPerCluster + 4095]);
+            ClassicAssert.AreEqual(2, actualBytes[1 * DummyDriver.BytesPerSector * DummyDriver.SectorsPerCluster]);
+            ClassicAssert.AreEqual(3, actualBytes[1 * DummyDriver.BytesPerSector * DummyDriver.SectorsPerCluster + 4095]);
 
-            Assert.AreEqual(3, actualBytes[2 * DummyDriver.BytesPerSector * DummyDriver.SectorsPerCluster]);
-            Assert.AreEqual(2, actualBytes[2 * DummyDriver.BytesPerSector * DummyDriver.SectorsPerCluster + 4095]);
+            ClassicAssert.AreEqual(3, actualBytes[2 * DummyDriver.BytesPerSector * DummyDriver.SectorsPerCluster]);
+            ClassicAssert.AreEqual(2, actualBytes[2 * DummyDriver.BytesPerSector * DummyDriver.SectorsPerCluster + 4095]);
 
-            Assert.AreEqual(4, actualBytes[3 * DummyDriver.BytesPerSector * DummyDriver.SectorsPerCluster]);
-            Assert.AreEqual(1, actualBytes[3 * DummyDriver.BytesPerSector * DummyDriver.SectorsPerCluster + 4095]);
+            ClassicAssert.AreEqual(4, actualBytes[3 * DummyDriver.BytesPerSector * DummyDriver.SectorsPerCluster]);
+            ClassicAssert.AreEqual(1, actualBytes[3 * DummyDriver.BytesPerSector * DummyDriver.SectorsPerCluster + 4095]);
         }
 
         [Test]
@@ -108,10 +109,10 @@ namespace NtfsSharp.Tests.FileRecords.Attributes
 
             var actualBytes = actualDataAttribute.Header.ReadBody();
 
-            Assert.AreEqual(residentData.Body.Length, actualBytes.Length);
+            ClassicAssert.AreEqual(residentData.Body.Length, actualBytes.Length);
 
-            Assert.AreEqual(0xbe, actualBytes[0]);
-            Assert.AreEqual(0xef, actualBytes[actualBytes.Length - 1]);
+            ClassicAssert.AreEqual(0xbe, actualBytes[0]);
+            ClassicAssert.AreEqual(0xef, actualBytes[actualBytes.Length - 1]);
         }
     }
 

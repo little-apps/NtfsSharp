@@ -2,6 +2,7 @@
 using System;
 using NtfsSharp.Tests.Driver;
 using NtfsSharp.Units;
+using NUnit.Framework.Legacy;
 
 namespace NtfsSharp.Tests
 {
@@ -35,7 +36,7 @@ namespace NtfsSharp.Tests
                 var sector = new Sector(0, (Volume) null);
             });
 
-            Assert.AreEqual("vol", ex.ParamName);
+            ClassicAssert.AreEqual("vol", ex.ParamName);
         }
 
         /// <summary>
@@ -49,7 +50,7 @@ namespace NtfsSharp.Tests
                 var sector = new Sector(0, (byte[]) null);
             });
 
-            Assert.AreEqual("data", ex.ParamName);
+            ClassicAssert.AreEqual("data", ex.ParamName);
         }
 
         /// <summary>
@@ -63,7 +64,7 @@ namespace NtfsSharp.Tests
                 var sector = new Sector(0, new byte[1]);
             });
 
-            Assert.AreEqual("data", ex.ParamName);
+            ClassicAssert.AreEqual("data", ex.ParamName);
         }
 
         /// <summary>
@@ -77,7 +78,7 @@ namespace NtfsSharp.Tests
                 var sector = new Sector(0, new byte[1024]);
             });
 
-            Assert.AreEqual("data", ex.ParamName);
+            ClassicAssert.AreEqual("data", ex.ParamName);
         }
 
         /// <summary>
@@ -89,7 +90,7 @@ namespace NtfsSharp.Tests
             var sectorData = new byte[512];
             var sector = new Sector(0, sectorData);
 
-            Assert.AreSame(sectorData, sector.Data);
+            ClassicAssert.AreSame(sectorData, sector.Data);
         }
         
         /// <summary>
@@ -110,8 +111,8 @@ namespace NtfsSharp.Tests
             var sector = new Sector(0, sectorBytes);
             var actual = sector.ReadFile<Guid>(sectorOffset);
 
-            Assert.AreEqual(expected, actual, "Actual GUID is different than expected GUID.");
-            Assert.AreEqual(expectedBytes, actual.ToByteArray(), "Actual bytes is not same as expected bytes.");
+            ClassicAssert.AreEqual(expected, actual, "Actual GUID is different than expected GUID.");
+            ClassicAssert.AreEqual(expectedBytes, actual.ToByteArray(), "Actual bytes is not same as expected bytes.");
         }
 
         /// <summary>
@@ -135,8 +136,8 @@ namespace NtfsSharp.Tests
             var sector = new Sector(lcn * Volume.SectorsPerCluster, Volume);
             var actual = sector.ReadFile<Guid>(sectorOffset);
 
-            Assert.AreEqual(expected, actual, "Actual GUID is different than expected GUID.");
-            Assert.AreEqual(expectedBytes, actual.ToByteArray(), "Actual bytes is not same as expected bytes.");
+            ClassicAssert.AreEqual(expected, actual, "Actual GUID is different than expected GUID.");
+            ClassicAssert.AreEqual(expectedBytes, actual.ToByteArray(), "Actual bytes is not same as expected bytes.");
         }
     }
 }

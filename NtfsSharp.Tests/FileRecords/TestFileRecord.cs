@@ -4,6 +4,7 @@ using NtfsSharp.Exceptions;
 using NtfsSharp.Facades;
 using NtfsSharp.Files;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 
 namespace NtfsSharp.Tests.FileRecords
 {
@@ -27,8 +28,8 @@ namespace NtfsSharp.Tests.FileRecords
                 fileRecord = FileRecordFacade.Build(DummyFileRecord.BuildWithUsa(BytesPerFileRecord, Driver, 0xab),
                     Volume));
 
-            Assert.IsNotNull(fileRecord);
-            Assert.AreEqual(expectedMagic, fileRecord.Header.Magic);
+            ClassicAssert.IsNotNull(fileRecord);
+            ClassicAssert.AreEqual(expectedMagic, fileRecord.Header.Magic);
         }
         
         /// <summary>
@@ -43,7 +44,7 @@ namespace NtfsSharp.Tests.FileRecords
                 Assert.Throws<InvalidFileRecordException>(() =>
                     FileRecordFacade.Build(DummyFileRecord.BuildWithUsa(BytesPerFileRecord, Driver, 0xab), Volume));
             
-            Assert.AreEqual(nameof(DummyFileRecord.FileRecord.Magic), ex.ParamName);
+            ClassicAssert.AreEqual(nameof(DummyFileRecord.FileRecord.Magic), ex.ParamName);
         }
 
         /// <summary>
@@ -54,12 +55,12 @@ namespace NtfsSharp.Tests.FileRecords
         {
             var fileRecordBytes = new byte[BytesPerFileRecord];
 
-            Assert.IsFalse(fileRecordBytes.Any(b => b != 0));
+            ClassicAssert.IsFalse(fileRecordBytes.Any(b => b != 0));
 
             var ex = Assert.Throws<InvalidFileRecordException>(() => FileRecordFacade.Build(fileRecordBytes, Volume));
 
             // Should fail at magic identifier
-            Assert.AreEqual(nameof(DummyFileRecord.FileRecord.Magic), ex.ParamName);
+            ClassicAssert.AreEqual(nameof(DummyFileRecord.FileRecord.Magic), ex.ParamName);
         }
     }
 }

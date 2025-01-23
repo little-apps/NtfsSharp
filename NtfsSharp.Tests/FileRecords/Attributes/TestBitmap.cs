@@ -5,6 +5,7 @@ using NtfsSharp.Files.Attributes.Base;
 using NtfsSharp.Tests.Driver;
 using NtfsSharp.Tests.Driver.Attributes.NonResident;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 
 namespace NtfsSharp.Tests.FileRecords.Attributes
 {
@@ -22,8 +23,8 @@ namespace NtfsSharp.Tests.FileRecords.Attributes
 
             var actualFileRecord = ReadDummyFileRecord();
 
-            Assert.AreEqual(1, actualFileRecord.Attributes.Count);
-            Assert.AreEqual(AttributeHeaderBase.NTFS_ATTR_TYPE.BITMAP, actualFileRecord.Attributes[0].Header.Header.Type);
+            ClassicAssert.AreEqual(1, actualFileRecord.Attributes.Count);
+            ClassicAssert.AreEqual(AttributeHeaderBase.NTFS_ATTR_TYPE.BITMAP, actualFileRecord.Attributes[0].Header.Header.Type);
         }
 
         [Test, Repeat(2)]
@@ -44,11 +45,11 @@ namespace NtfsSharp.Tests.FileRecords.Attributes
             var actualFileRecord = ReadDummyFileRecord();
             var attributeBody = actualFileRecord.FindAttributeBodyByType(AttributeHeaderBase.NTFS_ATTR_TYPE.BITMAP);
 
-            Assert.NotNull(attributeBody);
+            ClassicAssert.NotNull(attributeBody);
 
             var actualBitArray = new BitArray(attributeBody.Body);
 
-            Assert.AreEqual(expectedBitArray.Length, actualBitArray.Length);
+            ClassicAssert.AreEqual(expectedBitArray.Length, actualBitArray.Length);
             // Check that all bits aren't different
             Assert.That(() => { return expectedBitArray.Xor(actualBitArray).Cast<bool>().All(bit => !bit); });
         }
@@ -65,10 +66,10 @@ namespace NtfsSharp.Tests.FileRecords.Attributes
             var actualFileRecord = ReadDummyFileRecord();
             var attributeBody = actualFileRecord.FindAttributeBodyByType(AttributeHeaderBase.NTFS_ATTR_TYPE.BITMAP);
 
-            Assert.NotNull(attributeBody);
+            ClassicAssert.NotNull(attributeBody);
             
             // Should just be one cluster
-            Assert.AreEqual(DummyDriver.BytesPerSector * DummyDriver.SectorsPerCluster, attributeBody.Body.Length);
+            ClassicAssert.AreEqual(DummyDriver.BytesPerSector * DummyDriver.SectorsPerCluster, attributeBody.Body.Length);
             // Should all be zeroes
             Assert.That(() => { return new BitArray(attributeBody.Body).Cast<bool>().All(bit => !bit); });
         }

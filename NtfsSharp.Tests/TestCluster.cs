@@ -2,6 +2,7 @@
 using NtfsSharp.Tests.Driver;
 using NtfsSharp.Units;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 
 namespace NtfsSharp.Tests
 {
@@ -35,7 +36,7 @@ namespace NtfsSharp.Tests
                 var cluster = new Cluster(0, null);
             });
             
-            Assert.AreEqual("vol", ex.ParamName);
+            ClassicAssert.AreEqual("vol", ex.ParamName);
         }
 
         /// <summary>
@@ -46,7 +47,7 @@ namespace NtfsSharp.Tests
         {
             var cluster = new Cluster(1, Volume);
 
-            Assert.AreEqual(DummyDriver.SectorsPerCluster, cluster.Sectors.Length);
+            ClassicAssert.AreEqual(DummyDriver.SectorsPerCluster, cluster.Sectors.Length);
         }
 
         /// <summary>
@@ -72,8 +73,8 @@ namespace NtfsSharp.Tests
 
                 var cluster = Volume.ReadCluster(lcn);
 
-                Assert.AreEqual(sectorExpected, cluster.ReadFile<Guid>(clusterOffset), $"GUID read at offset {clusterOffset} in cluster is different.");
-                Assert.AreEqual(sectorExpected, cluster.Sectors[sectorIndex].ReadFile<Guid>(sectorOffset), $"GUID read in sector #{sectorExpected} is different.");
+                ClassicAssert.AreEqual(sectorExpected, cluster.ReadFile<Guid>(clusterOffset), $"GUID read at offset {clusterOffset} in cluster is different.");
+                ClassicAssert.AreEqual(sectorExpected, cluster.Sectors[sectorIndex].ReadFile<Guid>(sectorOffset), $"GUID read in sector #{sectorExpected} is different.");
             }
             
         }

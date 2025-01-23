@@ -4,6 +4,7 @@ using NtfsSharp.Facades;
 using NtfsSharp.Factories.FileRecords;
 using NtfsSharp.Files;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 
 namespace NtfsSharp.Tests.FileRecords
 {
@@ -32,7 +33,7 @@ namespace NtfsSharp.Tests.FileRecords
                 var actualUsa = BitConverter.ToUInt16(fileRecordWithUsa,
                     (sectorIndex + 1) * BootSector.DummyBootSector.BytesPerSector - 2);
 
-                Assert.AreNotEqual(expectedUsas[sectorIndex], actualUsa);
+                ClassicAssert.AreNotEqual(expectedUsas[sectorIndex], actualUsa);
             }
             
             var fileRecordFixed = new byte[fileRecordWithUsa.Length];
@@ -51,7 +52,7 @@ namespace NtfsSharp.Tests.FileRecords
                 var actualUsa = BitConverter.ToUInt16(fileRecordFixed,
                     (sectorIndex + 1) * BootSector.DummyBootSector.BytesPerSector - 2);
 
-                Assert.AreEqual(expectedUsas[sectorIndex], actualUsa);
+                ClassicAssert.AreEqual(expectedUsas[sectorIndex], actualUsa);
             }
         }
 
@@ -85,9 +86,9 @@ namespace NtfsSharp.Tests.FileRecords
             for (var sectorIndex = 0; sectorIndex < sectors; sectorIndex++)
             {
                 // Make sure last two bytes of each sector are set to end tag
-                Assert.AreEqual(expectedEndTag[0],
+                ClassicAssert.AreEqual(expectedEndTag[0],
                     fileRecordWithUsa[(sectorIndex + 1) * BootSector.DummyBootSector.BytesPerSector - 2]);
-                Assert.AreEqual(expectedEndTag[1],
+                ClassicAssert.AreEqual(expectedEndTag[1],
                     fileRecordWithUsa[(sectorIndex + 1) * BootSector.DummyBootSector.BytesPerSector - 1]);
             }
 
@@ -96,10 +97,10 @@ namespace NtfsSharp.Tests.FileRecords
 
             Assert.DoesNotThrow(() => { fileRecord = FileRecordFacade.Build(fileRecordWithUsa, Volume); });
 
-            Assert.NotNull(fileRecord);
-            Assert.NotNull(fileRecord.Fixupable);
-            Assert.AreEqual(expectedEndTag[0], fileRecord.Fixupable.EndTag[0]);
-            Assert.AreEqual(expectedEndTag[1], fileRecord.Fixupable.EndTag[1]);
+            ClassicAssert.NotNull(fileRecord);
+            ClassicAssert.NotNull(fileRecord.Fixupable);
+            ClassicAssert.AreEqual(expectedEndTag[0], fileRecord.Fixupable.EndTag[0]);
+            ClassicAssert.AreEqual(expectedEndTag[1], fileRecord.Fixupable.EndTag[1]);
         }
 
         /// <summary>
@@ -135,9 +136,9 @@ namespace NtfsSharp.Tests.FileRecords
                 sectorIndex++)
             {
                 // Make sure last two bytes of each sector aren't set to expected end tag
-                Assert.AreNotEqual(expectedEndTag[0],
+                ClassicAssert.AreNotEqual(expectedEndTag[0],
                     fileRecordWithUsa[(sectorIndex + 1) * BootSector.DummyBootSector.BytesPerSector - 2]);
-                Assert.AreNotEqual(expectedEndTag[1],
+                ClassicAssert.AreNotEqual(expectedEndTag[1],
                     fileRecordWithUsa[(sectorIndex + 1) * BootSector.DummyBootSector.BytesPerSector - 1]);
             }
 
@@ -149,7 +150,7 @@ namespace NtfsSharp.Tests.FileRecords
                     fileRecord = FileRecordFacade.Build(fileRecordWithUsa, Volume);
                 });
 
-            Assert.Null(fileRecord);
+            ClassicAssert.Null(fileRecord);
         }
     }
 }

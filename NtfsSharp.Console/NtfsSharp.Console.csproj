@@ -1,18 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <AssemblyName>NtfsSharp.Console</AssemblyName>
   </PropertyGroup>
-
   <ItemGroup>
-    <PackageReference Include="CommandLineParser" Version="2.8.0" />
+    <PackageReference Include="CommandLineParser" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\NtfsSharp.Drivers\NtfsSharp.Drivers.csproj" />
     <ProjectReference Include="..\NtfsSharp\NtfsSharp.csproj" />
   </ItemGroup>
-
 </Project>

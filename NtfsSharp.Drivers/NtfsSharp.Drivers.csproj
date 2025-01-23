@@ -1,14 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <AssemblyName>NtfsSharp.Drivers</AssemblyName>
     <RootNamespace>NtfsSharp.Drivers</RootNamespace>
     <Configurations>Debug;Release</Configurations>
   </PropertyGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\NtfsSharp\NtfsSharp.csproj" />
   </ItemGroup>
-
 </Project>

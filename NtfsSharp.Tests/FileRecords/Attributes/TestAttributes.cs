@@ -6,6 +6,7 @@ using NtfsSharp.Tests.Driver;
 using NtfsSharp.Tests.Driver.Attributes;
 using NtfsSharp.Tests.Driver.Attributes.NonResident;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 
 namespace NtfsSharp.Tests.FileRecords.Attributes
 {
@@ -50,14 +51,14 @@ namespace NtfsSharp.Tests.FileRecords.Attributes
 
             var actualFileRecord = ReadDummyFileRecord();
 
-            Assert.AreEqual(1, actualFileRecord.Attributes.Count);
+            ClassicAssert.AreEqual(1, actualFileRecord.Attributes.Count);
 
             var actualAttribute = actualFileRecord.Attributes[0];
             var actualBody = actualAttribute.Body.Body ?? actualAttribute.Header.ReadBody();
 
-            Assert.AreEqual((uint)attrType, (uint)actualAttribute.Header.Header.Type);
-            Assert.False(actualAttribute.Header.Header.NonResident);
-            Assert.AreEqual(actualBody.Length, actualBody.Length);
+            ClassicAssert.AreEqual((uint)attrType, (uint)actualAttribute.Header.Header.Type);
+            ClassicAssert.False(actualAttribute.Header.Header.NonResident);
+            ClassicAssert.AreEqual(actualBody.Length, actualBody.Length);
         }
 
         [Test]
@@ -82,14 +83,14 @@ namespace NtfsSharp.Tests.FileRecords.Attributes
 
             var actualFileRecord = ReadDummyFileRecord();
 
-            Assert.AreEqual(1, actualFileRecord.Attributes.Count);
+            ClassicAssert.AreEqual(1, actualFileRecord.Attributes.Count);
 
             var actualAttribute = actualFileRecord.Attributes[0];
             var actualBody = actualAttribute.Body.Body ?? actualAttribute.Header.ReadBody();
 
-            Assert.AreEqual((uint) attrType, (uint) actualAttribute.Header.Header.Type);
-            Assert.True(actualAttribute.Header.Header.NonResident);
-            Assert.AreEqual(dataCluster.Data.Length, actualBody.Length);
+            ClassicAssert.AreEqual((uint) attrType, (uint) actualAttribute.Header.Header.Type);
+            ClassicAssert.True(actualAttribute.Header.Header.NonResident);
+            ClassicAssert.AreEqual(dataCluster.Data.Length, actualBody.Length);
         }
 
         [Test]
@@ -128,12 +129,12 @@ namespace NtfsSharp.Tests.FileRecords.Attributes
             var actualNonResidentAttr = actualAttribute.Header as NonResident;
             var actualBody = actualAttribute.Body.Body ?? actualAttribute.Header.ReadBody();
 
-            Assert.AreEqual((uint)attrType, (uint)actualAttribute.Header.Header.Type);
-            Assert.True(actualAttribute.Header.Header.NonResident);
-            Assert.False(actualNonResidentAttr.DataBlocks[0].LcnOffsetNegative);
-            Assert.True(actualNonResidentAttr.DataBlocks[1].LcnOffsetNegative);
+            ClassicAssert.AreEqual((uint)attrType, (uint)actualAttribute.Header.Header.Type);
+            ClassicAssert.True(actualAttribute.Header.Header.NonResident);
+            ClassicAssert.False(actualNonResidentAttr.DataBlocks[0].LcnOffsetNegative);
+            ClassicAssert.True(actualNonResidentAttr.DataBlocks[1].LcnOffsetNegative);
 
-            Assert.AreEqual(secondLcnOffset, actualNonResidentAttr.VcnToLcn(1));
+            ClassicAssert.AreEqual(secondLcnOffset, actualNonResidentAttr.VcnToLcn(1));
             
         }
 
@@ -164,7 +165,7 @@ namespace NtfsSharp.Tests.FileRecords.Attributes
             if (actualException.InnerException != null)
                 actualException = actualException.InnerException;
 
-            Assert.IsInstanceOf<InvalidAttributeException>(actualException);
+            ClassicAssert.IsInstanceOf<InvalidAttributeException>(actualException);
         }
 
         [Test]

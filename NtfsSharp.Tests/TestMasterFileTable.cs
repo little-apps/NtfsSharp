@@ -4,6 +4,7 @@ using System.Linq;
 using NtfsSharp.Exceptions;
 using NtfsSharp.Tests.Driver;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 
 namespace NtfsSharp.Tests
 {
@@ -66,7 +67,7 @@ namespace NtfsSharp.Tests
 
             Volume.ReadMft();
 
-            Assert.AreEqual(_masterFileTableEntries, Volume.MFT.Count);
+            ClassicAssert.AreEqual(_masterFileTableEntries, Volume.MFT.Count);
             Assert.That(() => Volume.MFT[0].Header.Magic.SequenceEqual(new byte[] {0x46, 0x49, 0x4c, 0x45}));
         }
 
@@ -89,12 +90,12 @@ namespace NtfsSharp.Tests
 
             Volume.ReadMft();
 
-            Assert.AreEqual(_masterFileTableEntries, Volume.MFT.Count);
+            ClassicAssert.AreEqual(_masterFileTableEntries, Volume.MFT.Count);
 
             for (var i = 0; i < Volume.MFT.Count; i++)
             {
                 var mftEntry = Volume.MFT[(uint) i];
-                Assert.AreEqual(i, mftEntry.Header.MFTRecordNumber);
+                ClassicAssert.AreEqual(i, mftEntry.Header.MFTRecordNumber);
             }
         }
 
@@ -118,7 +119,7 @@ namespace NtfsSharp.Tests
             var ex =
                 Assert.Throws(typeof(InvalidMasterFileTableException), () => Volume.ReadMft()) as
                     InvalidMasterFileTableException;
-            Assert.AreEqual(nameof(DummyFileRecord.FILE_RECORD_HEADER_NTFS.MFTRecordNumber), ex.ParamName);
+            ClassicAssert.AreEqual(nameof(DummyFileRecord.FILE_RECORD_HEADER_NTFS.MFTRecordNumber), ex.ParamName);
         }
 
         [Test]
@@ -144,12 +145,12 @@ namespace NtfsSharp.Tests
 
             Volume.ReadMft();
 
-            Assert.AreEqual(_masterFileTableEntries, Volume.MFT.Count);
+            ClassicAssert.AreEqual(_masterFileTableEntries, Volume.MFT.Count);
 
             for (var i = 0; i < Volume.MFT.Count; i++)
             {
                 var mftEntry = Volume.MFT[(uint) i];
-                Assert.AreEqual(i, mftEntry.Header.MFTRecordNumber);
+                ClassicAssert.AreEqual(i, mftEntry.Header.MFTRecordNumber);
             }
         }
 
@@ -176,12 +177,12 @@ namespace NtfsSharp.Tests
 
             Volume.ReadMft();
 
-            Assert.AreEqual(_masterFileTableEntries, Volume.MFT.Count);
+            ClassicAssert.AreEqual(_masterFileTableEntries, Volume.MFT.Count);
 
             for (var i = 0; i < Volume.MFT.Count; i++)
             {
                 var mftEntry = Volume.MFT[(uint) i];
-                Assert.AreEqual(i, mftEntry.Header.MFTRecordNumber);
+                ClassicAssert.AreEqual(i, mftEntry.Header.MFTRecordNumber);
             }
         }
 

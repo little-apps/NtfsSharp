@@ -2,6 +2,7 @@
 using NtfsSharp.Files.Attributes.Base.NonResident;
 using NtfsSharp.Tests.Driver.Attributes.NonResident;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 using DataAttribute = NtfsSharp.Files.Attributes.DataAttribute;
 
 namespace NtfsSharp.Tests.FileRecords.Attributes
@@ -46,28 +47,28 @@ namespace NtfsSharp.Tests.FileRecords.Attributes
                 (DataAttribute)actualFileRecord.FindAttributeBodyByType(AttributeHeaderBase.NTFS_ATTR_TYPE.DATA);
 
             // Make sure data attribute isn't null
-            Assert.NotNull(actualDataAttribute);
+            ClassicAssert.NotNull(actualDataAttribute);
 
             // Get non-resident header
             var actualNonResidentHeader = actualDataAttribute.Header as NonResident;
 
             // Make sure it is non-resident header
-            Assert.NotNull(actualNonResidentHeader);
+            ClassicAssert.NotNull(actualNonResidentHeader);
 
             // Check that first VCN has LCN 100
-            Assert.AreEqual(expectedFirstLcn, actualNonResidentHeader.VcnToLcn(0));
+            ClassicAssert.AreEqual(expectedFirstLcn, actualNonResidentHeader.VcnToLcn(0));
 
             // Check that second VCN has LCN 90
-            Assert.AreEqual(expectedSecondLcn, actualNonResidentHeader.VcnToLcn(1));
+            ClassicAssert.AreEqual(expectedSecondLcn, actualNonResidentHeader.VcnToLcn(1));
 
             // Check data integrity
             var actualData = actualNonResidentHeader.GetAllDataAsBytes();
 
-            Assert.AreEqual(0xde, actualData[0]);
-            Assert.AreEqual(0xad, actualData[4095]);
+            ClassicAssert.AreEqual(0xde, actualData[0]);
+            ClassicAssert.AreEqual(0xad, actualData[4095]);
 
-            Assert.AreEqual(0xbe, actualData[4096]);
-            Assert.AreEqual(0xef, actualData[8191]);
+            ClassicAssert.AreEqual(0xbe, actualData[4096]);
+            ClassicAssert.AreEqual(0xef, actualData[8191]);
         }
 
         /// <summary>
@@ -107,28 +108,28 @@ namespace NtfsSharp.Tests.FileRecords.Attributes
                 (DataAttribute) actualFileRecord.FindAttributeBodyByType(AttributeHeaderBase.NTFS_ATTR_TYPE.DATA);
 
             // Make sure data attribute isn't null
-            Assert.NotNull(actualDataAttribute);
+            ClassicAssert.NotNull(actualDataAttribute);
 
             // Get non-resident header
             var actualNonResidentHeader = actualDataAttribute.Header as NonResident;
 
             // Make sure it is non-resident header
-            Assert.NotNull(actualNonResidentHeader);
+            ClassicAssert.NotNull(actualNonResidentHeader);
 
             // Check that first VCN has LCN 100
-            Assert.AreEqual(expectedFirstLcn, actualNonResidentHeader.VcnToLcn(0));
+            ClassicAssert.AreEqual(expectedFirstLcn, actualNonResidentHeader.VcnToLcn(0));
 
             // Check that second VCN has LCN 90
-            Assert.AreEqual(expectedSecondLcn, actualNonResidentHeader.VcnToLcn(1));
+            ClassicAssert.AreEqual(expectedSecondLcn, actualNonResidentHeader.VcnToLcn(1));
 
             // Check data integrity
             var actualData = actualNonResidentHeader.GetAllDataAsBytes();
 
-            Assert.AreEqual(0xde, actualData[0]);
-            Assert.AreEqual(0xad, actualData[4095]);
+            ClassicAssert.AreEqual(0xde, actualData[0]);
+            ClassicAssert.AreEqual(0xad, actualData[4095]);
 
-            Assert.AreEqual(0xbe, actualData[4096]);
-            Assert.AreEqual(0xef, actualData[8191]);
+            ClassicAssert.AreEqual(0xbe, actualData[4096]);
+            ClassicAssert.AreEqual(0xef, actualData[8191]);
         }
         
         // Test a virtual data run

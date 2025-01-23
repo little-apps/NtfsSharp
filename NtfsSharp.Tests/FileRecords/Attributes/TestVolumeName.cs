@@ -4,6 +4,7 @@ using NtfsSharp.Files.Attributes;
 using NtfsSharp.Files.Attributes.Base;
 using NtfsSharp.Tests.Driver.Attributes;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 
 namespace NtfsSharp.Tests.FileRecords.Attributes
 {
@@ -24,15 +25,15 @@ namespace NtfsSharp.Tests.FileRecords.Attributes
 
             var actualFileRecord = ReadDummyFileRecord();
 
-            Assert.AreEqual(1, actualFileRecord.Attributes.Count);
+            ClassicAssert.AreEqual(1, actualFileRecord.Attributes.Count);
 
             var actualAttribute = actualFileRecord.Attributes[0];
             
-            Assert.AreEqual(AttributeHeaderBase.NTFS_ATTR_TYPE.VOLUME_NAME, actualAttribute.Header.Header.Type);
+            ClassicAssert.AreEqual(AttributeHeaderBase.NTFS_ATTR_TYPE.VOLUME_NAME, actualAttribute.Header.Header.Type);
 
             var actualVolumeNameAttr = actualAttribute.Body as VolumeName;
-            Assert.NotNull(actualVolumeNameAttr);
-            Assert.AreEqual(expectedVolumeName, actualVolumeNameAttr.Name);
+            ClassicAssert.NotNull(actualVolumeNameAttr);
+            ClassicAssert.AreEqual(expectedVolumeName, actualVolumeNameAttr.Name);
         }
 
         /// <summary>
@@ -49,15 +50,15 @@ namespace NtfsSharp.Tests.FileRecords.Attributes
 
             var actualFileRecord = ReadDummyFileRecord();
 
-            Assert.AreEqual(1, actualFileRecord.Attributes.Count);
+            ClassicAssert.AreEqual(1, actualFileRecord.Attributes.Count);
 
             var actualAttribute = actualFileRecord.Attributes[0];
 
-            Assert.AreEqual(AttributeHeaderBase.NTFS_ATTR_TYPE.VOLUME_NAME, actualAttribute.Header.Header.Type);
+            ClassicAssert.AreEqual(AttributeHeaderBase.NTFS_ATTR_TYPE.VOLUME_NAME, actualAttribute.Header.Header.Type);
 
             var actualVolumeNameAttr = actualAttribute.Body as VolumeName;
-            Assert.NotNull(actualVolumeNameAttr);
-            Assert.AreEqual(expectedVolumeNameLength, actualVolumeNameAttr.Body.Length);
+            ClassicAssert.NotNull(actualVolumeNameAttr);
+            ClassicAssert.AreEqual(expectedVolumeNameLength, actualVolumeNameAttr.Body.Length);
         }
 
         /// <summary>

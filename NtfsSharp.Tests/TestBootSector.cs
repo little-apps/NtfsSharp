@@ -2,6 +2,7 @@
 using System;
 using NtfsSharp.Exceptions;
 using NtfsSharp.Tests.Driver;
+using NUnit.Framework.Legacy;
 
 namespace NtfsSharp.Tests
 {
@@ -44,8 +45,8 @@ namespace NtfsSharp.Tests
             Volume.ReadBootSector();
 
             const int expected = clustersPerMftRecord * BytesPerSector * SectorsPerCluster;
-            Assert.AreEqual(expected, Volume.BytesPerFileRecord);
-            Assert.Greater(Volume.BytesPerFileRecord, 0);
+            ClassicAssert.AreEqual(expected, Volume.BytesPerFileRecord);
+            ClassicAssert.Greater(Volume.BytesPerFileRecord, 0);
         }
 
         /// <summary>
@@ -61,8 +62,8 @@ namespace NtfsSharp.Tests
             Volume.ReadBootSector();
 
             var expected = (int) Math.Pow(2, Math.Abs(clustersPerMftRecord));
-            Assert.AreEqual(expected, Volume.BytesPerFileRecord);
-            Assert.Greater(Volume.BytesPerFileRecord, 0);
+            ClassicAssert.AreEqual(expected, Volume.BytesPerFileRecord);
+            ClassicAssert.Greater(Volume.BytesPerFileRecord, 0);
         }
 
         /// <summary>
@@ -76,7 +77,7 @@ namespace NtfsSharp.Tests
             BootSector.DummyBootSector.ClustersPerMFTRecord = (byte)clustersPerMftRecord;
 
             var ex = Assert.Throws<InvalidBootSectorException>(() => Volume.ReadBootSector());
-            Assert.AreEqual(nameof(BootSector.DummyBootSector.ClustersPerMFTRecord), ex.FieldName);
+            ClassicAssert.AreEqual(nameof(BootSector.DummyBootSector.ClustersPerMFTRecord), ex.FieldName);
         }
 
         /// <summary>
@@ -91,8 +92,8 @@ namespace NtfsSharp.Tests
 
             Volume.ReadBootSector();
 
-            Assert.AreEqual(bytesPerSector, Volume.BytesPerSector);
-            Assert.AreEqual(Volume.BytesPerFileRecord / Volume.BytesPerSector, Volume.SectorsPerMftRecord);
+            ClassicAssert.AreEqual(bytesPerSector, Volume.BytesPerSector);
+            ClassicAssert.AreEqual(Volume.BytesPerFileRecord / Volume.BytesPerSector, Volume.SectorsPerMftRecord);
         }
 
         /// <summary>
@@ -106,7 +107,7 @@ namespace NtfsSharp.Tests
             BootSector.DummyBootSector.BytesPerSector = bytesPerSector;
 
             var ex = Assert.Throws<InvalidBootSectorException>(() => Volume.ReadBootSector());
-            Assert.AreEqual(nameof(BootSector.DummyBootSector.BytesPerSector), ex.FieldName);
+            ClassicAssert.AreEqual(nameof(BootSector.DummyBootSector.BytesPerSector), ex.FieldName);
         }
 
         /// <summary>
@@ -120,7 +121,7 @@ namespace NtfsSharp.Tests
             BootSector.DummyBootSector.BytesPerSector = bytesPerSector;
 
             var ex = Assert.Throws<InvalidBootSectorException>(() => Volume.ReadBootSector());
-            Assert.AreEqual(nameof(BootSector.DummyBootSector.BytesPerSector), ex.FieldName);
+            ClassicAssert.AreEqual(nameof(BootSector.DummyBootSector.BytesPerSector), ex.FieldName);
         }
 
         /// <summary>
@@ -134,7 +135,7 @@ namespace NtfsSharp.Tests
             BootSector.DummyBootSector.BytesPerSector = bytesPerSector;
 
             var ex = Assert.Throws<InvalidBootSectorException>(() => Volume.ReadBootSector());
-            Assert.AreEqual(nameof(BootSector.DummyBootSector.BytesPerSector), ex.FieldName);
+            ClassicAssert.AreEqual(nameof(BootSector.DummyBootSector.BytesPerSector), ex.FieldName);
         }
 
         /// <summary>
@@ -149,7 +150,7 @@ namespace NtfsSharp.Tests
 
             Volume.ReadBootSector();
 
-            Assert.AreEqual(sectorsPerCluster, Volume.SectorsPerCluster);
+            ClassicAssert.AreEqual(sectorsPerCluster, Volume.SectorsPerCluster);
         }
 
         /// <summary>
@@ -166,7 +167,7 @@ namespace NtfsSharp.Tests
 
             Volume.ReadBootSector();
 
-            Assert.AreEqual(clustersPerMftRecord * sectorsPerCluster * BootSector.DummyBootSector.BytesPerSector,
+            ClassicAssert.AreEqual(clustersPerMftRecord * sectorsPerCluster * BootSector.DummyBootSector.BytesPerSector,
                 Volume.BytesPerFileRecord);
         }
     }
