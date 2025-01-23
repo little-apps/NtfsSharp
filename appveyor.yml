@@ -4,7 +4,8 @@ image: Visual Studio 2022
 before_build:
   - ps: dotnet restore --packages ./packages NtfsSharp.sln
   - ps: dotnet add NtfsSharp.Tests package OpenCover --version 4.7.1221
-  - ps: dotnet add NtfsSharp.Tests package coveralls.io --version 4.0.1
+  - ps: dotnet new tool-manifest
+  - ps: dotnet tool install coveralls.net
 
 build:
   project: NtfsSharp.Tests/
@@ -12,14 +13,15 @@ build:
 
 environment:
   COVERALLS_REPO_TOKEN:  
-    secure: N0XNTb1xnn0yOFDTnjoKu1vRSIVQvcO9Pt9v0If0LtG6TjZ1iE1Rn8ur5h6sU1Yz
+    # Generated from https://ci.appveyor.com/tools/encrypt
+    secure: A3NSomEYwSbZVrnxtIPcqj1z7suC9WCcmzZ4CgKWikNYmATKuWYkUHYGl73uajUx
 #  APPVEYOR_RDP_PASSWORD: a3vAE5MjPj6eA4Mh
 
 test_script:
   # generate report for NUnit testing framework:
-  - cmd: c:\projects\ntfssharp\packages\opencover\4.7.922\tools\OpenCover.Console.exe -register:administrator -filter:"+[NtfsSharp*]*" -target:"c:\Program Files\dotnet\dotnet.exe" -targetargs:"test" -output:c:\projects\ntfssharp\coverage.xml
+  - cmd: c:\projects\ntfssharp\packages\opencover\4.7.1221\tools\OpenCover.Console.exe -register:administrator -filter:"+[NtfsSharp*]*" -target:"c:\Program Files\dotnet\dotnet.exe" -targetargs:"test" -output:opencoverCoverage.xml
 after_test: 
-  - cmd: c:\projects\ntfssharp\packages\coveralls.io\1.4.2\tools\coveralls.net.exe --opencover "c:\projects\ntfssharp\coverage.xml"
+  - ps: dotnet tool run csmacnz.Coveralls --opencover -i "opencoverCoverage.xml" --repoToken $env:COVERALLS_REPO_TOKEN --useRelativePaths --commitId $env:APPVEYOR_REPO_COMMIT --commitBranch $env:APPVEYOR_REPO_BRANCH --commitAuthor $env:APPVEYOR_REPO_COMMIT_AUTHOR --commitEmail $env:APPVEYOR_REPO_COMMIT_AUTHOR_EMAIL --commitMessage $env:APPVEYOR_REPO_COMMIT_MESSAGE --jobId $env:APPVEYOR_BUILD_NUMBER --serviceName appveyor 
   
 #on_finish:
 #  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
