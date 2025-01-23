@@ -2,10 +2,11 @@ version: 1.0.{build}
 image: Visual Studio 2022
 
 before_build:
-  - ps: dotnet restore --packages ./packages NtfsSharp.sln
   - ps: dotnet add NtfsSharp.Tests package OpenCover --version 4.7.1221
   - ps: dotnet new tool-manifest
   - ps: dotnet tool install coveralls.net
+  # Packages have to be restored after packages are added.
+  - ps: dotnet restore --packages ./packages NtfsSharp.sln
 
 build:
   project: NtfsSharp.Tests/
