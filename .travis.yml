@@ -1,9 +1,0 @@
-language: csharp
-solution: NtfsSharp.sln
-mono: none
-dotnet: 3.1
-install:
-  - dotnet restore NtfsSharp.sln
-script:
-  - dotnet build /p:Configuration=Testing NtfsSharp.sln
-  - dotnet test ./NtfsSharp.Tests/NtfsSharp.Tests.csproj
