@@ -1,6 +1,6 @@
 NtfsSharp
 =====================
-[![Build status](https://ci.appveyor.com/api/projects/status/4vdeypbb8dv4faxj?svg=true)](https://ci.appveyor.com/project/SameOldNick/ntfssharp) [![Coverage Status](https://coveralls.io/repos/github/SameOldNick/NtfsSharp/badge.svg?branch=master)](https://coveralls.io/github/SameOldNick/NtfsSharp?branch=master)
+[![.NET](https://github.com/SameOldNick/NtfsSharp/actions/workflows/dotnet.yml/badge.svg)](https://github.com/SameOldNick/NtfsSharp/actions/workflows/dotnet.yml) [![Build status](https://ci.appveyor.com/api/projects/status/4vdeypbb8dv4faxj?svg=true)](https://ci.appveyor.com/project/SameOldNick/ntfssharp) [![Coverage Status](https://coveralls.io/repos/github/SameOldNick/NtfsSharp/badge.svg?branch=master)](https://coveralls.io/github/SameOldNick/NtfsSharp?branch=master)
 
 NtfsSharp is a C# library designed to parse and analyze NTFS (New Technology File System) volumes.
 
