@@ -21,8 +21,8 @@ jobs:
       with:
         dotnet-version: 8.0.x
     - name: Restore dependencies
-      run: dotnet restore NtfsSharp.sln
+      run: dotnet restore /p:EnableWindowsTargeting=true NtfsSharp.sln
     - name: Build
-      run: dotnet build --no-restore /p:Configuration=Testing NtfsSharp.sln
+      run: dotnet build --no-restore /p:EnableWindowsTargeting=true /p:Configuration=Testing NtfsSharp.sln
     - name: Test
       run: dotnet test --no-build --verbosity normal ./NtfsSharp.Tests/NtfsSharp.Tests.csproj
